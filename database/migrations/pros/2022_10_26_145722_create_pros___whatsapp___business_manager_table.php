@@ -38,13 +38,24 @@ class CreateProsWhatsappBusinessManagerTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
-
+            //其他字段配置
+            $table->string('guard_name', 200)->nullable(false)->default('')->comment('账户名称');
+            $table->char('code', 32)->nullable(false)->default('')->comment('商务管理平台编号');
+            $table->string('nickname', 200)->nullable(false)->default('')->comment('昵称姓名');
+            $table->string('ac_number', 200)->nullable(false)->default('')->comment('登录账号');
+            $table->string('ac_password', 200)->nullable(false)->default('')->comment('登录密码');
+            $table->string('ac_secret_key', 200)->nullable(false)->default('')->comment('密钥');
+            $table->string('ac_email', 200)->nullable(false)->default('')->comment('邮箱');
+            $table->string('ac_email_pwd', 200)->nullable(false)->default('')->comment('邮箱密码');
+            $table->string('ac_spare_email', 200)->nullable(false)->default('')->comment('备用邮箱');
+            $table->string('age', 200)->nullable(false)->default('')->comment('年龄');
+            $table->tinyInteger('status')->nullable(false)->default(BusinessManager::STATUS_ENABLED)->unsigned()->comment('账户状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
-
-            //TODO : 索引配置
-
+            //索引配置
+            $table->index('ac_email', 'AC_EMAIL');
+            $table->unique('code', 'CODE');
+            $table->unique('ac_number', 'AC_NUMBER');
         });
         //添加表自增长值
         (new BusinessManagerRepository())->setIncrementId(1, BusinessManager::DB_CONNECTION);

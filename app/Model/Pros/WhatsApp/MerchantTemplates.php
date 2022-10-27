@@ -41,6 +41,16 @@ class MerchantTemplates extends BaseModel
 
     ];
 
+    public const TYPE_OF_TRANSCATION = 1;//交易事务
+    public const TYPE_OF_MARKETING = 2;//市场营销
+    public const TYPE_OF_TEMPORARY_PASSWORD = 3;//一次性密码
+
+    public const HEADER_OF_NULL = 1;//无页眉
+    public const HEADER_OF_TEXT = 1;//文字页眉
+    public const HEADER_OF_MEDIA_DOCUMENT = 1;//媒体文档页眉
+    public const HEADER_OF_MEDIA_IMAGE = 1;//媒体图片页眉
+    public const HEADER_OF_MEDIA_VIDEO = 1;//媒体视频页眉
+
     public const LANGUAGES = [
         'af'=>['南非荷蘭文','Afrikaans'],
         'sq'=>['阿爾巴尼亞文','Albanian'],

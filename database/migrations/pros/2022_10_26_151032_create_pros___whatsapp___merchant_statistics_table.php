@@ -38,13 +38,20 @@ class CreateProsWhatsappMerchantStatisticsTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
-
+            //其他字段配置
+            $table->integer('template_id')->nullable(false)->default(0)->unsigned()->comment('模板ID');
+            $table->string('send', 200)->nullable(false)->default('')->comment('发送的数量');
+            $table->string('send_arrive', 200)->nullable(false)->default('')->comment('发送到达的数量');
+            $table->string('read', 200)->nullable(false)->default('')->comment('已读的数量');
+            $table->string('reply', 200)->nullable(false)->default('')->comment('回复的数量');
+            $table->string('fail', 200)->nullable(false)->default('')->comment('失败的数量');
+            $table->string('sending', 200)->nullable(false)->default('')->comment('发送中的数量');
+            $table->tinyInteger('status')->nullable(false)->default(MerchantStatistics::STATUS_ENABLED)->unsigned()->comment('状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
-            //TODO : 索引配置
-
+            //索引配置
+            $table->index('template_id', 'TEMPLATE_ID');
         });
         //添加表自增长值
         (new MerchantStatisticRepository())->setIncrementId(1, MerchantStatistics::DB_CONNECTION);

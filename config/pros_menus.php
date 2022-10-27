@@ -104,6 +104,47 @@ return [
                     ],
                 ]
             ],
+        ],
+        [
+            'guard_name' => 'WhatsApp',
+            'handler' => '',
+            'route' => ['name' => 'whatsapp.console.bm.index', 'params' => []],
+            'permission_nodes' => [],
+            'icon' => '',
+            'group_menus' => [
+                [
+                    [
+                        'guard_name' => 'BM账户管理',
+                        'handler' => '',
+                        'route' => ['name' => 'whatsapp.console.bm.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-home',
+                    ],
+                    [
+                        'guard_name' => '用户',
+                        'handler' => '',
+                        'route' => ['name' => '', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-list',
+                        'menus' => [
+                            [
+                                'guard_name' => '用户管理',
+                                'handler' => '',
+                                'route' => ['name' => 'whatsapp.console.account.index', 'params' => []],
+                                'permission_nodes' => [],
+                                'icon' => 'fa fa-list-ol',
+                            ],
+                            [
+                                'guard_name' => '用户标签',
+                                'handler' => '',
+                                'route' => ['name' => 'whatsapp.console.account.tag.index', 'params' => []],
+                                'permission_nodes' => [],
+                                'icon' => 'fa fa-sms',
+                            ],
+                        ],
+                    ],
+                ]
+            ],
         ]
 
     ],

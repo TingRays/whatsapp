@@ -47,6 +47,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapAbnermoukeProConsoleRoutes();
+        $this->mapWhatsAppRoutes();
     }
 
     /**
@@ -90,5 +91,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('abnermouke.pros.console')
             ->namespace('App\Interfaces\Pros\Console\Controllers')
             ->group(base_path('routes/abnermouke/pros/console.php'));
+    }
+
+    protected function mapWhatsAppRoutes()
+    {
+        Route::middleware('abnermouke.pros.console')
+            ->namespace('App\Interfaces\Pros\WhatsApp\Controllers')
+            ->group(base_path('routes/whatsapp/console.php'));
     }
 }

@@ -23,21 +23,70 @@ class AccountController extends BaseController
 
     /**
      * 用户页面
-     * @Author Abnermouke <abnermouke@outlook.com>
-     * @Originate in Yunni Technology Co Ltd.
-     * @Time 2022-10-26 15:14:30
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        //渲染页面
+        return view('pros.whatsapp.account.index');
+    }
+
+    /**
+     * 用户账户列表
      * @param Request $request
      * @param AccountInterfaceService $service
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
-    */
-    public function index(Request $request, AccountInterfaceService $service)
-    {
-
-        // TODO : 逻辑操作
-
+     */
+    public function lists(Request $request, AccountInterfaceService $service){
+        //获取（BM）账户列表
+        $service->lists($request);
         //响应接口
         return responseService($service);
     }
 
+    /**
+     * 获取用户详情
+     * @param $id
+     * @param Request $request
+     * @param AccountInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function detail($id, Request $request, AccountInterfaceService $service){
+        //获取用户详情
+        $service->detail($id, $request);
+        //响应接口
+        return responseService($service);
+    }
+
+    /**
+     * 保存用户信息
+     * @param $id
+     * @param Request $request
+     * @param AccountInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function store($id, Request $request, AccountInterfaceService $service){
+        //保存（BM）账户信息
+        $service->store($id, $request);
+        //响应接口
+        return responseService($service);
+    }
+
+    /**
+     * 更改用户状态
+     * @param $id
+     * @param Request $request
+     * @param AccountInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function enable($id, Request $request, AccountInterfaceService $service){
+        //更改用户状态
+        $service->enable($id, $request);
+        //响应接口
+        return responseService($service);
+    }
 }

@@ -39,12 +39,20 @@ class CreateProsWhatsappAccountsTable extends Migration
             $table->increments('id')->comment('表ID');
 
             //TODO : 其他字段配置
-
+            $table->string('global_roaming', 10)->nullable(false)->default('')->comment('国际区号');
+            $table->string('mobile', 15)->nullable(false)->default('')->comment('手机号码');
+            $table->tinyInteger('gender')->nullable(false)->default(Accounts::GENDER_OF_UNKNOWN)->unsigned()->comment('性别');
+            $table->longText('tag_ids')->comment('用户标签集合');
+            $table->longText('remarks')->comment('备注信息');
+            $table->tinyInteger('source')->nullable(false)->default(Accounts::SOURCE_OF_DEFAULT)->unsigned()->comment('来源');
+            $table->integer('last_login_time')->nullable(false)->default(0)->unsigned()->comment('最后登录时间');
+            $table->tinyInteger('status')->nullable(false)->default(Accounts::STATUS_ENABLED)->unsigned()->comment('用户状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
-            //TODO : 索引配置
-
+            //索引配置
+            $table->unique(['global_roaming', 'mobile'], 'GLOBAL_ROAMING_MOBILE');
+            $table->unique('mobile', 'MOBILE');
         });
         //添加表自增长值
         (new AccountRepository())->setIncrementId(1, Accounts::DB_CONNECTION);

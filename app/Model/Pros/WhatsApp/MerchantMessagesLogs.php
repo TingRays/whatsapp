@@ -40,4 +40,11 @@ class MerchantMessagesLogs extends BaseModel
         //
 
     ];
+
+    public const TYPE_OF_TEXT = 1;//文本类型
+    public const TYPE_OF_IMG = 1;//图片类型
+    public const TYPE_OF_TEMPLATE = 1;//模板类型
+
+    public const MODE_OF_MERCHANT = 1;//商户给用户发消息
+    public const MODE_OF_ACCOUNT = 2;//用户给商户发消息
 }

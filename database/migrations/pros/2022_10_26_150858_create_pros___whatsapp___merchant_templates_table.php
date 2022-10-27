@@ -38,13 +38,22 @@ class CreateProsWhatsappMerchantTemplatesTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
-
+            //其他字段配置
+            $table->tinyInteger('type')->nullable(false)->default(MerchantTemplates::TYPE_OF_MARKETING)->unsigned()->comment('消息模板类型');
+            $table->string('title', 255)->nullable(false)->default('')->comment('模板名称');
+            $table->string('language', 20)->nullable(false)->default('')->comment('模板消息语言');
+            $table->tinyInteger('header_type')->nullable(false)->default(MerchantTemplates::HEADER_OF_NULL)->unsigned()->comment('模板页眉类型');
+            $table->string('header_content', 20)->nullable(false)->default(MerchantTemplates::HEADER_OF_NULL)->comment('模板页眉内容');
+            $table->longText('body')->comment('身体正文内容');
+            $table->longText('footer')->comment('页脚正文内容');
+            $table->longText('button')->comment('按钮内容');
+            $table->tinyInteger('status')->nullable(false)->default(MerchantTemplates::STATUS_ENABLED)->unsigned()->comment('状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
-            //TODO : 索引配置
-
+            //索引配置
+            $table->unique(['type','title','language'], 'TYPE_TITLE_LANGUAGE');
+            $table->unique('title', 'TITLE');
         });
         //添加表自增长值
         (new MerchantTemplateRepository())->setIncrementId(1, MerchantTemplates::DB_CONNECTION);

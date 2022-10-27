@@ -23,19 +23,54 @@ class AccountTagController extends BaseController
 
     /**
      * 用户标签页面
-     * @Author Abnermouke <abnermouke@outlook.com>
-     * @Originate in Yunni Technology Co Ltd.
-     * @Time 2022-10-26 15:15:49
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        //渲染页面
+        return view('pros.whatsapp.account.tag.index');
+    }
+
+    /**
+     * 获取用户标签列表
      * @param Request $request
      * @param AccountTagInterfaceService $service
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
-    */
-    public function index(Request $request, AccountTagInterfaceService $service)
-    {
+     */
+    public function lists(Request $request, AccountTagInterfaceService $service){
+        //获取用户标签列表
+        $service->lists($request);
+        //响应接口
+        return responseService($service);
+    }
 
-        // TODO : 逻辑操作
+    /**
+     * 获取用户标签详情
+     * @param $id
+     * @param Request $request
+     * @param AccountTagInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function detail($id, Request $request, AccountTagInterfaceService $service){
+        //获取用户详情
+        $service->detail($id, $request);
+        //响应接口
+        return responseService($service);
+    }
 
+    /**
+     * 保存用户标签信息
+     * @param $id
+     * @param Request $request
+     * @param AccountTagInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function store($id, Request $request, AccountTagInterfaceService $service){
+        //保存（BM）账户信息
+        $service->store($id, $request);
         //响应接口
         return responseService($service);
     }

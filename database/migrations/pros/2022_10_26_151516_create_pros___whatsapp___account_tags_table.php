@@ -38,13 +38,15 @@ class CreateProsWhatsappAccountTagsTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
-
+            //其他字段配置
+            $table->string('guard_name', 200)->nullable(false)->default('')->comment('标签名');
+            $table->string('alias', 100)->nullable(false)->default('')->comment('标签标识');
+            $table->text('description')->nullable()->comment('标签描述');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
-            //TODO : 索引配置
-
+            //索引配置
+            $table->unique('alias', 'ALIAS');
         });
         //添加表自增长值
         (new AccountTagRepository())->setIncrementId(1, AccountTags::DB_CONNECTION);

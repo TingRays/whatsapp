@@ -8,6 +8,7 @@
 */
 
 use App\Model\Pros\WhatsApp\Merchants;
+use App\Model\Pros\WhatsApp\BusinessManager;
 use App\Repository\Pros\WhatsApp\MerchantRepository;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -38,13 +39,23 @@ class CreateProsWhatsappMerchantsTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
-
+            //其他字段配置
+            $table->integer('bm_id')->nullable(false)->default(0)->unsigned()->comment('BM-ID');
+            $table->string('guard_name', 200)->nullable(false)->default('')->comment('商户名称');
+            $table->string('auth_token', 500)->nullable(false)->default('')->comment('访问令牌');
+            $table->string('global_roaming', 10)->nullable(false)->default('')->comment('国际区号');
+            $table->string('tel', 50)->nullable(false)->default('')->comment('手机号');
+            $table->string('tel_code', 50)->nullable(false)->default('')->comment('电话号码编号');
+            $table->string('business_code', 50)->nullable(false)->default('')->comment('业务帐户编号');
+            $table->integer('remainder')->nullable(false)->default(0)->unsigned()->comment('剩余发送量');
+            $table->tinyInteger('bm_status')->nullable(false)->default(BusinessManager::STATUS_ENABLED)->unsigned()->comment('BM账户状态');
+            $table->tinyInteger('status')->nullable(false)->default(Merchants::STATUS_ENABLED)->unsigned()->comment('商户状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
-            //TODO : 索引配置
-
+            //索引配置
+            $table->unique(['global_roaming', 'tel'], 'GLOBAL_ROAMING_TEL');
+            $table->unique('tel_code', 'TEL_CODE');
         });
         //添加表自增长值
         (new MerchantRepository())->setIncrementId(1, Merchants::DB_CONNECTION);

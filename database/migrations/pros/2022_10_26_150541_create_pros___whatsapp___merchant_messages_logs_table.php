@@ -38,13 +38,20 @@ class CreateProsWhatsappMerchantMessagesLogsTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
-
+            //其他字段配置
+            $table->integer('merchant_id')->nullable(false)->default(0)->unsigned()->comment('商户ID');
+            $table->integer('account_id')->nullable(false)->default(0)->unsigned()->comment('用户ID');
+            $table->tinyInteger('type')->nullable(false)->default(MerchantMessagesLogs::TYPE_OF_TEXT)->unsigned()->comment('消息类型');
+            $table->tinyInteger('mode')->nullable(false)->default(MerchantMessagesLogs::MODE_OF_MERCHANT)->unsigned()->comment('发送消息方式');
+            $table->integer('template_id')->nullable(false)->default(0)->unsigned()->comment('模板ID');
+            $table->longText('content')->comment('消息内容');
+            $table->tinyInteger('status')->nullable(false)->default(MerchantMessagesLogs::STATUS_ENABLED)->unsigned()->comment('状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
-            //TODO : 索引配置
-
+            //索引配置
+            $table->unique(['merchant_id','type','mode'], 'MERCHANT_ID_TYPE_MODE');
+            $table->unique(['account_id','type','mode'], 'ACCOUNT_ID_TYPE_MODE');
         });
         //添加表自增长值
         (new MerchantMessagesLogRepository())->setIncrementId(1, MerchantMessagesLogs::DB_CONNECTION);

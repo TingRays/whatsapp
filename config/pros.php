@@ -26,7 +26,8 @@ return [
         //检索命名空间（可指定多个目录）
         'index_namespaces' => [
             //ConsoleBuilder 默认文件目录
-            'App\Interfaces\Pros\Console\Controllers'
+            'App\Interfaces\Pros\Console\Controllers',
+            'App\Interfaces\Pros\WhatsApp\Controllers'
         ],
         //检索中间件标识或中间件Class地址（可指定多个中间件）
         'index_route_middleware' => ['abnermouke.pros.console.auth'],

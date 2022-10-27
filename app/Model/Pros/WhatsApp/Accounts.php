@@ -37,7 +37,21 @@ class Accounts extends BaseModel
         //默认状态
         '__status__' => [self::STATUS_ENABLED => '正常启用', self::STATUS_DISABLED => '禁用中', self::STATUS_VERIFYING => '审核中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
-        //
+        //性别
+        'gender' => [
+            self::GENDER_OF_MAN => '男',
+            self::GENDER_OF_WOMAN => '女',
+            self::GENDER_OF_UNKNOWN => '未知',
+        ],
 
     ];
+
+    //性别
+    public const GENDER_OF_MAN = 1;
+    public const GENDER_OF_WOMAN = 2;
+    public const GENDER_OF_UNKNOWN = 3;
+
+    //来源
+    public const SOURCE_OF_DEFAULT = 1;//默认
+    public const SOURCE_OF_RANDOM = 2;//系统随机生成的
 }
