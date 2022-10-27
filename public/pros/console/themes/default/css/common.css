@@ -1,0 +1,43 @@
+@media (min-width: 992px) {
+    .header-fixed.toolbar-fixed .wrapper {
+        padding-top: 55px;
+    }
+}
+
+@media (max-width: 992px) {
+    .header-fixed.toolbar-fixed .wrapper {
+        padding-top: 75px;
+    }
+}
+
+.pros_table_content_actions .pros_table_content_action:after {
+    content: '|';
+    color: #e8eaec;
+    font-weight: bolder;
+    margin: 0 3px;
+}
+.pros_table_content_actions .pros_table_content_action:last-child:after {
+    content: '';
+    margin: 0;
+}
+
+/**
+    Tagify 实例化后手机显示placeholder内容超出问题解决
+ */
+tags.tagify--noTags.tagify--empty {
+    overflow: hidden;
+}
+
+/**
+    modal打开时，层级不够
+ */
+span.bootstrap-maxlength, #edui_fixedlayer {
+    z-index: 1100 !important;
+}
+
+/**
+ 表头撑满
+ */
+.pros_table_box th, .pros_table_box .pros_table_content_action {
+    white-space: nowrap;
+}

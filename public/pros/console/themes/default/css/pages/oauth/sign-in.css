@@ -1,0 +1,23 @@
+/*登录页面视频背景图*/
+.login-video-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+.login-video-bg video {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    object-fit: cover
+}
+.login-video-bg .mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+    opacity: .7;
+}
