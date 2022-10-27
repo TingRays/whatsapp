@@ -49,7 +49,13 @@ class AccountInterfaceService extends BaseService
             //返回失败
             return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
         }
-        $conditions = [];
+        //整理查询条件
+        $conditions = ['status' => ['!=', Accounts::STATUS_DELETED]];
+        //判断是否筛选状态
+        if ($request->exists('status')) {
+            //设置默认条件
+            $conditions['status'] = (int)$request->get('status', Accounts::STATUS_ENABLED);
+        }
         //判断筛选条件
         if ($filters = data_get($data, 'filters', [])) {
             //循环筛选条件
