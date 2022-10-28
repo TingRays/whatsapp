@@ -38,7 +38,7 @@ class CreateProsWhatsappAccountsTable extends Migration
             //配置字段
             $table->increments('id')->comment('表ID');
 
-            //TODO : 其他字段配置
+            //其他字段配置
             $table->string('global_roaming', 10)->nullable(false)->default('')->comment('国际区号');
             $table->string('mobile', 15)->nullable(false)->default('')->comment('手机号码');
             $table->tinyInteger('gender')->nullable(false)->default(Accounts::GENDER_OF_UNKNOWN)->unsigned()->comment('性别');

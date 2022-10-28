@@ -380,3 +380,18 @@ if (!function_exists('formatting_time')){
         return date($format, $time);
     }
 }
+
+if (!function_exists('get_america_time')){
+    /**
+     * 获取美国时间
+     * @param string $format
+     * @return false|string
+     */
+    function get_america_time(string $format = "Y-m-d H:i:s") {
+        $timezone_out = date_default_timezone_get();
+        date_default_timezone_set('America/New_York');
+        $china_time = date($format);
+        date_default_timezone_set($timezone_out);
+        return $china_time;
+    }
+}

@@ -89,4 +89,27 @@ class AccountController extends BaseController
         //响应接口
         return responseService($service);
     }
+
+    /**
+     * 用户导入管理
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function posts(){
+        //快递单管理
+        return view('pros.whatsapp.account.posts');
+    }
+
+    /**
+     * 用户导入方法
+     * @param Request $request
+     * @param AccountInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function import(Request $request, AccountInterfaceService $service){
+        //导入发货单
+        $service->import($request);
+        //导入快递单
+        return responseService($service);
+    }
 }

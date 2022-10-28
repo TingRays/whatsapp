@@ -33,6 +33,17 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             Route::post('store/{bm_id}/{id}', 'MerchantController@store')->name('store');
             //商户状态
             Route::post('{id}/enable', 'MerchantController@enable')->name('enable');
+            //用戶标签相关路由
+            Route::group(['as' => 'message.', 'prefix' => 'message'], function () {
+                //用戶标签
+                Route::get('index', 'MerchantMessageController@index')->name('index');
+                //用戶标签列表
+                Route::post('lists', 'MerchantMessageController@lists')->name('lists');
+                //用戶标签详情
+                Route::get('detail', 'MerchantMessageController@detail')->name('detail');
+                //用戶标签保存
+                Route::post('store', 'MerchantMessageController@store')->name('store');
+            });
         });
         //用戶相关路由
         Route::group(['as' => 'account.', 'prefix' => 'account'], function () {
@@ -57,6 +68,10 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
                 //用戶标签保存
                 Route::post('store/{id}', 'AccountTagController@store')->name('store');
             });
+            //用戶导入页面
+            Route::get('posts', 'AccountController@posts')->name('posts');
+            //用戶导入
+            Route::post('import', 'AccountController@import')->name('import');
         });
     });
 });

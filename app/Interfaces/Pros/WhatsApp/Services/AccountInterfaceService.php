@@ -15,10 +15,16 @@ use Abnermouke\EasyBuilder\Module\BaseService;
 use Abnermouke\Pros\Builders\Form\FormBuilder;
 use Abnermouke\Pros\Builders\Form\Tools\FormItemBuilder;
 use Abnermouke\Pros\Builders\Table\TableBuilder;
+use App\Exports\Accounts\WrongAccountsExport;
+use App\Imports\Accounts\AccountsImport;
 use App\Model\Pros\WhatsApp\Accounts;
 use App\Repository\Pros\WhatsApp\AccountRepository;
 use App\Repository\Pros\WhatsApp\AccountTagRepository;
+use App\Services\Pros\Console\UploadService;
+use App\Services\Pros\System\TemporaryFileService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * 用户接口逻辑服务容器
@@ -124,6 +130,12 @@ class AccountInterfaceService extends BaseService
         $info = Arr::only($data['__data__'], $data['__edited__']);
         //添加修改时间
         $info['updated_at'] = auto_datetime();
+        if ($info['global_roaming']){
+            $info['global_roaming'] = str_replace(['+',' '],'',trim($info['global_roaming']));
+        }
+        if ($info['mobile']){
+            $info['mobile'] = str_replace(['+',' ','(',')','-','（','）'],'',trim($info['mobile']));
+        }
         //判断是否为新增
         if ((int)$id <= 0) {
             //判断信息是否可用
@@ -169,5 +181,75 @@ class AccountInterfaceService extends BaseService
         }
         //返回成功
         return $this->success(compact('id'));
+    }
+
+    public function import(Request $request)
+    {
+        //上传文件
+        if (!($service = new UploadService())->upload($request)) {
+            //返回失败
+            return $this->fail($service->getCode(), $service->getMessage());
+        }
+        //获取文件结果
+        $file = $service->getResult();
+        //导入内容
+        $sheets = Excel::import(new AccountsImport(), $file['storage_name'], $file['storage_disk'])->toArray(new AccountsImport, $file['storage_name'], $file['storage_disk']);
+        //获取导入信息
+        $posts = Arr::first($sheets);
+        //整理失败数据
+        $wrongs = $success = $tag_ids = [];
+        //循环导入信息
+        foreach ($posts as $k => $post) {
+            //判断是否第一项
+            if ((int)$k > 0) {
+                //查询物流公司
+                if ((new AccountRepository())->exists(['global_roaming' => trim($post[0]),'mobile' => trim($post[1])])) {
+                    //设置错误原因
+                    $post[] = '该用户已存在';
+                    //设置失败
+                    $wrongs[] = $post;
+                    //跳出当前循环
+                    continue;
+                }
+                if (empty($tag_ids)){
+                    ($service = new AccountTagInterfaceService())->insertTag($post[3]);
+                    $tag_ids[] = $service->getResult()['tag_id'];
+                }
+                $global_roaming = str_replace(['+',' '],'',trim($post[0]));
+                $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($post[1]));
+                $params = [
+                    'global_roaming' => $global_roaming,
+                    'mobile' => $mobile,
+                    'gender' => Accounts::GENDER_OF_UNKNOWN,
+                    'tag_ids' => $tag_ids,
+                    'remarks' => $post[4],
+                    'source' => Accounts::SOURCE_OF_IMPORT,
+                    'status' => Accounts::STATUS_DISABLED,
+                    'created_at' => auto_datetime(),
+                    'updated_at' => auto_datetime(),
+                ];
+                if (trim($post[2]) == '是'){
+                    $params['status'] = Accounts::STATUS_ENABLED;
+                }
+                (new AccountRepository())->insertGetId($params);
+                //添加成功
+                $success[] = $post;
+            }
+        }
+        //整理返回结果
+        $result = ['success' => count($success), 'wrong' => $wrongs, 'msg' => ('本次导入共' . (count($posts) - 1) . '条<br />成功：' . count($success) . ' 条，失败：' . count($wrongs) . ' 条')];
+        //判断是否存在错误发货单信息
+        if ($wrongs) {
+            //生成临时文件
+            $temp_file = (new TemporaryFileService(true))->temporary('accounts/exports/wrongs/' . $file['file_info']['basename']);
+            //保存文件
+            Excel::store(new WrongAccountsExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
+            //设置链接
+            $result['link'] = $temp_file['file']['link'];
+            //设置提示
+            $result['msg'] .= '<br /><br />错误文档已自动导出，请留意最后一栏失败原因并及时处理！';
+        }
+        //返回成功
+        return $this->success($result);
     }
 }

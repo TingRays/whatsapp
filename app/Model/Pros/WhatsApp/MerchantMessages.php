@@ -3,8 +3,8 @@
  * Power by abnermouke/easy-builder.
  * User: Abnermouke <abnermouke@outlook.com>
  * Originate in Yunni Technology Co Ltd.
- * Date: 2022-10-26
- * Time: 15:03:21
+ * Date: 2022-10-28
+ * Time: 08:51:39
 */
 
 namespace App\Model\Pros\WhatsApp;
@@ -12,11 +12,11 @@ namespace App\Model\Pros\WhatsApp;
 use Abnermouke\EasyBuilder\Module\BaseModel;
 
 /**
- * BM的商户表
- * Class Merchants
+ * 商户发送消息表
+ * Class MerchantMessages
  * @package App\Model\Pros\WhatsApp
 */
-class Merchants extends BaseModel
+class MerchantMessages extends BaseModel
 {
     //设置表名
     protected $table = self::TABLE_NAME;
@@ -25,7 +25,7 @@ class Merchants extends BaseModel
     protected $connection = 'mysql';
 
     //定义表名
-    public const TABLE_NAME = 'wa_merchants';
+    public const TABLE_NAME = 'wa_merchant_messages';
 
     //定义表链接信息
     public const DB_CONNECTION = 'mysql';
@@ -35,9 +35,16 @@ class Merchants extends BaseModel
         //是否选择
         '__switch__' => [self::SWITCH_ON => '是', self::SWITCH_OFF => '不是'],
         //默认状态
-        '__status__' => [self::STATUS_ENABLED => '正常启用', self::STATUS_DISABLED => '禁用中', self::STATUS_VERIFYING => '群发消息中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
+        '__status__' => [self::STATUS_ENABLED => '发送完成', self::STATUS_DISABLED => '未发送', self::STATUS_VERIFYING => '发送中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
         //
 
     ];
+
+    public const TYPE_OF_SINGLE = 1;//单独发送
+    public const TYPE_OF_GROUP = 1;//指定用户
+    public const TYPE_OF_TAGS = 1;//标签用户
+
+    public const MODE_OF_TIMING = 1;//定时发送
+    public const MODE_OF_IMMEDIATELY = 2;//即时发送
 }

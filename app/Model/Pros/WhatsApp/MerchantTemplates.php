@@ -37,7 +37,7 @@ class MerchantTemplates extends BaseModel
         //默认状态
         '__status__' => [self::STATUS_ENABLED => '正常启用', self::STATUS_DISABLED => '禁用中', self::STATUS_VERIFYING => '审核中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
-        //
+        'languages' => self::LANGUAGES,
 
     ];
 
@@ -46,10 +46,10 @@ class MerchantTemplates extends BaseModel
     public const TYPE_OF_TEMPORARY_PASSWORD = 3;//一次性密码
 
     public const HEADER_OF_NULL = 1;//无页眉
-    public const HEADER_OF_TEXT = 1;//文字页眉
-    public const HEADER_OF_MEDIA_DOCUMENT = 1;//媒体文档页眉
-    public const HEADER_OF_MEDIA_IMAGE = 1;//媒体图片页眉
-    public const HEADER_OF_MEDIA_VIDEO = 1;//媒体视频页眉
+    public const HEADER_OF_TEXT = 2;//文字页眉
+    public const HEADER_OF_MEDIA_DOCUMENT = 3;//媒体文档页眉
+    public const HEADER_OF_MEDIA_IMAGE = 4;//媒体图片页眉
+    public const HEADER_OF_MEDIA_VIDEO = 5;//媒体视频页眉
 
     public const LANGUAGES = [
         'af'=>['南非荷蘭文','Afrikaans'],

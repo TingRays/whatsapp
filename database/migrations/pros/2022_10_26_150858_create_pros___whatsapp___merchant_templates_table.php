@@ -53,7 +53,7 @@ class CreateProsWhatsappMerchantTemplatesTable extends Migration
 
             //索引配置
             $table->unique(['type','title','language'], 'TYPE_TITLE_LANGUAGE');
-            $table->unique('title', 'TITLE');
+            $table->index('title', 'TITLE');
         });
         //添加表自增长值
         (new MerchantTemplateRepository())->setIncrementId(1, MerchantTemplates::DB_CONNECTION);

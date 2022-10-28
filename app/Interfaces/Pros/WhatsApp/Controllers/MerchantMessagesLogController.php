@@ -33,10 +33,21 @@ class MerchantMessagesLogController extends BaseController
     */
     public function index(Request $request, MerchantMessagesLogInterfaceService $service)
     {
+        //商户发送消息记录页面
+        return view('pros.whatsapp.account.posts');
+    }
 
-        // TODO : 逻辑操作
-
-        //响应接口
+    /**
+     * 发送消息
+     * @param Request $request
+     * @param MerchantMessagesLogInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function sendMessage(Request $request, MerchantMessagesLogInterfaceService $service){
+        //导入发货单
+        $service->sendMessage($request);
+        //导入快递单
         return responseService($service);
     }
 

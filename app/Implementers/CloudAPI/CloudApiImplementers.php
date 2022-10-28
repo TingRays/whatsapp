@@ -42,72 +42,44 @@ class CloudApiImplementers extends BaseService
     /*
      * 设置默认请求参数
      */
-    public function setDefaultParams($params){
+    public function setDefaultParams($data,$to_mobile,$type){
         //默认请求参数
+        $params = [
+            'messaging_product' => 'whatsapp',
+            'recipient_type' => 'individual',
+            'to' => $to_mobile,
+            'type' => $type,
+            $type => $data
+        ];
         $this->params = $params;
         //返回当前实例
         return $this;
     }
 
-    public function sendText(){
-        $params = [
-            'messaging_product' => 'whatsapp',
-            'recipient_type' => 'individual',
-            'to' => '5511980341696',
-            'type' => 'text',
-            'text' => [
-                'preview_url' => false,
-                'body' => 'Olá, sou Gerente de Contratação da Treasury!  Devido à boa reputação das compras on-line, convidamos você a se tornar nossa equipe on-line em meio período.
- Você pode ganhar de 500-3000 reais por dia em 30 minutos usando apenas seu celular.
- Clique no link abaixo para entrar em contato comigo pelo whatsapp!
- Digite seu número de celular e ganhe 50 reais instantaneamente.  apenas hoje!'
-            ]
+    public function sendText($text,$to_mobile){
+        $data = [
+            'preview_url' => false,
+            'body' => $text
         ];
-        $this->setDefaultParams($params);
+        $type = 'text';
+        $this->setDefaultParams($data,$to_mobile,$type);
         $result = $this->query();
         return $result;
     }
 
-    public function sendTextTemplate(){
-        $params = [
-            'messaging_product' => 'whatsapp',
-            'recipient_type' => 'individual',
-            'to' => '5511957095596',
-            'type' => 'template',
-            'template' => [
-                'name' => 'onemessage',
-                'language' => [
-                    'code' => 'en_GB',
-                ],
-                'components' => [
-                    [
-                        'type' => 'header',
-                        'parameters' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'aaron',
-                            ]
-                        ]
-                    ],
-                    [
-                        'type' => 'body',
-                        'parameters' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'ting',
-                            ],
-                            [
-                                'type' => 'text',
-                                'text' => 'ray',
-                            ],
-                        ]
-                    ],
-                ]
-            ]
+    public function sendTextTemplate($template,$to_mobile){
+        $components = self::components($template['title'].'_'.$template['language']);
+        $data = [
+            'name' => $template['title'],
+            'language' => [
+                'code' => $template['language'],
+            ],
+            'components' => $components
         ];
-        $this->setDefaultParams($params);
+        $type = 'template';
+        $this->setDefaultParams($data,$to_mobile,$type);
         $result = $this->query();
-        return $result;
+        return compact('result','data');
     }
 
     private function query(){
@@ -152,5 +124,42 @@ class CloudApiImplementers extends BaseService
         //}
         //返回成功
         return ['data' => $result];
+    }
+
+    private function components($name){
+        switch ($name){
+            case 'onemessage_en_US':
+            case 'onemessage_en_GB':
+                $components = [
+                    [
+                        'type' => 'header',
+                        'parameters' => [
+                            [
+                                'type' => 'text',
+                                'text' => 'aaron',
+                            ]
+                        ]
+                    ],
+                    [
+                        'type' => 'body',
+                        'parameters' => [
+                            [
+                                'type' => 'text',
+                                'text' => 'ting',
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => 'ray',
+                            ],
+                        ]
+                    ],
+                ];
+                break;
+            case 'hello_world_en_US':
+                $components = [];
+                break;
+            default: $components = [];
+        }
+        return $components;
     }
 }

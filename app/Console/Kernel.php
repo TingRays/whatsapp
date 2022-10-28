@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        \App\Console\Commands\Pros\Tasks\TemporaryFileCommand::class
+        \App\Console\Commands\Pros\Tasks\TemporaryFileCommand::class,
+        \App\Console\Commands\Pros\Tasks\MerchantRemainderCommand::class,
     ];
 
     /**
@@ -29,6 +30,8 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         //每五分钟清除过期文件
         $schedule->command('temporary_file:clear')->everyFiveMinutes();
+        //每天执行
+        $schedule->command('merchant:remainder')->daily();
     }
 
     /**

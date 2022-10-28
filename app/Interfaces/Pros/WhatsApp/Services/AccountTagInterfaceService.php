@@ -121,4 +121,30 @@ class AccountTagInterfaceService extends BaseService
         //返回成功
         return $this->success(compact('id'));
     }
+
+    public function insertTag($guard_name = ''){
+        $alias = auto_datetime('YmdHi');
+        $description = '';
+        if (!$guard_name){
+            $guard_name = auto_datetime('Y-m-d H:i');
+            $description = auto_datetime('Y-m-d H:i').'导入的用户标签';
+        }
+        if (($tag_id = (new AccountTagRepository())->find(['alias' => $alias],'id')) > 0) {
+            //返回ID
+            return $this->success(compact('tag_id'));
+        }
+        if (($tag_id = (new AccountTagRepository())->find(['guard_name' => $guard_name],'id')) > 0) {
+            //返回ID
+            return $this->success(compact('tag_id'));
+        }
+        $tag_id = (new AccountTagRepository())->insertGetId([
+            'guard_name'=>$guard_name,
+            'alias'=>$alias,
+            'description'=>$description,
+            'created_at'=>auto_datetime(),
+            'updated_at'=>auto_datetime(),
+        ]);
+        //返回ID
+        return $this->success(compact('tag_id'));
+    }
 }
