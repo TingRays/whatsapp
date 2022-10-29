@@ -37,13 +37,21 @@ class MerchantMessages extends BaseModel
         //默认状态
         '__status__' => [self::STATUS_ENABLED => '发送完成', self::STATUS_DISABLED => '未发送', self::STATUS_VERIFYING => '发送中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
-        //
+        'type' => [
+            self::TYPE_OF_SINGLE => '单独发送',
+            self::TYPE_OF_GROUP => '指定用户',
+            self::TYPE_OF_TAGS => '标签用户',
+        ],
+        'mode' => [
+            self::MODE_OF_TIMING => '定时发送',
+            self::MODE_OF_IMMEDIATELY => '即时发送'
+        ]
 
     ];
 
     public const TYPE_OF_SINGLE = 1;//单独发送
-    public const TYPE_OF_GROUP = 1;//指定用户
-    public const TYPE_OF_TAGS = 1;//标签用户
+    public const TYPE_OF_GROUP = 2;//指定用户
+    public const TYPE_OF_TAGS = 3;//标签用户
 
     public const MODE_OF_TIMING = 1;//定时发送
     public const MODE_OF_IMMEDIATELY = 2;//即时发送

@@ -38,12 +38,17 @@ class MerchantMessagesLogs extends BaseModel
         '__status__' => [self::STATUS_ENABLED => '发送成功', self::STATUS_DISABLED => '等待发送中', self::STATUS_VERIFYING => '发送中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
         //
+        'type' => [
+            self::TYPE_OF_TEXT => '文本类型',
+            self::TYPE_OF_IMG => '图片类型',
+            self::TYPE_OF_TEMPLATE => '模板类型',
+        ],
 
     ];
 
     public const TYPE_OF_TEXT = 1;//文本类型
-    public const TYPE_OF_IMG = 1;//图片类型
-    public const TYPE_OF_TEMPLATE = 1;//模板类型
+    public const TYPE_OF_IMG = 2;//图片类型
+    public const TYPE_OF_TEMPLATE = 3;//模板类型
 
     public const MODE_OF_MERCHANT = 1;//商户给用户发消息
     public const MODE_OF_ACCOUNT = 2;//用户给商户发消息

@@ -12,6 +12,7 @@ namespace App\Interfaces\Pros\WhatsApp\Services;
 use Abnermouke\EasyBuilder\Library\CodeLibrary;
 use Abnermouke\EasyBuilder\Library\Cryptography\AesLibrary;
 use Abnermouke\EasyBuilder\Module\BaseService;
+use Abnermouke\Pros\Builders\BuilderProvider;
 use Abnermouke\Pros\Builders\Table\TableBuilder;
 use App\Model\Pros\WhatsApp\Accounts;
 use App\Model\Pros\WhatsApp\MerchantMessages;
@@ -20,8 +21,11 @@ use App\Model\Pros\WhatsApp\MerchantTemplates;
 use App\Repository\Pros\WhatsApp\AccountRepository;
 use App\Repository\Pros\WhatsApp\AccountTagRepository;
 use App\Repository\Pros\WhatsApp\MerchantMessageRepository;
+use App\Repository\Pros\WhatsApp\MerchantMessagesLogRepository;
+use App\Repository\Pros\WhatsApp\MerchantRepository;
 use App\Repository\Pros\WhatsApp\MerchantTemplateRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * 商户发送消息接口逻辑服务容器
@@ -74,7 +78,7 @@ class MerchantMessageInterfaceService extends BaseService
             }
         }
         //整理查询条件
-        $conditions = ['mode' => ['!=', MerchantMessages::MODE_OF_TIMING]];
+        //$conditions = ['mode' => ['!=', MerchantMessages::MODE_OF_TIMING]];
         //判断是否筛选状态
         if ($request->exists('mode')) {
             //设置默认条件
@@ -82,6 +86,20 @@ class MerchantMessageInterfaceService extends BaseService
         }
         //查询列表
         $lists = (new MerchantMessageRepository())->lists($conditions, [], [], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
+        if ($lists && !empty($lists['lists'])) {
+            //获取模板
+            $template_ids = array_column($lists['lists'],'template_id');
+            $templates = (new MerchantTemplateRepository())->get(['id'=>['in',$template_ids]],['id','title']);
+            $templates = array_column($templates, null, 'id');
+            //循环列表
+            foreach ($lists['lists'] as $k => $list) {
+                //设置信息
+                $lists['lists'][$k]['template_title'] = $templates[$list['template_id']]['title']??'-';
+                $lists['lists'][$k]['type_str'] = MerchantMessages::TYPE_GROUPS['type'][$list['type']]??'-';
+                $lists['lists'][$k]['mode_str'] = MerchantMessages::TYPE_GROUPS['mode'][$list['mode']]??'-';
+                $lists['lists'][$k]['timing_send_time'] = auto_datetime('Y-m-d H:i',$list['timing_send_time']);
+            }
+        }
         //渲染表格内容
         $render = TableBuilder::CONTENT()->signature($data['signature'])->setLists($lists)->render();
         //返回成功
@@ -203,5 +221,55 @@ class MerchantMessageInterfaceService extends BaseService
         }
         //返回成功
         return $this->success($service->getResult());
+    }
+
+    /**
+     * 消息群发用户列表
+     * @param $id
+     * @param $request
+     * @return array|bool
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function accounts($id, $request){
+        //获取加密信息
+        if (!$data = AesLibrary::decryptFormData($request->all())) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
+        }
+        $lists = (new MerchantMessagesLogRepository())->lists(['merchant_messages_id'=>$id,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['merchant_id','account_id','type','status','updated_at'],[], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
+        //获取商户
+        $merchant_ids = array_column($lists['lists'],'merchant_id');
+        $merchants = (new MerchantRepository())->get(['id'=>['in',$merchant_ids]],['id','guard_name']);
+        $merchants = array_column($merchants, null, 'id');
+        //获取用户
+        $account_ids = array_column($lists['lists'],'account_id');
+        $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
+        $accounts = array_column($accounts, null, 'id');
+        //循环列表
+        foreach ($lists['lists'] as $k => $list) {
+            //判断是否已读
+            $lists['lists'][$k]['merchant_name'] = $merchants[$list['merchant_id']]['guard_name']??'无';
+            $lists['lists'][$k]['account_mobile'] = !empty($accounts[$list['account_id']]) ? '+('.$accounts[$list['account_id']]['global_roaming'].')-'.$accounts[$list['account_id']]['mobile'] : '-';
+            $lists['lists'][$k]['type_str'] = MerchantMessagesLogs::TYPE_GROUPS['type'][$list['type']]??'-';
+            $lists['lists'][$k]['status_str'] = MerchantMessagesLogs::TYPE_GROUPS['__status__'][$list['status']]??'-';
+        }
+        //初始化表格
+        $render = TableBuilder::CONTENT()
+            ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $builder) {
+                //其他字段
+                $builder->info('merchant_name', '商户')->description('ID：{merchant_id}');
+                $builder->string('account_mobile', '用户电话')->badge('primary');
+                $builder->string('type_str', '发送类型')->badge('success');
+                $builder->string('status_str', '状态');
+                $builder->string('updated_at', '发送时间')->date('Y-m-d H:i:s');
+                //$builder->option('is_read', '是否已读')->options(AccountsMessages::TYPE_GROUPS['readable'], BuilderProvider::THEME_COLORS['switch']);
+            })
+            ->target(Str::random(10), 5, '', '')
+            ->setLists($lists)
+            ->render(true);
+        //返回表格内容
+        return $this->success(['html' => $render]);
     }
 }

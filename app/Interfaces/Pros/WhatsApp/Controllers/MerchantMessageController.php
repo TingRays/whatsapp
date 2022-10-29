@@ -78,4 +78,19 @@ class MerchantMessageController extends BaseController
         //响应接口
         return responseService($service);
     }
+
+    /**
+     * 消息群发用户列表
+     * @param $id
+     * @param Request $request
+     * @param MerchantMessageInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function accounts($id, Request $request, MerchantMessageInterfaceService $service){
+        //获取用户消息接收用户
+        $service->accounts($id, $request);
+        //响应接口
+        return responseService($service);
+    }
 }
