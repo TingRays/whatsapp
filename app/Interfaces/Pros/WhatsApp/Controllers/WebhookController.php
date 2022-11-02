@@ -40,7 +40,7 @@ class WebhookController extends BaseController
         }
         //响应接口
         //return responseService($service);
-        return ['success'=>false,'code'=>CodeLibrary::MISSING_PERMISSION];
+        return CodeLibrary::MISSING_PERMISSION;
     }
 
 }
