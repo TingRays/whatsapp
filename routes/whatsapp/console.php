@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 //设置Pros - console基础前缀与路由
 Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], function () {
+    //获取BM列表
+    Route::post('webhook', 'WebhookController@index')->name('index');
     //设置需登录相关路由
     Route::group(['middleware' => 'abnermouke.pros.console.auth'], function () {
         //BM相关路由
