@@ -9,6 +9,7 @@
 
 namespace App\Interfaces\Pros\WhatsApp\Controllers;
 
+use Abnermouke\EasyBuilder\Library\CodeLibrary;
 use App\Interfaces\Pros\WhatsApp\Services\WebhookInterfaceService;
 use Illuminate\Http\Request;
 use Abnermouke\EasyBuilder\Module\BaseController;
@@ -34,9 +35,12 @@ class WebhookController extends BaseController
     public function index(Request $request, WebhookInterfaceService $service)
     {
         $service->webhook($request);
+        if ($service->getState()){
+            return ['success'=>true,'code'=>CodeLibrary::CODE_SUCCESS,'challenge'=>$request->get('hub_challenge','')];
+        }
         //响应接口
         //return responseService($service);
-        return ['success'=>true,'hub_challenge'=>$request->get('hub_challenge','')];
+        return ['success'=>false,'code'=>CodeLibrary::MISSING_PERMISSION];
     }
 
 }

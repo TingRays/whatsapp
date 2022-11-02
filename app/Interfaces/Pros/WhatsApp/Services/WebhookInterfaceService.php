@@ -9,6 +9,7 @@
 
 namespace App\Interfaces\Pros\WhatsApp\Services;
 
+use Abnermouke\EasyBuilder\Library\CodeLibrary;
 use Abnermouke\EasyBuilder\Module\BaseService;
 use App\Repository\Pros\WhatsApp\WebhookRepository;
 
@@ -29,7 +30,10 @@ class WebhookInterfaceService extends BaseService
 
     public function webhook($request){
         $data = $request->all();
-        $id = (new WebhookRepository())->insertGetId(['content'=>$data]);
-        return $this->success(compact('id'));
+        if ($data['hub_mode'] === 'subscribe' && $data['hub_challenge'] === 'XUkLMJJ|S$Aq5'){
+            $id = (new WebhookRepository())->insertGetId(['content'=>$data]);
+            return $this->success(compact('id'));
+        }
+        return $this->fail(CodeLibrary::MISSING_PERMISSION, '修改失败');
     }
 }
