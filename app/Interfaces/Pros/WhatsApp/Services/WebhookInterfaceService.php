@@ -31,7 +31,7 @@ class WebhookInterfaceService extends BaseService
     public function webhook($request){
         $data = $request->all();
         if ($data['hub_mode'] === 'subscribe' && $data['hub_challenge'] === 'XUkLMJJ|S$Aq5'){
-            $id = (new WebhookRepository())->insertGetId(['content'=>$data]);
+            $id = (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
             return $this->success(compact('id'));
         }
         return $this->fail(CodeLibrary::MISSING_PERMISSION, '修改失败');
