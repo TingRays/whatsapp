@@ -36,7 +36,7 @@ class WebhookController extends BaseController
     {
         $service->webhook($request);
         if ($service->getState()){
-            return ['success'=>true,'code'=>CodeLibrary::CODE_SUCCESS,'challenge'=>$request->get('hub_challenge','')];
+            return $request->get('hub_challenge','');
         }
         //响应接口
         //return responseService($service);
