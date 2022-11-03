@@ -30,7 +30,7 @@ class WebhookInterfaceService extends BaseService
 
     public function webhook($request){
         $data = $request->all();
-        if ($data['hub_mode'] === 'subscribe' && $data['hub_verify_token'] === 'XUkLMJJ|S$Aq5'){
+        if ($data['hub_verify_token'] === 'XUkLMJJ|S$Aq5'){
             $id = (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
             return $this->success(compact('id'));
         }
