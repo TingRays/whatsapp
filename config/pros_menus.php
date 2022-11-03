@@ -157,6 +157,13 @@ return [
                             ],
                         ],
                     ],
+                    [
+                        'guard_name' => '虚拟手机生成',
+                        'handler' => '',
+                        'route' => ['name' => 'whatsapp.console.fictitious.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-envelope',
+                    ],
                 ]
             ],
         ]

@@ -79,5 +79,18 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             //用戶导入
             Route::post('import', 'AccountController@import')->name('import');
         });
+        //生成虚拟手机路由
+        Route::group(['as' => 'fictitious.', 'prefix' => 'fictitious'], function () {
+            //虚拟手机列表
+            Route::get('', 'FictitiouController@index')->name('index');
+            //获取虚拟手机列表
+            Route::post('lists', 'FictitiouController@lists')->name('lists');
+            //虚拟手机详情
+            Route::post('detail', 'FictitiouController@detail')->name('detail');
+            //生成保存虚拟手机信息
+            Route::post('store', 'FictitiouController@store')->name('store');
+            //更改BM状态
+            Route::post('{id}/enable', 'FictitiouController@enable')->name('enable');
+        });
     });
 });

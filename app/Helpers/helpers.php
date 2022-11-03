@@ -355,3 +355,27 @@ if (!function_exists('check_file_path')) {
     }
 }
 
+if (!function_exists('get_random')) {
+    /**
+     * 生成指定长度的随机数
+     * @param int $len
+     * @return string
+     */
+    function get_random(int $len=3)
+    {
+        //range 是将10到99列成一个数组
+        $numbers = range (0,9);
+        //shuffle 将数组顺序随即打乱
+        shuffle ($numbers);
+        //取值起始位置随机
+        $start = mt_rand(1,3);
+        //取从指定定位置开始的若干数
+        $result = array_slice($numbers,$start,$len);
+        $random = "";
+        for ($i=0;$i<$len;$i++){
+            $random = $random.$result[$i];
+        }
+        return $random;
+    }
+}
+
