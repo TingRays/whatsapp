@@ -86,7 +86,7 @@ class FictitiouInterfaceService extends BaseService
         return $this->success($render);
     }
 
-    public function detail( $request){
+    public function detail($request){
         $region_code = [];
         foreach (Fictitious::REGION_CODE as $k=>$item){
             $region_code[$k] = $item[0].'（+'.$item[1].'）'.$item[2];
