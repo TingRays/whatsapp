@@ -13,8 +13,8 @@
 @section('container')
     {!!
         \Abnermouke\Pros\Builders\Table\TableBuilder::BASIC()
-        ->setFilters(function (\Abnermouke\Pros\Builders\Table\Tools\TableFilterBuilder $filterBuilder) {
-            $filterBuilder->select('group_id', '粉丝分组')->options(array_column((new \App\Repository\Pros\WhatsApp\FansManageGroupRepository())->get([], ['id', 'title']), 'title', 'id'));
+        ->setFilters(function (\Abnermouke\Pros\Builders\Table\Tools\TableFilterBuilder $filterBuilder) use ($admin_id, $default_id) {
+            $filterBuilder->select('group_id', '粉丝分组')->options(array_column((new \App\Repository\Pros\WhatsApp\FansManageGroupRepository())->get(['admin_id'=>$admin_id], ['id', 'title']), 'title', 'id'))->default_value($default_id);
             $filterBuilder->input('keyword', '关键词搜索')->placeholder('请输入ID/手机号等关键词检索');
             $filterBuilder->date('updated_at', '更新时间')->col(5);
         })

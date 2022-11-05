@@ -10,6 +10,7 @@
 namespace App\Interfaces\Pros\WhatsApp\Controllers;
 
 use App\Interfaces\Pros\WhatsApp\Services\FansManageInterfaceService;
+use App\Repository\Pros\WhatsApp\FansManageGroupRepository;
 use Illuminate\Http\Request;
 use Abnermouke\EasyBuilder\Module\BaseController;
 
@@ -33,8 +34,10 @@ class FansManageController extends BaseController
     */
     public function index(Request $request, FansManageInterfaceService $service)
     {
+        $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
+        $default_id = (new FansManageGroupRepository())->find(['admin_id'=>$admin_id],'id');
         //渲染页面
-        return view('pros.whatsapp.fans_manage.index');
+        return view('pros.whatsapp.fans_manage.index',compact('admin_id','default_id'));
     }
 
     /**

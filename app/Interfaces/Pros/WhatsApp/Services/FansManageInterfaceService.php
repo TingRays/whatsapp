@@ -52,6 +52,8 @@ class FansManageInterfaceService extends BaseService
         //整理查询条件
         //设置默认条件
         $conditions = ['status'=>FansManage::STATUS_ENABLED];
+        $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
+        $conditions['admin_id'] = $admin_id;
         //判断筛选条件
         if ($filters = data_get($data, 'filters', [])) {
             //循环筛选条件
