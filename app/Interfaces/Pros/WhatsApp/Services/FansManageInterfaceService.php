@@ -63,6 +63,9 @@ class FansManageInterfaceService extends BaseService
                     case 'keyword':
                         $value && $conditions[implode('|', ['id', 'mobile'])] = ['like', '%'.$value.'%'];
                         break;
+                    case 'group_id':
+                        $value && $conditions['group_id'] = $value;
+                        break;
                     case 'updated_at':
                         $value && $conditions['updated_at'] = ['date', $value];
                         break;
@@ -72,13 +75,15 @@ class FansManageInterfaceService extends BaseService
         //查询列表
         $lists = (new FansManageRepository())->lists($conditions, ['*'], [], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
         $group_ids = array_column($lists['lists'],'group_id');
-        $group_arr = (new FansManageGroupRepository())->get(['id'=>$group_ids],['id','title']);
+        $group_arr = (new FansManageGroupRepository())->get(['id'=>$group_ids],['id','title','code']);
         $group_key_arr = [];
         foreach ($group_arr as $group){
-            $group_key_arr[$group['id']] = $group['title'];
+            $group_key_arr[$group['id']] = ['title'=>$group['title'],'code'=>$group['code']];
         }
         foreach ($lists['lists'] as &$list){
-            $list['group_name'] = $group_key_arr[$list['group_id']]??'-';
+            $list['group_name'] = $group_key_arr[$list['group_id']]['title']??'-';
+            $list['group_url'] = 'https://jump.whatsqunfa.com/'.$group_key_arr[$list['group_id']]['code'];
+            $list['jump_url'] = 'https://api.whatsapp.com/send?phone='.$list['mobile'];
         }
         //渲染表格内容
         $render = TableBuilder::CONTENT()->signature($data['signature'])->setLists($lists)->render();

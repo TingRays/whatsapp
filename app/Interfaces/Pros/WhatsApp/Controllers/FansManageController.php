@@ -35,9 +35,8 @@ class FansManageController extends BaseController
     public function index(Request $request, FansManageInterfaceService $service)
     {
         $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
-        $default_id = (new FansManageGroupRepository())->find(['admin_id'=>$admin_id],'id');
         //渲染页面
-        return view('pros.whatsapp.fans_manage.index',compact('admin_id','default_id'));
+        return view('pros.whatsapp.fans_manage.index',compact('admin_id'));
     }
 
     /**

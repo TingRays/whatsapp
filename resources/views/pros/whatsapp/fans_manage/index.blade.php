@@ -13,8 +13,9 @@
 @section('container')
     {!!
         \Abnermouke\Pros\Builders\Table\TableBuilder::BASIC()
-        ->setFilters(function (\Abnermouke\Pros\Builders\Table\Tools\TableFilterBuilder $filterBuilder) use ($admin_id, $default_id) {
-            $filterBuilder->select('group_id', '粉丝分组')->options(array_column((new \App\Repository\Pros\WhatsApp\FansManageGroupRepository())->get(['admin_id'=>$admin_id], ['id', 'title']), 'title', 'id'))->default_value($default_id);
+        ->addAlert('<i class="fa fa-info-circle me-3 text-primary"></i>分组连接：是当前分组的所有号码随机跳，号码连接：是当前号码跳WhatsApp页面')
+        ->setFilters(function (\Abnermouke\Pros\Builders\Table\Tools\TableFilterBuilder $filterBuilder) use ($admin_id) {
+            $filterBuilder->select('group_id', '粉丝分组')->options(array_column((new \App\Repository\Pros\WhatsApp\FansManageGroupRepository())->get(['admin_id'=>$admin_id], ['id', 'title']), 'title', 'id'));
             $filterBuilder->input('keyword', '关键词搜索')->placeholder('请输入ID/手机号等关键词检索');
             $filterBuilder->date('updated_at', '更新时间')->col(5);
         })
@@ -30,6 +31,8 @@
         ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $itemBuilder) {
             $itemBuilder->string('mobile', '手机号')->bold()->badge('primary');
             $itemBuilder->string('group_name', '分组')->bold();
+            $itemBuilder->string('group_url', '分组连接')->bold();
+            $itemBuilder->string('jump_url', '号码连接')->bold();
             $itemBuilder->option('status', '状态')->bold()->options(\App\Model\Pros\WhatsApp\FansManage::TYPE_GROUPS['__status__'], \Abnermouke\Pros\Builders\BuilderProvider::THEME_COLORS['status']);
             $itemBuilder->string('updated_at', '更新时间')->date('friendly')->sorting();
         })
