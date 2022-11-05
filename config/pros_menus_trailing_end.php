@@ -26,7 +26,17 @@ return [
             'route' => ['name' => 'pros.console.index', 'params' => []],
             'permission_nodes' => [],
             'icon' => '',
-            'group_menus' => [],
+            'group_menus' => [
+                [
+                    [
+                        'guard_name' => '首页',
+                        'handler' => '',
+                        'route' => ['name' => 'pros.console.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-home',
+                    ]
+                ]
+            ],
         ],
         [
             'guard_name' => '粉丝管理',
