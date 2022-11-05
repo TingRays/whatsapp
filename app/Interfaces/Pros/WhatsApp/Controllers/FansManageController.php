@@ -82,4 +82,29 @@ class FansManageController extends BaseController
         //响应接口
         return responseService($service);
     }
+
+    /**
+     * 导入页面
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function posts(){
+        $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
+        $groups = (new FansManageGroupRepository())->get(['admin_id'=>$admin_id], ['id', 'title']);
+        //导入页面
+        return view('pros.whatsapp.fans_manage.posts',compact('groups'));
+    }
+
+    /**
+     * 导入粉号
+     * @param Request $request
+     * @param FansManageInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function import(Request $request, FansManageInterfaceService $service){
+        //导入粉号
+        $service->import($request);
+        //导入快递单
+        return responseService($service);
+    }
 }

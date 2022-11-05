@@ -18,7 +18,11 @@ use Abnermouke\Pros\Builders\Table\TableBuilder;
 use App\Model\Pros\WhatsApp\FansManage;
 use App\Repository\Pros\WhatsApp\FansManageGroupRepository;
 use App\Repository\Pros\WhatsApp\FansManageRepository;
+use App\Services\Pros\Console\UploadService;
+use App\Services\Pros\System\TemporaryFileService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * 粉丝管理接口逻辑服务容器
@@ -75,7 +79,7 @@ class FansManageInterfaceService extends BaseService
         //查询列表
         $lists = (new FansManageRepository())->lists($conditions, ['*'], [], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
         $group_ids = array_column($lists['lists'],'group_id');
-        $group_arr = (new FansManageGroupRepository())->get(['id'=>$group_ids],['id','title','code']);
+        $group_arr = (new FansManageGroupRepository())->get(['id'=>['in',$group_ids]],['id','title','code']);
         $group_key_arr = [];
         foreach ($group_arr as $group){
             $group_key_arr[$group['id']] = ['title'=>$group['title'],'code'=>$group['code']];
@@ -164,5 +168,64 @@ class FansManageInterfaceService extends BaseService
         }
         //返回成功
         return $this->success(compact('id'));
+    }
+
+    public function import(Request $request)
+    {
+        //上传文件
+        if (!($service = new UploadService())->upload($request)) {
+            //返回失败
+            return $this->fail($service->getCode(), $service->getMessage());
+        }
+        $group_id = $request->get('group_id');
+        if (!$group_id){
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '请先选择粉分组！');
+        }
+        //获取文件结果
+        $file = $service->getResult();
+        $file_path = Storage::disk($file['storage_disk'])->path($file['storage_name']);
+        if (!file_exists($file_path)) {
+            //返回失败
+            return $this->fail($service->getCode(), '文件丢失请重试！');
+        }
+        $fp = fopen($file_path, "r");
+        $str = fread($fp, filesize($file_path));//指定读取大小，这里把整个文件内容读取出来
+        $str = str_replace("\r\n", ",", $str);
+        $posts = explode(',',$str);
+
+        $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
+        //整理失败数据
+        $wrongs = $success = [];
+        //循环导入信息
+        foreach ($posts as $mobile) {
+            if (!$mobile){
+                continue;
+            }
+            //查询手机号
+            if ((new FansManageRepository())->exists(['mobile' => $mobile,'admin_id'=>$admin_id])) {
+                //设置错误原因
+                $post[] = '该用户已存在';
+                //设置失败
+                $wrongs[] = $post;
+                //跳出当前循环
+                continue;
+            }
+            $params = [
+                'admin_id' => $admin_id,
+                'group_id' => $group_id,
+                'mobile' => $mobile,
+                'status' => FansManage::STATUS_ENABLED,
+                'created_at' => auto_datetime(),
+                'updated_at' => auto_datetime(),
+            ];
+            (new FansManageRepository())->insertGetId($params);
+            //添加成功
+            $success[] = $mobile;
+        }
+        //整理返回结果
+        $result = ['link'=>route('whatsapp.console.fans_manage.index'), 'msg' => ('本次导入共' . (count($posts)) . '条<br />成功：' . count($success) . ' 条，已存在重复：' . count($wrongs) . ' 条')];
+        //返回成功
+        return $this->success($result);
     }
 }

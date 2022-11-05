@@ -92,18 +92,22 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             //更改BM状态
             Route::post('{id}/enable', 'FictitiouController@enable')->name('enable');
         });
-        //生成虚拟手机路由
+        //生成粉丝管理路由
         Route::group(['as' => 'fans_manage.', 'prefix' => 'fans_manage'], function () {
-            //虚拟手机列表
+            //粉丝管理列表
             Route::get('', 'FansManageController@index')->name('index');
-            //获取虚拟手机列表
+            //获取粉丝管理列表
             Route::post('lists', 'FansManageController@lists')->name('lists');
-            //虚拟手机详情
+            //粉丝管理详情
             Route::post('detail/{id}', 'FansManageController@detail')->name('detail');
-            //生成保存虚拟手机信息
+            //生成保存粉丝管理信息
             Route::post('store/{id}', 'FansManageController@store')->name('store');
-            //更改BM状态
+            //删除粉丝管理
             Route::post('{id}/enable', 'FansManageController@enable')->name('enable');
+            //粉丝批量导入页面
+            Route::get('posts', 'FansManageController@posts')->name('posts');
+            //粉丝批量导入
+            Route::post('import', 'FansManageController@import')->name('import');
             //用戶标签相关路由
             Route::group(['as' => 'group.', 'prefix' => 'group'], function () {
                 //用戶标签

@@ -24,6 +24,7 @@
         })
         ->setButtons(function (\Abnermouke\Pros\Builders\Table\Tools\TableButtonBuilder $buttonBuilder) {
             $buttonBuilder->form(route('whatsapp.console.fans_manage.detail', ['id' => 0]), '添加粉号')->theme('info');
+            $buttonBuilder->redirect(route('whatsapp.console.fans_manage.posts'), '批量导入')->theme('info');
         })
         ->setActions(function (\Abnermouke\Pros\Builders\Table\Tools\TableActionBuilder $actionBuilder) {
             $actionBuilder->form(route('whatsapp.console.fans_manage.detail', ['id' => '__ID__']), '编辑粉号')->icon('fa fa-edit');
