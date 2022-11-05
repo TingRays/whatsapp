@@ -199,7 +199,7 @@ class FansManageInterfaceService extends BaseService
         $wrongs = $success = [];
         //循环导入信息
         foreach ($posts as $mobile) {
-            if (!$mobile){
+            if (empty($mobile)){
                 continue;
             }
             //查询手机号
