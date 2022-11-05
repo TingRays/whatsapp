@@ -96,11 +96,12 @@ class FansManageInterfaceService extends BaseService
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function detail($id, $request){
+        $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
         //渲染表单内容
         $render = FormBuilder::make()
             ->setSubmit(route('whatsapp.console.fans_manage.store',['id'=>$id]))
-            ->setItems(function (FormItemBuilder $builder) {
-                $builder->select('group_id', '用户标签')->options(array_column((new FansManageGroupRepository())->get([], ['id', 'title']), 'title', 'id'));
+            ->setItems(function (FormItemBuilder $builder) use ($admin_id) {
+                $builder->select('group_id', '分组')->options(array_column((new FansManageGroupRepository())->get(['admin_id'=>$admin_id], ['id', 'title']), 'title', 'id'));
                 $builder->input('mobile', '手机号码')->description('手机号码')->required();
                 $builder->select('status', '账户状态')->options(FansManage::TYPE_GROUPS['__status__'],FansManage::STATUS_ENABLED)->required();
             })
