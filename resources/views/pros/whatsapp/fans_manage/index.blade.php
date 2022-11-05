@@ -27,6 +27,7 @@
             $buttonBuilder->redirect(route('whatsapp.console.fans_manage.posts'), '批量导入')->theme('info');
         })
         ->setActions(function (\Abnermouke\Pros\Builders\Table\Tools\TableActionBuilder $actionBuilder) {
+            $actionBuilder->redirect('__JUMP_URL__', '查看')->icon('fa fa-eye')->target(true);
             $actionBuilder->form(route('whatsapp.console.fans_manage.detail', ['id' => '__ID__']), '编辑粉号')->icon('fa fa-edit');
         })
         ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $itemBuilder) {
