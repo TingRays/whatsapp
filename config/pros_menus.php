@@ -157,17 +157,52 @@ return [
                             ],
                         ],
                     ],
+                ]
+            ],
+        ],
+        [
+            'guard_name' => '虚拟号',
+            'handler' => '',
+            'route' => ['name' => 'whatsapp.console.fictitious.index', 'params' => []],
+            'permission_nodes' => [],
+            'icon' => '',
+            'group_menus' => [
+                [
                     [
                         'guard_name' => '虚拟手机生成',
                         'handler' => '',
                         'route' => ['name' => 'whatsapp.console.fictitious.index', 'params' => []],
                         'permission_nodes' => [],
-                        'icon' => 'fa fa-envelope',
+                        'icon' => 'fa fa-bug',
                     ],
                 ]
             ],
-        ]
-
+        ],
+        [
+            'guard_name' => '粉丝管理',
+            'handler' => '',
+            'route' => ['name' => 'whatsapp.console.fans_manage.index', 'params' => []],
+            'permission_nodes' => [],
+            'icon' => '',
+            'group_menus' => [
+                [
+                    [
+                        'guard_name' => '我的粉',
+                        'handler' => '',
+                        'route' => ['name' => 'whatsapp.console.fans_manage.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-asterisk',
+                    ],
+                    [
+                        'guard_name' => '粉的管理分组',
+                        'handler' => '',
+                        'route' => ['name' => 'whatsapp.console.fans_manage.group.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-id-card-alt',
+                    ],
+                ]
+            ],
+        ],
     ],
 
 ];
