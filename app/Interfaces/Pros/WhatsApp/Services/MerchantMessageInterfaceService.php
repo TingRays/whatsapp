@@ -244,7 +244,7 @@ class MerchantMessageInterfaceService extends BaseService
             //返回失败
             return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
         }
-        $lists = (new MerchantMessagesLogRepository())->lists(['merchant_messages_id'=>$id,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['merchant_id','account_id','type','status','updated_at'],[], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
+        $lists = (new MerchantMessagesLogRepository())->lists(['merchant_messages_id'=>$id,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['merchant_id','account_id','type','status','updated_at'],[], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', 500));
         //获取商户
         $merchant_ids = array_column($lists['lists'],'merchant_id');
         $merchants = (new MerchantRepository())->get(['id'=>['in',$merchant_ids]],['id','guard_name']);
