@@ -183,6 +183,12 @@ class AccountInterfaceService extends BaseService
         return $this->success(compact('id'));
     }
 
+    /**
+     * 批量导入用户手机号
+     * @param Request $request
+     * @return array|bool
+     * @throws \Exception
+     */
     public function import(Request $request)
     {
         //上传文件

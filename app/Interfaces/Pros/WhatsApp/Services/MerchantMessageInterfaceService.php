@@ -147,6 +147,12 @@ class MerchantMessageInterfaceService extends BaseService
         return $this->success(compact('accounts', 'account_tags', 'templates', 'default_title'));
     }
 
+    /**
+     * 消息群发
+     * @param $request
+     * @return array|bool
+     * @throws \Exception
+     */
     public function store($request){
         //获取加密信息
         if (!$data = AesLibrary::decryptFormData($request->all())) {

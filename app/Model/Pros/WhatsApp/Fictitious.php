@@ -35,7 +35,7 @@ class Fictitious extends BaseModel
         //是否选择
         '__switch__' => [self::SWITCH_ON => '是', self::SWITCH_OFF => '不是'],
         //默认状态
-        '__status__' => [self::STATUS_ENABLED => '注册了', self::STATUS_DISABLED => '未注册', self::STATUS_VERIFYING => '待检测'],
+        '__status__' => [self::STATUS_ENABLED => '注册了', self::STATUS_DISABLED => '未注册', self::STATUS_VERIFYING => '待检测', self::STATUS_VERIFY_FAILED => '检测中'],
 
         //
 

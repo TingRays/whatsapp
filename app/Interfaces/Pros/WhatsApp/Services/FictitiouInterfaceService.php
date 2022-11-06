@@ -86,6 +86,14 @@ class FictitiouInterfaceService extends BaseService
         return $this->success($render);
     }
 
+    /**
+     * 生成虚拟号页面
+     * @param $request
+     * @return array|bool
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function detail($request){
         $region_code = [];
         foreach (Fictitious::REGION_CODE as $k=>$item){
@@ -105,6 +113,12 @@ class FictitiouInterfaceService extends BaseService
         return $this->success(['html' => $render]);
     }
 
+    /**
+     * 保存虚拟号
+     * @param $request
+     * @return array|bool
+     * @throws \Exception
+     */
     public function store($request){
         //获取加密信息
         if (!$data = AesLibrary::decryptFormData($request->all())) {
@@ -118,9 +132,24 @@ class FictitiouInterfaceService extends BaseService
         }
         //获取更改项
         $info = Arr::only($data['__data__'], $data['__edited__']);
+        $default_num = 300;
+        self::addFictitiousNum($default_num,$info['number_segment'],$info['global_roaming']);
+        $info['count'] = $info['count'] - $default_num;
+        (new TaskQueueRepository())->insertGetId(['type'=>TaskQueues::TYPE_OF_FICTITIOUS,'source'=>0,'params'=>$info,'created_at'=>auto_datetime(),'updated_at'=>auto_datetime()]);
+        //返回成功
+        return $this->success();
+    }
 
-        $count = $info['count'];
-        $region_code = Fictitious::REGION_CODE[$info['global_roaming']];
+    /**
+     * 存储虚拟号方法
+     * @param $default_num
+     * @param $number_segment
+     * @param $global_roaming_abbr
+     * @return void
+     * @throws \Exception
+     */
+    public function addFictitiousNum($default_num,$number_segment,$global_roaming_abbr){
+        $region_code = Fictitious::REGION_CODE[$global_roaming_abbr];
         $len_arr[] = $region_code[3];
         if (isset($region_code[4])){
             $len_arr[] = $region_code[4];
@@ -129,26 +158,19 @@ class FictitiouInterfaceService extends BaseService
         //添加信息
         $param['created_at'] = auto_datetime();
         $param['updated_at'] = auto_datetime();
-        $default_num = 300;
-        if ($count > $default_num){
-            for ($i=0;$i<$default_num;$i++){
-                $len_key = array_rand($len_arr);
-                $len = $len_arr[$len_key] - strlen($info['number_segment']);
-                $mobile_segment = get_random($len);
-                $mobile = $info['number_segment'].$mobile_segment;
-                //判断信息是否存在
-                if ((new FictitiouRepository())->exists(['global_roaming' => $global_roaming,'mobile'=>$mobile])) {
-                    continue;
-                }
-                $param['global_roaming'] = $global_roaming;
-                $param['mobile'] = $mobile;
-                $param['status'] = Fictitious::STATUS_VERIFYING;
-                (new FictitiouRepository())->insertGetId($param);
+        for ($i=0;$i<$default_num;$i++){
+            $len_key = array_rand($len_arr);
+            $len = $len_arr[$len_key] - strlen($number_segment);
+            $mobile_segment = get_random($len);
+            $mobile = $number_segment.$mobile_segment;
+            //判断信息是否存在
+            if ((new FictitiouRepository())->exists(['global_roaming' => $global_roaming,'mobile'=>$mobile])) {
+                continue;
             }
+            $param['global_roaming'] = $global_roaming;
+            $param['mobile'] = $mobile;
+            $param['status'] = Fictitious::STATUS_VERIFYING;
+            (new FictitiouRepository())->insertGetId($param);
         }
-        $info['count'] = $info['count'] - $default_num;
-        (new TaskQueueRepository())->insertGetId(['type'=>TaskQueues::TYPE_OF_FICTITIOUS,'source'=>0,'params'=>$info,'created_at'=>auto_datetime(),'updated_at'=>auto_datetime()]);
-        //返回成功
-        return $this->success();
     }
 }

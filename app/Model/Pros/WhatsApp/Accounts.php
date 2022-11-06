@@ -53,6 +53,6 @@ class Accounts extends BaseModel
 
     //来源
     public const SOURCE_OF_DEFAULT = 1;//默认
-    public const SOURCE_OF_RANDOM = 2;//系统随机生成的
+    public const SOURCE_OF_RANDOM = 2;//系统随机生成的虚拟号
     public const SOURCE_OF_IMPORT = 3;//导入的
 }
