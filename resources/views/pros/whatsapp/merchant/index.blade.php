@@ -34,7 +34,7 @@
             $itemBuilder->string('tel_code', '电话号码编号')->bold()->badge('primary');
             $itemBuilder->string('business_code', '业务帐户编号')->bold();
             $itemBuilder->string('remainder', '剩余发送量')->bold();
-            $itemBuilder->switch('status', '账号状态')->on(\App\Model\Pros\WhatsApp\Merchants::STATUS_ENABLED, route('whatsapp.console.merchant.enable', ['id' => '__ID__']), 'post', \App\Model\Pros\WhatsApp\Merchants::TYPE_GROUPS['__status__'][\App\Model\Pros\WhatsApp\Merchants::STATUS_ENABLED])->off(\App\Model\Pros\WhatsApp\Merchants::STATUS_DISABLED, route('whatsapp.console.merchant.enable', ['id' => '__ID__']), 'post', \App\Model\Pros\WhatsApp\Merchants::TYPE_GROUPS['__status__'][\App\Model\Pros\WhatsApp\Merchants::STATUS_DISABLED])->after_refresh();
+            $itemBuilder->option('status', '账号状态')->options(\App\Model\Pros\WhatsApp\Merchants::TYPE_GROUPS['__status__'], \Abnermouke\Pros\Builders\BuilderProvider::THEME_COLORS['status']);
             $itemBuilder->string('updated_at', '更新时间')->date('friendly')->sorting();
         })
         ->checkbox('id', ['deleteSelected'])
