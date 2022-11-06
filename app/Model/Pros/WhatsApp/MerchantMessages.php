@@ -35,7 +35,7 @@ class MerchantMessages extends BaseModel
         //是否选择
         '__switch__' => [self::SWITCH_ON => '是', self::SWITCH_OFF => '不是'],
         //默认状态
-        '__status__' => [self::STATUS_ENABLED => '发送完成', self::STATUS_DISABLED => '未发送', self::STATUS_VERIFYING => '发送中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
+        '__status__' => [self::STATUS_ENABLED => '发送完成', self::STATUS_DISABLED => '未发送完', self::STATUS_VERIFYING => '发送中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
         'type' => [
             self::TYPE_OF_SINGLE => '单独发送',

@@ -129,6 +129,9 @@ class MerchantMessagesLogInterfaceService extends BaseService
                     if ($not_send_num <= 0){
                         //消息发送完毕
                         (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
+                    }else{
+                        //恢复状态
+                        (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_DISABLED,'updated_at'=>auto_datetime()]);
                     }
                 }
             }
