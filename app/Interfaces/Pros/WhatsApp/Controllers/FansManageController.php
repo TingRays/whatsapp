@@ -84,6 +84,21 @@ class FansManageController extends BaseController
     }
 
     /**
+     * 删除粉号
+     * @param $id
+     * @param Request $request
+     * @param FansManageInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function enable($id, Request $request, FansManageInterfaceService $service){
+        //更改用户状态
+        $service->enable($id, $request);
+        //响应接口
+        return responseService($service);
+    }
+
+    /**
      * 导入页面
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

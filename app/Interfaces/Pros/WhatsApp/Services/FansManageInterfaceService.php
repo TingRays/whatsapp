@@ -170,6 +170,27 @@ class FansManageInterfaceService extends BaseService
         return $this->success(compact('id'));
     }
 
+    public function enable($id, $request){
+        //获取加密信息
+        if (!$data = AesLibrary::decryptFormData($request->all())) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
+        }
+        //更改账户状态
+        if (!(new FansManageRepository())->delete(['id' => (int)$id])) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_UPDATE_FAIL, '删除失败');
+        }
+        //返回成功
+        return $this->success(compact('id'));
+    }
+
+    /**
+     * 批量导入粉号
+     * @param Request $request
+     * @return array|bool
+     * @throws \Exception
+     */
     public function import(Request $request)
     {
         //上传文件

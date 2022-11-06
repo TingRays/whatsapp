@@ -27,8 +27,9 @@
             $buttonBuilder->redirect(route('whatsapp.console.fans_manage.posts'), '批量导入')->theme('info');
         })
         ->setActions(function (\Abnermouke\Pros\Builders\Table\Tools\TableActionBuilder $actionBuilder) {
-            $actionBuilder->redirect('__JUMP_URL__', '查看')->icon('fa fa-eye')->target(true);
-            $actionBuilder->form(route('whatsapp.console.fans_manage.detail', ['id' => '__ID__']), '编辑粉号')->icon('fa fa-edit');
+            $actionBuilder->redirect('__JUMP_URL__', '查看')->icon('fa fa-eye text-info')->theme('info')->target(true);
+            $actionBuilder->form(route('whatsapp.console.fans_manage.detail', ['id' => '__ID__']), '编辑')->icon('fa fa-edit');
+            $actionBuilder->ajax(route('whatsapp.console.fans_manage.enable', ['id' => '__ID__']), '删除')->icon('fa fa-eraser text-danger')->theme('danger')->confirmed('该操作将删除此号码，是否继续删除？')->condition('status', [\App\Model\Pros\WhatsApp\FansManage::STATUS_ENABLED]);
         })
         ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $itemBuilder) {
             $itemBuilder->string('mobile', '手机号')->bold()->badge('primary');
