@@ -25,7 +25,7 @@
                             <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                 <span>粉分组</span>
                             </label>
-                            <select class="form-select form-select-solid" autocomplete="off" id="group" name="group_id">
+                            <select class="form-select form-select-solid" data-control="select2"  data-allow-clear="true" autocomplete="off" id="group" name="group_id">
                                 <option value="" selected>请选择粉分组</option>
                                 @foreach($groups as $group)
                                     <option value="{{ $group['id'] }}">{{ $group['title'] }}</option>
