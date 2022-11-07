@@ -58,7 +58,6 @@ class MassDispatchCommand extends Command
                     print "创建子进程失败!".PHP_EOL;
                     exit;
                 case 0:
-                    print "子进程ID".$childPid.PHP_EOL;
                     try {
                         (new MerchantMessagesLogInterfaceService())->massDispatch();
                     } catch (\Exception $e) {
