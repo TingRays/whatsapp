@@ -39,6 +39,9 @@ class MassDispatchCommand extends Command
      */
     public function handle()
     {
+        //忽略系统限制
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
         //默认进程数
         $loop_num = 3;
         for ($i=1; $i<=$loop_num; $i++){

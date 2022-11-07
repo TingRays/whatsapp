@@ -40,6 +40,9 @@ class QueuesCommand extends Command
      */
     public function handle()
     {
+        //忽略系统限制
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
         //查询一条任务队列
         $task_info = (new TaskQueueRepository())->row(['status'=>TaskQueues::STATUS_DISABLED],['id','type','source','params'],['created_at' => 'asc']);
         if($task_info){
