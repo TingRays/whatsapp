@@ -51,7 +51,6 @@ class MassDispatchCommand extends Command
         // 获取父进程id
         //$parentPid = getmypid();
         for ($i = 1; $i <= $default_process; ++$i) {
-            print 'key：'.$i;
             // 创建子进程
             $childPid = pcntl_fork();
             switch($childPid) {
@@ -59,6 +58,7 @@ class MassDispatchCommand extends Command
                     print "创建子进程失败!".PHP_EOL;
                     exit;
                 case 0:
+                    print "子进程ID".$childPid.PHP_EOL;
                     try {
                         (new MerchantMessagesLogInterfaceService())->massDispatch();
                     } catch (\Exception $e) {
