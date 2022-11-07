@@ -51,6 +51,7 @@ class MassDispatchCommand extends Command
         // 获取父进程id
         //$parentPid = getmypid();
         for ($i = 1; $i <= $default_process; ++$i) {
+            print 'key：'.$i;
             // 创建子进程
             $childPid = pcntl_fork();
             switch($childPid) {
