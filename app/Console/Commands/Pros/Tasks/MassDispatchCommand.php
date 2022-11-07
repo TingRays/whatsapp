@@ -43,16 +43,13 @@ class MassDispatchCommand extends Command
         set_time_limit(0);
         ini_set('memory_limit', '2048M');
         //默认进程数
-        $loop_num = 3;
-        for ($i=1; $i<=$loop_num; $i++){
-            try {
-                (new MerchantMessagesLogInterfaceService())->massDispatch();
-            } catch (\Exception $e) {
-                //记录日志
-                LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
-                //返回失败
-                return false;
-            }
+        try {
+            (new MerchantMessagesLogInterfaceService())->massDispatch();
+        } catch (\Exception $e) {
+            //记录日志
+            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
+            //返回失败
+            return false;
         }
         //返回处理成功
         return true;

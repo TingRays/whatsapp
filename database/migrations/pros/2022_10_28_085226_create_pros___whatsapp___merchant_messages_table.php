@@ -52,7 +52,7 @@ class CreateProsWhatsappMerchantMessagesTable extends Migration
 
             //索引配置
             $table->unique('title', 'TITLE');
-            $table->unique(['type','mode'], 'TYPE_MODE');
+            $table->index(['type','mode'], 'TYPE_MODE');
         });
         //添加表自增长值
         (new MerchantMessageRepository())->setIncrementId(1, MerchantMessages::DB_CONNECTION);

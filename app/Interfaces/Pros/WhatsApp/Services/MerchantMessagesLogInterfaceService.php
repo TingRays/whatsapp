@@ -80,9 +80,9 @@ class MerchantMessagesLogInterfaceService extends BaseService
     public function massDispatch(){
         $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
         if ($merchant){
-            $default_size = $merchant['remainder'];
+            $default_size = 3;
             //等待发送中
-            $message_logs = (new MerchantMessagesLogRepository())->limit(['status'=>MerchantMessagesLogs::STATUS_DISABLED,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['id','account_id','merchant_messages_id','type','template_id'],[],[],[],1,$default_size);
+            $message_logs = (new MerchantMessagesLogRepository())->limit(['status'=>MerchantMessagesLogs::STATUS_DISABLED,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['id','account_id','merchant_messages_id','type','template_id'],[],['id'=>'desc'],[],1,$default_size);
             if ($message_logs){
                 //剩余发送量
                 $remainder = $merchant['remainder'];
@@ -103,8 +103,13 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
                 $accounts = array_column($accounts,null,'id');
                 foreach ($message_logs as $k=>$message_log){
-                    //发送成功
-                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$accounts[$message_log['account_id']]??'');
+                    //非模板发送
+                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$accounts[$message_log['account_id']]??'');
+                    if(!$result){
+                        $result = ['data'=>[],'result'=>[]];
+                    }
+                    //模板发送成功
+                    //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$accounts[$message_log['account_id']]??'');
                     (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                         ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                             'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
