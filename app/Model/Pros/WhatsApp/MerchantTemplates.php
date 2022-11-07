@@ -41,6 +41,9 @@ class MerchantTemplates extends BaseModel
 
     ];
 
+    public const OBJECT_OF_TEXT = 1;//文本对象
+    public const OBJECT_OF_TEMPLATE = 2;//模板对象
+
     public const TYPE_OF_TRANSCATION = 1;//交易事务
     public const TYPE_OF_MARKETING = 2;//市场营销
     public const TYPE_OF_TEMPORARY_PASSWORD = 3;//一次性密码

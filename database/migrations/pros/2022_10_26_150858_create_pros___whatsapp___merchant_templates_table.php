@@ -39,6 +39,7 @@ class CreateProsWhatsappMerchantTemplatesTable extends Migration
             $table->increments('id')->comment('表ID');
 
             //其他字段配置
+            $table->tinyInteger('object')->nullable(false)->default(MerchantTemplates::OBJECT_OF_TEXT)->unsigned()->comment('模板对象');
             $table->tinyInteger('type')->nullable(false)->default(MerchantTemplates::TYPE_OF_MARKETING)->unsigned()->comment('消息模板类型');
             $table->string('title', 255)->nullable(false)->default('')->comment('模板名称');
             $table->string('language', 20)->nullable(false)->default('')->comment('模板消息语言');
