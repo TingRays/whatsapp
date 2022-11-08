@@ -48,8 +48,7 @@ class MassDispatchCommand extends Command
         }
         //默认进程数
         $default_process = 5;
-        // 获取父进程id
-        //$parentPid = getmypid();
+        $child_arr = [];
         for ($i = 1; $i <= $default_process; ++$i) {
             // 创建子进程
             $childPid = pcntl_fork();
@@ -68,13 +67,55 @@ class MassDispatchCommand extends Command
                     }
                     break;
                 default:
-                    $pid = pcntl_wait($status);
-                    if (pcntl_wifexited($status)) {
-                        print "\n\n* Sub process: {$pid} exited with {$status}";
-                    }
+                    $child_arr[] = $childPid;
+                    //$pid = pcntl_wait($status);
+                    //if (pcntl_wifexited($status)) {
+                    //    print "\n\n* Sub process: {$pid} exited with {$status}";
+                    //}
             }
+        }
+        while (count($child_arr) > 0) {
+            foreach ($child_arr as $key => $pid) {
+                $res = pcntl_waitpid($pid, $status, WNOHANG);
+                //-1代表error, 大于0代表子进程已退出,返回的是子进程的pid,非阻塞时0代表没取到退出子进程
+                if ($res == -1 || $res > 0)
+                    unset($child_arr[$key]);
+            }
+            sleep(1);
         }
         //返回处理成功
         return true;
+    }
+
+    private function processOpera($default_process = 1){
+        while(true) {
+            // 创建子进程
+            $child_pid = pcntl_fork();
+            switch($child_pid) {
+                case -1:
+                    print "pid fork error!".PHP_EOL;
+                    exit;
+                case 0:
+                    while(true) {
+                        try {
+                            (new MerchantMessagesLogInterfaceService())->massDispatch();
+                        } catch (\Exception $e) {
+                            //记录日志
+                            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
+                            //返回失败
+                            return false;
+                        }
+                        sleep(5);
+                    }
+                    break;
+                default:
+                    static $execute = 0;
+                    $execute++;
+                    if($execute >= $default_process) {
+                        pcntl_wait($status);
+                        $execute--;
+                    }
+            }
+        }
     }
 }
