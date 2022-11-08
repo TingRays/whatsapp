@@ -114,7 +114,6 @@ class MerchantMessagesLogInterfaceService extends BaseService
                     (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                         ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                             'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
-                    sleep(1);
                     $remainder--;
                     unset($message_logs[$k]);
                     unset($message_log_ids[$message_log['id']]);
