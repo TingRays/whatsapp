@@ -53,7 +53,7 @@ class CreateProsWhatsappMerchantMessagesLogsTable extends Migration
 
             //索引配置
             $table->index('merchant_id', 'MERCHANT_ID');
-            $table->unique(['account_id','type','mode'], 'ACCOUNT_ID_TYPE_MODE');
+            $table->index(['account_id','type','mode'], 'ACCOUNT_ID_TYPE_MODE');
         });
         //添加表自增长值
         (new MerchantMessagesLogRepository())->setIncrementId(1, MerchantMessagesLogs::DB_CONNECTION);
