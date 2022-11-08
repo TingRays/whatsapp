@@ -147,7 +147,7 @@ class FansManageInterfaceService extends BaseService
         if ((int)$id <= 0) {
             $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
             //判断信息是否可用
-            if ((new FansManageRepository())->exists(['mobile' => $info['mobile'],'admin_id'=>$admin_id])) {
+            if ((new FansManageRepository())->exists(['mobile' => $info['mobile'],'admin_id'=>$admin_id,'group_id'=>$info['group_id']])) {
                 //返回失败
                 return $this->fail(CodeLibrary::DATA_CREATE_FAIL, '手机号已存在');
             }
