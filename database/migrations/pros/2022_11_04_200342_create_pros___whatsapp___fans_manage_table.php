@@ -42,6 +42,7 @@ class CreateProsWhatsappFansManageTable extends Migration
             $table->integer('admin_id')->nullable(false)->default(0)->unsigned()->comment('管理员ID');
             $table->integer('group_id')->nullable(false)->default(0)->unsigned()->comment('分组ID');
             $table->string('mobile', 20)->nullable(false)->default('')->comment('手机号码');
+            $table->integer('read_num')->nullable(false)->default(0)->unsigned()->comment('读取次数');
             $table->tinyInteger('status')->nullable(false)->default(FansManage::STATUS_ENABLED)->unsigned()->comment('用户状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');

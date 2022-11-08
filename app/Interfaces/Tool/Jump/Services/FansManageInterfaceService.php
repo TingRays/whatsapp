@@ -38,9 +38,10 @@ class FansManageInterfaceService extends BaseService
         if (!$group_id){
             return $this->fail(CodeLibrary::DATA_MISSING,'数据不存在！!');
         }
-        $fans = (new FansManageRepository())->pluck('mobile',['group_id'=>$group_id,'status'=>FansManage::STATUS_ENABLED]);
-        $mobile_key = array_rand($fans,1);
-        $redirect = 'https://api.whatsapp.com/send?phone='.$fans[$mobile_key];
+        $fans = (new FansManageRepository())->row(['group_id'=>$group_id,'status'=>FansManage::STATUS_ENABLED],['id','mobile'],['read_num'=>'asc']);
+        (new FansManageRepository())->increment('read_num',['id'=>$fans['id']]);
+        $mobile = $fans['mobile'];
+        $redirect = 'https://api.whatsapp.com/send?phone='.$mobile;
         return $this->success(compact('redirect'));
     }
 }
