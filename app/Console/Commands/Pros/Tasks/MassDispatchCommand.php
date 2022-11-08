@@ -118,4 +118,44 @@ class MassDispatchCommand extends Command
             }
         }
     }
+
+    private function test(){
+        $processIds = [];
+        $dirs = [1,2,3,4,5,6,7,8,9,10];
+        $count = 10;
+        //fork 10个子进程
+        $workers = 10;
+        $block = (int)ceil($count / $workers);
+
+        for ($i = 0; $i < $workers; $i++) {
+            $left = $block * $i;
+            $deal = array_slice($dirs, $left, $block);
+            if ($left < $count) {
+                $processIds[$i] = pcntl_fork();
+                switch ($processIds[$i]) {
+                    case -1 :
+                        echo "fork failed : {$i} \r\n";
+                        exit;
+                    case 0 :
+                        // 子进程处理word读取和图片上传
+                        echo $i."\r\n";
+                        $this->doWork($deal);
+                        exit;
+                    default :
+                        break;
+                }
+            } else {
+                break;
+            }
+        }
+        //子进程完成之后要退出
+        while (count($processIds) > 0) {
+            $mypid = pcntl_waitpid(-1, $status, WNOHANG);
+            foreach ($processIds as $key => $pid) {
+                if ($mypid == $pid || $mypid == -1) {
+                    unset($processIds[$key]);
+                }
+            }
+        }
+    }
 }
