@@ -87,7 +87,7 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 //剩余发送量
                 $remainder = $merchant['remainder'];
                 //更新商户状态
-                (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING]);
+                (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
                 //更新商户发送消息状态 - 发送中
                 $merchant_message_ids = array_column($message_logs,'merchant_messages_id');
                 (new MerchantMessageRepository())->update(['id'=>['in',$merchant_message_ids]],['status'=>MerchantMessages::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
@@ -122,7 +122,7 @@ class MerchantMessagesLogInterfaceService extends BaseService
                         break;
                     }
                 }
-                (new MerchantRepository())->update(['id'=>$merchant['id']],['remainder'=>$remainder,'status'=>Merchants::STATUS_ENABLED]);
+                (new MerchantRepository())->update(['id'=>$merchant['id']],['remainder'=>$remainder,'status'=>Merchants::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
                 //恢复未处理的
                 if ($message_log_ids){
                     //等待发送中
