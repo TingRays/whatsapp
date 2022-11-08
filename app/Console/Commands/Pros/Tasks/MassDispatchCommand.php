@@ -74,7 +74,6 @@ class MassDispatchCommand extends Command
                     }
             }
         }
-
         //返回处理成功
         return true;
     }
