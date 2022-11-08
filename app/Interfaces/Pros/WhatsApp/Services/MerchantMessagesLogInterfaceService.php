@@ -104,8 +104,8 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 $accounts = array_column($accounts,null,'id');
                 foreach ($message_logs as $k=>$message_log){
                     //非模板发送
-                    //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$accounts[$message_log['account_id']]??'');
-                    $result = false;
+                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$accounts[$message_log['account_id']]??'');
+                    //$result = false;
                     if(!$result){
                         $result = ['data'=>[],'result'=>[]];
                     }
