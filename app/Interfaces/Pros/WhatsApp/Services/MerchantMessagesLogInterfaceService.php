@@ -104,7 +104,7 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 $accounts = array_column($accounts,null,'id');
                 foreach ($message_logs as $k=>$message_log){
                     $accounts_info = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
-                    $to_mobile = $accounts_info['global_roaming'].$accounts_info['mobile'];print_r($to_mobile);
+                    $to_mobile = $accounts_info['global_roaming'].$accounts_info['mobile'];
                     //非模板发送
                     //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$to_mobile);
                     //$result = false;
