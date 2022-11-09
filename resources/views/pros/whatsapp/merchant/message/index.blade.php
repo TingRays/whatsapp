@@ -31,6 +31,8 @@
         ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $itemBuilder) {
             $itemBuilder->info('title', '标题')->description('发送类型：{type_str}，送达方式：{mode_str}')->image('avatar');
             $itemBuilder->string('template_title', '模板名称')->bold()->badge('primary');
+            $itemBuilder->string('type_str', '类型')->bold();
+            $itemBuilder->string('mode_str', '模式')->bold();
             $itemBuilder->string('timing_send_time', '发送时间')->bold();
             $itemBuilder->option('status', '状态')->options(\App\Model\Pros\WhatsApp\MerchantMessages::TYPE_GROUPS['__status__'], \Abnermouke\Pros\Builders\BuilderProvider::THEME_COLORS['status']);
             $itemBuilder->string('updated_at', '更新时间')->date('friendly')->sorting();
