@@ -230,7 +230,7 @@ class AccountInterfaceService extends BaseService
                     'tag_ids' => $tag_ids,
                     'remarks' => $post[4],
                     'source' => Accounts::SOURCE_OF_IMPORT,
-                    'status' => Accounts::STATUS_DISABLED,
+                    //'status' => Accounts::STATUS_DISABLED,
                     'created_at' => auto_datetime(),
                     'updated_at' => auto_datetime(),
                 ];
