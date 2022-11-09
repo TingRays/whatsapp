@@ -45,6 +45,7 @@ class CreateProsWhatsappMerchantMessagesTable extends Migration
             $table->tinyInteger('mode')->nullable(false)->default(MerchantMessages::MODE_OF_IMMEDIATELY)->unsigned()->comment('送达方式');
             $table->integer('template_id')->nullable(false)->default(0)->unsigned()->comment('模板ID');
             $table->longText('content')->comment('消息内容');
+            $table->longText('account_body')->comment('发送的用户');
             $table->integer('timing_send_time')->nullable(false)->default(0)->unsigned()->comment('定时发送时间');
             $table->tinyInteger('status')->nullable(false)->default(MerchantMessages::STATUS_DISABLED)->unsigned()->comment('状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');

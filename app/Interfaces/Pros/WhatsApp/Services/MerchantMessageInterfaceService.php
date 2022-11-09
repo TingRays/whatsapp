@@ -210,25 +210,16 @@ class MerchantMessageInterfaceService extends BaseService
             'mode' => $data['__data__']['mode'],
             'template_id' => $template_id,
             'content' => $template_info['body'],
+            'account_body' => $account_ids,
             'timing_send_time' => $timing_send_time,
-            'status' => MerchantMessages::STATUS_VERIFY_FAILED,//等待发送
+            'status' => MerchantMessages::STATUS_VERIFY_FAILED,//创建发送中
             'created_at' => auto_datetime(),
             'updated_at' => auto_datetime()
         ];
         $id = (new MerchantMessageRepository())->insertGetId($messages);
 
-        $service = new MerchantMessagesLogInterfaceService();
-        foreach ($account_ids as $account_id){
-            //发布消息
-            if (!$service->addSendMessage($id, $account_id, MerchantMessagesLogs::TYPE_OF_TEMPLATE, MerchantMessagesLogs::MODE_OF_MERCHANT, $template_id,[],[],MerchantMessagesLogs::STATUS_DISABLED)) {
-                //返回失败
-                return $this->fail($service->getCode(), $service->getMessage(), $service->getExtra());
-            }
-        }
-        //修改为可以发送状态 - 任务查询这个状态的
-        (new MerchantMessageRepository())->update(['id'=>$id],['status' => MerchantMessages::STATUS_DISABLED,'updated_at' => auto_datetime()]);
         //返回成功
-        return $this->success($service->getResult());
+        return $this->success(compact('id'));
     }
 
     /**
