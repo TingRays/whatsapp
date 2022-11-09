@@ -104,13 +104,13 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 $accounts = array_column($accounts,null,'id');
                 foreach ($message_logs as $k=>$message_log){
                     //非模板发送
-                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$accounts[$message_log['account_id']]??'');
+                    //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$accounts[$message_log['account_id']]??'');
                     //$result = false;
-                    if(!$result){
-                        $result = ['data'=>[],'result'=>[]];
-                    }
+                    //if(!$result){
+                    //    $result = ['data'=>[],'result'=>[]];
+                    //}
                     //模板发送成功
-                    //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$accounts[$message_log['account_id']]??'');
+                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$accounts[$message_log['account_id']]??'');
                     (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                         ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                             'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
