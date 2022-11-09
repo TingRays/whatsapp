@@ -87,13 +87,13 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 //剩余发送量
                 $remainder = $merchant['remainder'];
                 //更新商户状态
-                (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
+                //(new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
                 //更新商户发送消息状态 - 发送中
                 $merchant_message_ids = array_column($message_logs,'merchant_messages_id');
-                (new MerchantMessageRepository())->update(['id'=>['in',$merchant_message_ids]],['status'=>MerchantMessages::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
+                //(new MerchantMessageRepository())->update(['id'=>['in',$merchant_message_ids]],['status'=>MerchantMessages::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
                 //更新消息发送状态 - 发送中
                 $message_log_ids = array_column($message_logs,'id','id');
-                (new MerchantMessagesLogRepository())->update(['id'=>['in',$message_log_ids]],['status'=>MerchantMessagesLogs::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
+                //(new MerchantMessagesLogRepository())->update(['id'=>['in',$message_log_ids]],['status'=>MerchantMessagesLogs::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
                 //获取模板
                 $template_ids = array_column($message_logs,'template_id');
                 $templates = (new MerchantTemplateRepository())->get(['id'=>['in',$template_ids]],['id','title','language','header_type','header_content','body','button']);
@@ -103,14 +103,16 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
                 $accounts = array_column($accounts,null,'id');
                 foreach ($message_logs as $k=>$message_log){
+                    $accounts = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
+                    $to_mobile = $accounts['global_roaming'].$accounts['mobile'];
                     //非模板发送
-                    //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$accounts[$message_log['account_id']]??'');
+                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$to_mobile);
                     //$result = false;
-                    //if(!$result){
-                    //    $result = ['data'=>[],'result'=>[]];
-                    //}
+                    if(!$result){
+                        $result = ['data'=>[],'result'=>[]];
+                    }
                     //模板发送成功
-                    $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$accounts[$message_log['account_id']]??'');
+                    //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
                     (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                         ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                             'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
