@@ -234,9 +234,9 @@ class AccountInterfaceService extends BaseService
                     'created_at' => auto_datetime(),
                     'updated_at' => auto_datetime(),
                 ];
-                if (trim($post[2]) == '是'){
+                //if (trim($post[2]) == '是'){
                     $params['status'] = Accounts::STATUS_ENABLED;
-                }
+                //}
                 (new AccountRepository())->insertGetId($params);
                 //添加成功
                 $success[] = $post;
