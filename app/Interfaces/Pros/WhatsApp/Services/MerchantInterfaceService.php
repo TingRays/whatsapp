@@ -95,11 +95,11 @@ class MerchantInterfaceService extends BaseService
                 $builder->input('bm_info', 'BM账户信息')->description('Meta的信息商务管理平台（BM）主账户信息')->readonly(true);
                 $builder->input('guard_name', '商户名称')->description('系统内方便管理识别账户下的商户名称，与Meta账户无关系')->readonly((int)$id <= 0 ? false : true)->required();
                 $builder->input('auth_token', '访问令牌')->description('接口访问密令')->required();
-                $builder->input('global_roaming', '国际区号')->description('绑定手机的国际区号（+86）')->readonly((int)$id <= 0 ? false : true)->required();
-                $builder->input('tel', '手机号')->description('发信人绑定的手机号')->readonly((int)$id <= 0 ? false : true)->tip('发送消息的绑定手机号')->required();
-                $builder->input('tel_code', '电话号码编号')->description('发信人绑定的手机号对应编号')->readonly((int)$id <= 0 ? false : true)->required();
-                $builder->input('business_code', '业务帐户编号')->description('WhatsApp Business 业务帐户编号')->readonly((int)$id <= 0 ? false : true)->required();
-                $builder->input('remainder', '剩余发送量')->default_value(1000)->input_type('number')->description('当前商户剩余发送消息量')->readonly(true)->required();
+                $builder->input('global_roaming', '国际区号')->description('绑定手机的国际区号（+86）')->required();
+                $builder->input('tel', '手机号')->description('发信人绑定的手机号')->tip('发送消息的绑定手机号')->required();
+                $builder->input('tel_code', '电话号码编号')->description('发信人绑定的手机号对应编号')->required();
+                $builder->input('business_code', '业务帐户编号')->description('WhatsApp Business 业务帐户编号')->required();
+                $builder->input('remainder', '剩余发送量')->default_value(1000)->input_type('number')->description('当前商户剩余发送消息量')->required();
                 $builder->select('status', '商户状态')->options(Merchants::TYPE_GROUPS['__status__'],Merchants::STATUS_ENABLED)->required();
             })
             ->setData($info)
