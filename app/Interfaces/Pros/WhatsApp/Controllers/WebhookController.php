@@ -34,6 +34,7 @@ class WebhookController extends BaseController
     */
     public function index(Request $request, WebhookInterfaceService $service)
     {
+        //回调地址：https://www.whatsqunfa.com/whatsapp/console/webhook
         $service->webhook($request);
         if ($service->getState()){
             return $request->get('hub_challenge','');
