@@ -49,14 +49,14 @@ class MassDispatchCommand extends Command
         //默认进程数
         $default_process = 5;
         $child_arr = [];
-        for ($i = 1; $i <= $default_process; ++$i) {
-            // 创建子进程
-            $childPid = pcntl_fork();
-            switch($childPid) {
-                case -1:
-                    print "创建子进程失败!".PHP_EOL;
-                    exit;
-                case 0:
+//        for ($i = 1; $i <= $default_process; ++$i) {
+//            // 创建子进程
+//            $childPid = pcntl_fork();
+//            switch($childPid) {
+//                case -1:
+//                    print "创建子进程失败!".PHP_EOL;
+//                    exit;
+//                case 0:
                     try {
                         (new MerchantMessagesLogInterfaceService())->massDispatch();
                     } catch (\Exception $e) {
@@ -65,24 +65,24 @@ class MassDispatchCommand extends Command
                         //返回失败
                         return false;
                     }
-                    break;
-                default:
-                    $child_arr[] = $childPid;
-                    //$pid = pcntl_wait($status);
-                    //if (pcntl_wifexited($status)) {
-                    //    print "\n\n* Sub process: {$pid} exited with {$status}";
-                    //}
-            }
-        }
-        while (count($child_arr) > 0) {
-            foreach ($child_arr as $key => $pid) {
-                $res = pcntl_waitpid($pid, $status, WNOHANG);
-                //-1代表error, 大于0代表子进程已退出,返回的是子进程的pid,非阻塞时0代表没取到退出子进程
-                if ($res == -1 || $res > 0)
-                    unset($child_arr[$key]);
-            }
-            sleep(1);
-        }
+//                    break;
+//                default:
+//                    $child_arr[] = $childPid;
+//                    //$pid = pcntl_wait($status);
+//                    //if (pcntl_wifexited($status)) {
+//                    //    print "\n\n* Sub process: {$pid} exited with {$status}";
+//                    //}
+//            }
+//        }
+//        while (count($child_arr) > 0) {
+//            foreach ($child_arr as $key => $pid) {
+//                $res = pcntl_waitpid($pid, $status, WNOHANG);
+//                //-1代表error, 大于0代表子进程已退出,返回的是子进程的pid,非阻塞时0代表没取到退出子进程
+//                if ($res == -1 || $res > 0)
+//                    unset($child_arr[$key]);
+//            }
+//            sleep(1);
+//        }
         //返回处理成功
         return true;
     }
