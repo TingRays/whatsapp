@@ -88,6 +88,7 @@ class MassDispatchCommand extends Command
     }
 
     private function processOpera($default_process = 1){
+        //地址：https://www.laruence.com/2009/06/11/930.html
         while(true) {
             // 创建子进程
             $child_pid = pcntl_fork();
@@ -120,6 +121,7 @@ class MassDispatchCommand extends Command
     }
 
     private function test(){
+        //地址：https://www.yuanchengzhushou.cn/article/7944.html
         $processIds = [];
         $dirs = [1,2,3,4,5,6,7,8,9,10];
         $count = 10;

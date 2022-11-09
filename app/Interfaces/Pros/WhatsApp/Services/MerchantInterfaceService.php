@@ -87,14 +87,15 @@ class MerchantInterfaceService extends BaseService
     public function detail($bm_id, $id, $request){
         $info = (int)$id > 0 ? (new MerchantRepository())->row(['id' => (int)$id]) : [];
         //渲染表单内容
-        $bm_info = (new BusinessManagerRepository())->row(['id'=>$bm_id],['guard_name','code','nickname']);
+        $bm_info = (new BusinessManagerRepository())->row(['id'=>$bm_id],['guard_name','code','nickname','auth_token']);
         $info['bm_info'] = $bm_info['guard_name'].'（'.$bm_info['code'].' - '.$bm_info['nickname'].'）';
+        $info['auth_token'] = $bm_info['auth_token'];
         $render = FormBuilder::make()
             ->setSubmit(route('whatsapp.console.merchant.store', ['bm_id' => $bm_id,'id' => (int)$id]))
             ->setItems(function (FormItemBuilder $builder) use ($id) {
                 $builder->input('bm_info', 'BM账户信息')->description('Meta的信息商务管理平台（BM）主账户信息')->readonly(true);
                 $builder->input('guard_name', '商户名称')->description('系统内方便管理识别账户下的商户名称，与Meta账户无关系')->readonly((int)$id <= 0 ? false : true)->required();
-                $builder->input('auth_token', '访问令牌')->description('接口访问密令')->required();
+                $builder->input('auth_token', '访问令牌')->description('接口访问密令')->readonly(true)->required();
                 $builder->input('global_roaming', '国际区号')->description('绑定手机的国际区号（+86）')->required();
                 $builder->input('tel', '手机号')->description('发信人绑定的手机号')->tip('发送消息的绑定手机号')->required();
                 $builder->input('tel_code', '电话号码编号')->description('发信人绑定的手机号对应编号')->required();
@@ -142,8 +143,11 @@ class MerchantInterfaceService extends BaseService
                 //返回失败
                 return $this->fail(CodeLibrary::DATA_CREATE_FAIL, 'BM的商户手机已存在');
             }
+            $auth_token = (new BusinessManagerRepository())->find(['id'=>$bm_id],'auth_token');
             //设置商户信息
             $info['bm_id'] = $bm_id;
+            //访问令牌
+            $info['auth_token'] = $auth_token;
             //添加信息
             $info['created_at'] = auto_datetime();
             //添加信息

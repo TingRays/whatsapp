@@ -17,6 +17,7 @@ use Abnermouke\Pros\Builders\Form\Tools\FormItemBuilder;
 use Abnermouke\Pros\Builders\Table\TableBuilder;
 use App\Model\Pros\WhatsApp\BusinessManager;
 use App\Repository\Pros\WhatsApp\BusinessManagerRepository;
+use App\Repository\Pros\WhatsApp\MerchantRepository;
 use App\Services\Pros\System\TemporaryFileService;
 use Illuminate\Support\Arr;
 
@@ -99,6 +100,7 @@ class BusinessManagerInterfaceService extends BaseService
                 $builder->input('ac_number', '登录账号')->description('Meta信息商务管理平台的登录账号')->readonly((int)$id <= 0 ? false : true)->tip('作为BM登录账号使用')->required();
                 $builder->input('ac_password', '登录密码')->description('Meta信息商务管理平台的登录账号的密码')->readonly((int)$id <= 0 ? false : true)->tip('作为BM登录账号的密码使用')->required();
                 $builder->input('ac_secret_key', '密钥')->description('Meta账号登录验证码的接码密钥')->readonly((int)$id <= 0 ? false : true)->tip('作为BM账号登录接码使用')->required();
+                $builder->input('auth_token', '访问令牌')->description('接口访问密令')->required();
                 $builder->input('ac_email', '邮箱')->input_type('email')->description('Meta账号绑定的邮箱')->readonly((int)$id <= 0 ? false : true)->required();
                 $builder->input('ac_email_pwd', '邮箱密码')->description('Meta账号绑定的邮箱的登录密码')->readonly((int)$id <= 0 ? false : true)->required();
                 $builder->input('ac_spare_email', '备用邮箱')->description('可能是Meta账号绑定的邮箱的备用邮箱')->readonly((int)$id <= 0 ? false : true)->required();
@@ -160,6 +162,9 @@ class BusinessManagerInterfaceService extends BaseService
             if (!(new BusinessManagerRepository())->update(['id' => (int)$id], $info)) {
                 //返回失败
                 return $this->fail(CodeLibrary::DATA_UPDATE_FAIL, '修改失败');
+            }
+            if (isset($info['auth_token'])){
+                (new MerchantRepository())->update(['bm_id'=>(int)$id],['auth_token'=>$info['auth_token']]);
             }
         }
         //返回成功

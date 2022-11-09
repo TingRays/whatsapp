@@ -45,6 +45,7 @@ class CreateProsWhatsappBusinessManagerTable extends Migration
             $table->string('ac_number', 200)->nullable(false)->default('')->comment('登录账号');
             $table->string('ac_password', 200)->nullable(false)->default('')->comment('登录密码');
             $table->string('ac_secret_key', 200)->nullable(false)->default('')->comment('密钥');
+            $table->string('auth_token', 500)->nullable(false)->default('')->comment('访问令牌');
             $table->string('ac_email', 200)->nullable(false)->default('')->comment('邮箱');
             $table->string('ac_email_pwd', 200)->nullable(false)->default('')->comment('邮箱密码');
             $table->string('ac_spare_email', 200)->nullable(false)->default('')->comment('备用邮箱');
