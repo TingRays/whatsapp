@@ -103,8 +103,8 @@ class MerchantMessagesLogInterfaceService extends BaseService
                 $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
                 $accounts = array_column($accounts,null,'id');
                 foreach ($message_logs as $k=>$message_log){
-                    $accounts = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
-                    $to_mobile = $accounts['global_roaming'].$accounts['mobile'];
+                    $accounts_info = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
+                    $to_mobile = $accounts_info['global_roaming'].$accounts_info['mobile'];
                     //非模板发送
                     $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendText($templates[$message_log['template_id']]['body'],$to_mobile);
                     //$result = false;
