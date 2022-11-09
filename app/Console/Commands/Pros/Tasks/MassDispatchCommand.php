@@ -56,7 +56,7 @@ class MassDispatchCommand extends Command
         if (substr(php_sapi_name(), 0, 3) !== 'cli') {
             die("This Programe can only be run in CLI mode");
         }
-        self::massDispatch();
+        //self::massDispatch();
 
         try {
             (new MerchantMessagesLogInterfaceService())->massDispatch();
