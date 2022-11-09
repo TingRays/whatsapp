@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Pros\Tasks\MerchantRemainderCommand::class,
         \App\Console\Commands\Pros\Tasks\QueuesCommand::class,
         \App\Console\Commands\Pros\Tasks\MessagesLogCommand::class,
+        \App\Console\Commands\Pros\Tasks\MassDispatchCommand::class,
     ];
 
     /**
@@ -39,7 +40,7 @@ class Kernel extends ConsoleKernel
         //每5秒执行 - 群发消息记录创建
         $schedule->command('messages:log')->cron('*/5 * * * * ?');
         //每5秒执行 - 群发任务
-        $schedule->command('messages:log')->cron('*/5 * * * * ?');
+        //$schedule->command('mass:dispatch')->cron('*/5 * * * * ?');
     }
 
     /**
