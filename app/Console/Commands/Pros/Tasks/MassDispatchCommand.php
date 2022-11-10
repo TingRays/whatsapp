@@ -56,16 +56,17 @@ class MassDispatchCommand extends Command
         if (substr(php_sapi_name(), 0, 3) !== 'cli') {
             die("This Programe can only be run in CLI mode");
         }
-        //self::massDispatch();
+        //群发
+        self::massDispatch();
 
-        try {
-            (new MerchantMessagesLogInterfaceService())->massDispatch();
-        } catch (\Exception $e) {
-            //记录日志
-            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
-            //返回失败
-            return false;
-        }
+//        try {
+//            (new MerchantMessagesLogInterfaceService())->massDispatch();
+//        } catch (\Exception $e) {
+//            //记录日志
+//            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
+//            //返回失败
+//            return false;
+//        }
         //返回处理成功
         return true;
     }
@@ -81,16 +82,23 @@ class MassDispatchCommand extends Command
             return;
         }
         //fork 子进程
-        $workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED]);
+        //$workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED]);
+        $workers = 2;
         for ($i = 0; $i < $workers; $i++) {
             //查询可以用于发送消息的商户
-            $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
-            if (empty($merchant)){
-                //没有商户可以用于发送消息
-                return;
-            }
+//            $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
+//            if (empty($merchant)){
+//                //没有商户可以用于发送消息
+//                return;
+//            }
+            $merchant = [
+                'id' => 1,
+                'remainder' => 2,
+                'tel_code' => '103686909229239',
+                'auth_token' => 'EAALI95MH988BANJdruD8BUznyy1ZBjZB4HLhIoLzZCx731jSJdAZBgZCKkW4mTOWL1BrxMUeYn9gNTuEuvWu4f3AJNtaEajGbGM2g3TQQFO8pEgR4UcwZCCi6ffeF792yLOrbUaAmojzi9iRdFmMGtmsrqdNeZAu2Tf5uplkiruikl8eN2v3RglTgLaFVSWwYfZCV3GXwX3ClM9ZCUZArYN0xU',
+            ];
             //更新商户状态
-            (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
+            //(new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
             //更新商户发送消息状态 - 发送中
             (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
             //剩余发送量
