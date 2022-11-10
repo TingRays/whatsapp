@@ -86,7 +86,7 @@ class CloudApiImplementers extends BaseService
         //判断数据
         if (!$this->send_api_link || !$this->access_token || !$this->params) {
             //返回失败
-            return false;
+            return ['status'=>false,'data'=>[]];
         }
         $params = $this->params;
         //尝试查询
@@ -108,22 +108,18 @@ class CloudApiImplementers extends BaseService
             //记录日志
             LoggerLibrary::logger('cloud_api_errors', $exception->getMessage());
             //返回失败
-            return false;
+            return ['status'=>false,'data'=>[]];
         }
         //判断是否请求失败
         if ((int)$response->getStatusCode() !== 200) {
             //返回失败
-            return false;
+            return ['status'=>false,'data'=>json_decode($response->getBody()->getContents(), true)];
         }
         //获取返回结果
         $result = json_decode($response->getBody()->getContents(), true);
-        //判断请求是否成功
-        //if ((int)$result['status'] !== 200) {
-            //返回失败
-        //    return false;
-        //}
+
         //返回成功
-        return ['data' => $result];
+        return ['status'=>true,'data' => $result];
     }
 
     private function components($name){
