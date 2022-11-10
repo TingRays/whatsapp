@@ -138,7 +138,6 @@ class MassDispatchCommand extends Command
                         if ($message_log_ids){
                             //等待发送中
                             (new MerchantMessagesLogRepository())->update(['id'=>['id',$message_log_ids]],['status'=>MerchantMessagesLogs::STATUS_DISABLED,'updated_at'=>auto_datetime()]);
-
                         }
                         //更新消息发送状态 - 发送完成
                         $not_send_num = (new MerchantMessagesLogRepository)->count(['merchant_messages_id'=>$merchant_message_id,'status'=>['in',[MerchantMessagesLogs::STATUS_DISABLED,MerchantMessagesLogs::STATUS_VERIFYING]]]);

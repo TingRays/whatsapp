@@ -223,6 +223,10 @@ class AccountInterfaceService extends BaseService
                 }
                 $global_roaming = str_replace(['+',' '],'',trim($post[0]));
                 $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($post[1]));
+                if (strpos($mobile,$global_roaming) === 0){
+                    $global_roaming_len = strlen($global_roaming);
+                    $mobile = substr($mobile,$global_roaming_len);
+                }
                 $params = [
                     'global_roaming' => $global_roaming,
                     'mobile' => $mobile,
