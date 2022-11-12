@@ -83,6 +83,10 @@ class MassDispatchCommand extends Command
         }
         //fork 子进程
         $workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED]);
+        //最多10个子进程
+        if ($workers > 10){
+            $workers = 10;
+        }
         for ($i = 0; $i < $workers; $i++) {
             //查询可以用于发送消息的商户
             $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
