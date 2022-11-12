@@ -108,7 +108,7 @@ class MerchantInterfaceService extends BaseService
                 $builder->input('tel', '手机号')->description('发信人绑定的手机号')->tip('发送消息的绑定手机号')->required();
                 $builder->input('tel_code', '电话号码编号')->description('发信人绑定的手机号对应编号')->required();
                 $builder->input('business_code', '业务帐户编号')->description('WhatsApp Business 业务帐户编号')->required();
-                $builder->input('remainder', '剩余发送量')->default_value(1000)->input_type('number')->description('当前商户剩余发送消息量')->required();
+                $builder->input('remainder', '剩余发送量')->default_value(50)->input_type('number')->description('当前商户剩余发送消息量')->required();
                 $builder->select('status', '商户状态')->options(Merchants::TYPE_GROUPS['__status__'],Merchants::STATUS_ENABLED)->required();
             })
             ->setData($info)
