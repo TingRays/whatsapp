@@ -121,7 +121,7 @@ class MerchantMessageInterfaceService extends BaseService
         }
         //查询全部有效用户
         $accounts = (new AccountRepository())->limit(['status' => Accounts::STATUS_ENABLED],
-            ['id', 'global_roaming', 'mobile'], [], ['updated_at' => 'desc'],'',(int)data_get($data, 'page', config('pros.table.default_page')),1000);
+            ['id', 'global_roaming', 'mobile'], [], ['updated_at' => 'desc'],'',1,1000);
         //初始化信息
         $accounts = array_column($accounts, null, 'id');
         //循环用户信息
