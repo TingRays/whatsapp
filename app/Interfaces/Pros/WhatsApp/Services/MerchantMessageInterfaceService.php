@@ -114,11 +114,6 @@ class MerchantMessageInterfaceService extends BaseService
      */
     public function detail(Request $request)
     {
-        //获取加密信息
-        if (!$data = AesLibrary::decryptFormData($request->all())) {
-            //返回失败
-            return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
-        }
         //查询全部有效用户
         $accounts = (new AccountRepository())->limit(['status' => Accounts::STATUS_ENABLED],
             ['id', 'global_roaming', 'mobile'], [], ['updated_at' => 'desc'],'',1,1000);
