@@ -90,6 +90,23 @@ class BusinessManagerInterfaceService extends BaseService
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function detail($id, $request){
+        $info = (int)$id > 0 ? (new BusinessManagerRepository())->row(['id' => (int)$id]) : [];
+        if (!$info){
+            $count = (new BusinessManagerRepository())->count() + 1;
+            if ($count<10){
+                $count = '0'.$count;
+            }
+            $info['guard_name'] = 'BM-'.$count;
+            $info['code'] = '1128022304774783';
+            $info['nickname'] = 'Tamang Michi';
+            $info['ac_number'] = '100012320310148';
+            $info['ac_password'] = 'A@!xJuNHvPK';
+            $info['ac_secret_key'] = '3ZBG7S6TDS2QDGIURWW3QZ6EWLAJVBXK';
+            $info['ac_email'] = 'ayesha6f9dora@outlook.com';
+            $info['ac_email_pwd'] = 'ioaFGjnI6ucVmmA#';
+            $info['ac_spare_email'] = 'ayesha6f9dora@getnada.com';
+            $info['age'] = '01/01/1976';
+        }
         //渲染表单内容
         $render = FormBuilder::make()
             ->setSubmit(route('whatsapp.console.bm.store', ['id' => (int)$id]))
@@ -107,7 +124,7 @@ class BusinessManagerInterfaceService extends BaseService
                 $builder->input('age', '年龄')->description('可能是账号的验证信息备注')->readonly((int)$id <= 0 ? false : true)->required();
                 $builder->select('status', '账户状态')->options(BusinessManager::TYPE_GROUPS['__status__'],BusinessManager::STATUS_ENABLED)->required();
             })
-            ->setData((int)$id > 0 ? (new BusinessManagerRepository())->row(['id' => (int)$id]) : [])
+            ->setData($info)
             ->render();
         //返回成功
         return $this->success(['html' => $render]);

@@ -85,11 +85,19 @@ class MerchantInterfaceService extends BaseService
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function detail($bm_id, $id, $request){
-        $info = (int)$id > 0 ? (new MerchantRepository())->row(['id' => (int)$id]) : [];
         //渲染表单内容
         $bm_info = (new BusinessManagerRepository())->row(['id'=>$bm_id],['guard_name','code','nickname','auth_token']);
         $info['bm_info'] = $bm_info['guard_name'].'（'.$bm_info['code'].' - '.$bm_info['nickname'].'）';
         $info['auth_token'] = $bm_info['auth_token'];
+        if ($id){
+            $info = (int)$id > 0 ? (new MerchantRepository())->row(['id' => (int)$id]) : [];
+        }else{
+            $count = (new MerchantRepository())->count() + 1;
+            if ($count<10){
+                $count = '0'.$count;
+            }
+            $info['guard_name'] = $bm_info['guard_name'].' 的'.'（'.$count.'）';
+        }
         $render = FormBuilder::make()
             ->setSubmit(route('whatsapp.console.merchant.store', ['bm_id' => $bm_id,'id' => (int)$id]))
             ->setItems(function (FormItemBuilder $builder) use ($id) {
