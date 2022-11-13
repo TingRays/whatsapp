@@ -94,10 +94,6 @@ class MassDispatchCommand extends Command
                 //没有商户可以用于发送消息
                 break;
             }
-            //更新商户状态
-            (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
-            //更新商户发送消息状态 - 发送中
-            (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
             //剩余发送量
             $remainder = $default_size = $merchant['remainder'];
             //等待发送中
@@ -105,6 +101,10 @@ class MassDispatchCommand extends Command
             if (empty($message_logs)){
                 break;
             }
+            //更新商户状态
+            (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
+            //更新商户发送消息状态 - 发送中
+            (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
             //更新消息发送状态 - 发送中
             $message_log_ids = array_column($message_logs,'id','id');
             (new MerchantMessagesLogRepository())->update(['id'=>['in',$message_log_ids]],['status'=>MerchantMessagesLogs::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
