@@ -120,5 +120,18 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
                 Route::post('store/{id}', 'FansManageGroupController@store')->name('store');
             });
         });
+        //生成虚拟手机路由
+        Route::group(['as' => 'template.', 'prefix' => 'template'], function () {
+            //虚拟手机列表
+            Route::get('', 'MerchantTemplateController@index')->name('index');
+            //获取虚拟手机列表
+            Route::post('lists', 'MerchantTemplateController@lists')->name('lists');
+            //虚拟手机详情
+            Route::post('detail', 'MerchantTemplateController@detail')->name('detail');
+            //生成保存虚拟手机信息
+            Route::post('store', 'MerchantTemplateController@store')->name('store');
+            //更改BM状态
+            Route::post('{id}/enable', 'MerchantTemplateController@enable')->name('enable');
+        });
     });
 });

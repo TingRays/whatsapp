@@ -121,6 +121,13 @@ return [
                         'icon' => 'fa fa-store',
                     ],
                     [
+                        'guard_name' => '模板管理',
+                        'handler' => '',
+                        'route' => ['name' => 'whatsapp.console.template.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-envelope',
+                    ],
+                    [
                         'guard_name' => '消息群发',
                         'handler' => '',
                         'route' => ['name' => 'whatsapp.console.merchant.message.index', 'params' => []],

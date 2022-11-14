@@ -37,22 +37,45 @@ class MerchantTemplateController extends BaseController
         return view('pros.whatsapp.merchant.index');
     }
 
+    /**
+     * 商户模板列表
+     * @param Request $request
+     * @param MerchantTemplateInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function lists(Request $request, MerchantTemplateInterfaceService $service){
-        //获取（BM）账户列表
+        //商户模板列表
         $service->lists($request);
         //响应接口
         return responseService($service);
     }
 
+    /**
+     * 商户模板详情
+     * @param $id
+     * @param Request $request
+     * @param MerchantTemplateInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function detail($id, Request $request, MerchantTemplateInterfaceService $service){
-        //获取BM的商户详情
+        //商户模板详情
         $service->detail($id, $request);
         //响应接口
         return responseService($service);
     }
 
+    /**
+     * 商户模板信息
+     * @param $id
+     * @param Request $request
+     * @param MerchantTemplateInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function store($id, Request $request, MerchantTemplateInterfaceService $service){
-        //保存BM的商户信息
+        //商户模板信息
         $service->store($id, $request);
         //响应接口
         return responseService($service);

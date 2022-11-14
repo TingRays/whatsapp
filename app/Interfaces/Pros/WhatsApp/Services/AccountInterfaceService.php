@@ -208,8 +208,9 @@ class AccountInterfaceService extends BaseService
         foreach ($posts as $k => $post) {
             //判断是否第一项
             if ((int)$k > 0) {
-                //查询物流公司
-                if ((new AccountRepository())->exists(['global_roaming' => trim($post[0]),'mobile' => trim($post[1])])) {
+                $global_roaming = str_replace(['+',' '],'',trim($post[0]));
+                $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($post[1]));
+                if ((new AccountRepository())->exists(['global_roaming' => $global_roaming,'mobile' => $mobile])) {
                     //设置错误原因
                     $post[] = '该用户已存在';
                     //设置失败
@@ -221,8 +222,6 @@ class AccountInterfaceService extends BaseService
                     ($service = new AccountTagInterfaceService())->insertTag($post[3]);
                     $tag_ids[] = $service->getResult()['tag_id'];
                 }
-                $global_roaming = str_replace(['+',' '],'',trim($post[0]));
-                $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($post[1]));
                 if (strpos($mobile,$global_roaming) === 0){
                     $global_roaming_len = strlen($global_roaming);
                     $mobile = substr($mobile,$global_roaming_len);

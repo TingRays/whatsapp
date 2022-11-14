@@ -92,7 +92,7 @@ class MerchantTemplateInterfaceService extends BaseService
         return $this->success(['html' => $render]);
     }
 
-    public function store($bm_id, $id, $request){
+    public function store($id, $request){
         //获取加密信息
         if (!$data = AesLibrary::decryptFormData($request->all())) {
             //返回失败
