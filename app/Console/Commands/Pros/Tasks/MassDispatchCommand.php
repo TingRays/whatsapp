@@ -128,7 +128,7 @@ class MassDispatchCommand extends Command
                         $accounts_info = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
                         $to_mobile = $accounts_info['global_roaming'].$accounts_info['mobile'];
                         //模板发送成功
-                        $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
+                        //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
                         (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                             ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                                 'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
