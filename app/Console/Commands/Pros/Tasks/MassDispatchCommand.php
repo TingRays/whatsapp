@@ -117,19 +117,18 @@ class MassDispatchCommand extends Command
             $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
             $accounts = array_column($accounts,null,'id');
             // 创建子进程
-            //$process_ids[$i] = pcntl_fork();
-            //switch ($process_ids[$i]) {
-            //    case -1 :
-            //        echo "fork failed : {$i} \r\n";
-            //        exit;
-            //    case 0 :
+            $process_ids[$i] = pcntl_fork();
+            switch ($process_ids[$i]) {
+                case -1 :
+                    echo "fork failed : {$i} \r\n";
+                    exit;
+                case 0 :
                     // 子进程处理消息发送
                     foreach ($message_logs as $k=>$message_log){
                         $accounts_info = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
                         $to_mobile = $accounts_info['global_roaming'].$accounts_info['mobile'];
                         //模板发送成功
-                        //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
-                        sleep(1);
+                        $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
                         (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                             ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                                 'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
@@ -155,20 +154,16 @@ class MassDispatchCommand extends Command
                         //恢复状态
                         (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_DISABLED,'updated_at'=>auto_datetime()]);
                     }
-            //        exit;
-            //    default :
-            //        break;
-            //}
+                    exit;
+                default :
+                    $pid = pcntl_wait($status);
+                    if (pcntl_wifexited($status)) {
+                        print "\n\n* Sub process: {$pid} exited with {$status}";
+                    }
+                    break;
+            }
         }
-        //子进程完成之后要退出
-//        while (count($process_ids) > 0) {
-//            $my_pid = pcntl_waitpid(-1, $status, WNOHANG);
-//            foreach ($process_ids as $key => $pid) {
-//                if ($my_pid == $pid || $my_pid == -1) {
-//                    unset($process_ids[$key]);
-//                }
-//            }
-//        }
         //返回处理成功
+        return;
     }
 }
