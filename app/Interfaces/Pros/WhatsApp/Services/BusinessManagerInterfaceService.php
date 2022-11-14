@@ -157,6 +157,9 @@ class BusinessManagerInterfaceService extends BaseService
         $info = Arr::only($data['__data__'], $data['__edited__']);
         //添加修改时间
         $info['updated_at'] = auto_datetime();
+        if (!isset($info['guard_name'])){
+            $info['guard_name'] = $data['__edited__']['guard_name'];
+        }
         //判断是否为新增
         if ((int)$id <= 0) {
             //判断信息是否可用
