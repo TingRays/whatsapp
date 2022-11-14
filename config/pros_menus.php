@@ -116,9 +116,25 @@ return [
                     [
                         'guard_name' => 'BM账户管理',
                         'handler' => '',
-                        'route' => ['name' => 'whatsapp.console.bm.index', 'params' => []],
+                        'route' => ['name' => '', 'params' => []],
                         'permission_nodes' => ['whatsapp.console.merchant.index'],
                         'icon' => 'fa fa-store',
+                        'menus' => [
+                            [
+                                'guard_name' => 'BM账户',
+                                'handler' => '',
+                                'route' => ['name' => 'whatsapp.console.bm.index', 'params' => []],
+                                'permission_nodes' => [],
+                                'icon' => 'fa fa-user',
+                            ],
+                            [
+                                'guard_name' => 'BM导入',
+                                'handler' => '',
+                                'route' => ['name' => 'whatsapp.console.bm.posts', 'params' => []],
+                                'permission_nodes' => [],
+                                'icon' => 'fa fa-car',
+                            ],
+                        ],
                     ],
                     [
                         'guard_name' => '模板管理',

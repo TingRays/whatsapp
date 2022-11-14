@@ -15,11 +15,16 @@ use Abnermouke\EasyBuilder\Module\BaseService;
 use Abnermouke\Pros\Builders\Form\FormBuilder;
 use Abnermouke\Pros\Builders\Form\Tools\FormItemBuilder;
 use Abnermouke\Pros\Builders\Table\TableBuilder;
+use App\Imports\Bm\BusinessManagersImport;
 use App\Model\Pros\WhatsApp\BusinessManager;
+use App\Model\Pros\WhatsApp\Merchants;
 use App\Repository\Pros\WhatsApp\BusinessManagerRepository;
 use App\Repository\Pros\WhatsApp\MerchantRepository;
+use App\Services\Pros\Console\UploadService;
 use App\Services\Pros\System\TemporaryFileService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * 商业管理（BM）账户接口逻辑服务容器
@@ -209,5 +214,121 @@ class BusinessManagerInterfaceService extends BaseService
         }
         //返回成功
         return $this->success(compact('id'));
+    }
+
+    public function import(Request $request)
+    {
+        //上传文件
+        if (!($service = new UploadService())->upload($request)) {
+            //返回失败
+            return $this->fail($service->getCode(), $service->getMessage());
+        }
+        $remainder = $request->get('remainder');
+        if (!$remainder){
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '请先选择发送量！');
+        }
+        //获取文件结果
+        $file = $service->getResult();
+        //导入内容
+        $sheets = Excel::import(new BusinessManagersImport(), $file['storage_name'], $file['storage_disk'])->toArray(new BusinessManagersImport, $file['storage_name'], $file['storage_disk']);
+        //获取导入信息
+        $posts = Arr::first($sheets);
+        //整理失败数据
+        $wrongs = $success = [];
+        //循环导入信息
+        foreach ($posts as $k => $post) {
+            //判断是否第一项
+            if ((int)$k > 0) {
+                $auth_token = trim($post[0]);
+                if (!$auth_token){
+                    continue;
+                }
+                $global_roaming = '55';
+                $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($post[1]));
+
+                if (strpos($mobile,$global_roaming) === 0){
+                    $global_roaming_len = strlen($global_roaming);
+                    $mobile = substr($mobile,$global_roaming_len);
+                }
+                $tel_code = str_replace(['+',' ','-'],'',trim($post[2]));
+                $business_code = str_replace(['+',' ','-'],'',trim($post[3]));
+
+                $bm = (new BusinessManagerRepository())->row(['auth_token' => $auth_token],['id','guard_name']);
+                if (!$bm) {
+                    $count = (new BusinessManagerRepository())->count() + 1;
+                    if ($count<10){
+                        $count = '0'.$count;
+                    }
+                    $bm_info = [
+                        'guard_name' => 'BM-'.$count,
+                        'code' => time().rand(999,9999),
+                        'nickname' => 'Tamang Michi',
+                        'ac_number' => time().rand(999,9999),
+                        'ac_password' => 'A@!xJuNHvPK',
+                        'ac_secret_key' => '3ZBG7S6TDS2QDGIURWW3QZ6EWLAJVBXK',
+                        'auth_token' => $auth_token,
+                        'ac_email' => 'ayesha6f9dora@outlook.com',
+                        'ac_email_pwd' => 'ioaFGjnI6ucVmmA#',
+                        'ac_spare_email' => 'ayesha6f9dora@getnada.com',
+                        'age' => '01/01/1976',
+                        'status' => BusinessManager::STATUS_ENABLED,
+                        'created_at' => auto_datetime(),
+                        'updated_at' => auto_datetime(),
+                    ];
+                    $guard_name = $bm_info['guard_name'];
+                    $bm_id = (new BusinessManagerRepository())->insertGetId($bm_info);
+                }else{
+                    $bm_id = $bm['id'];
+                    $guard_name = $bm['guard_name'];
+                }
+                if ((new MerchantRepository())->exists(['tel_code'=>$tel_code])){
+                    //商户已存在 - 更新
+                    $merchant_info = [
+                        'global_roaming' => $global_roaming,
+                        'tel' => $mobile,
+                        'tel_code' => $tel_code,
+                        'business_code' => $business_code,
+                        'remainder' => $remainder,
+                        'bm_status' => BusinessManager::STATUS_ENABLED,
+                        'status' => Merchants::STATUS_ENABLED,
+                        'updated_at' => auto_datetime(),
+                    ];
+                    (new MerchantRepository())->update(['tel_code'=>$tel_code],$merchant_info);
+                }else{
+                    //商户不存在 - 新增
+                    $merchant_count = (new MerchantRepository())->count(['bm_id'=>$bm_id]) + 1;
+                    if ($merchant_count<10){
+                        $merchant_count = '0'.$merchant_count;
+                    }
+                    $merchant_info = [
+                        'bm_id' => $bm_id,
+                        'guard_name' => $guard_name.'的（'.$merchant_count.'）',
+                        'auth_token' => $auth_token,
+                        'global_roaming' => $global_roaming,
+                        'tel' => $mobile,
+                        'tel_code' => $tel_code,
+                        'business_code' => $business_code,
+                        'remainder' => 250,
+                        'update_remainder_time' => 0,
+                        'bm_status' => BusinessManager::STATUS_ENABLED,
+                        'status' => Merchants::STATUS_ENABLED,
+                        'created_at' => auto_datetime(),
+                        'updated_at' => auto_datetime(),
+                    ];
+                    //添加信息
+                    if (!$id = (new MerchantRepository())->insertGetId($merchant_info)) {
+                        //返回失败
+                        return $this->fail(CodeLibrary::DATA_UPDATE_FAIL, 'BM的商户创建失败');
+                    }
+                }
+                //添加成功
+                $success[] = $post;
+            }
+        }
+        //整理返回结果
+        $result = ['success' => count($success), 'wrong' => $wrongs, 'msg' => ('本次导入共' . (count($posts) - 1) . '条<br />成功：' . count($success) . ' 条，失败：' . count($wrongs) . ' 条')];
+        //返回成功
+        return $this->success($result);
     }
 }

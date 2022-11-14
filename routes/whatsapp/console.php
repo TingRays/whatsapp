@@ -23,6 +23,10 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             Route::post('{id}/store', 'BusinessManagerController@store')->name('store');
             //更改BM状态
             Route::post('{id}/enable', 'BusinessManagerController@enable')->name('enable');
+            //BM导入页面
+            Route::get('posts', 'BusinessManagerController@posts')->name('posts');
+            //BM批量导入
+            Route::post('import', 'BusinessManagerController@import')->name('import');
         });
 
         //商户相关路由

@@ -90,4 +90,26 @@ class BusinessManagerController extends BaseController
         return responseService($service);
     }
 
+    /**
+     * bm导入管理
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function posts(){
+        //快递单管理
+        return view('pros.whatsapp.bm.posts');
+    }
+
+    /**
+     * bm导入方法
+     * @param Request $request
+     * @param AccountInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function import(Request $request, BusinessManagerInterfaceService $service){
+        //导入发货单
+        $service->import($request);
+        //导入快递单
+        return responseService($service);
+    }
 }
