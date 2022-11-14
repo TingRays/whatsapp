@@ -87,8 +87,6 @@ class MerchantInterfaceService extends BaseService
     public function detail($bm_id, $id, $request){
         //渲染表单内容
         $bm_info = (new BusinessManagerRepository())->row(['id'=>$bm_id],['guard_name','code','nickname','auth_token']);
-        $info['bm_info'] = $bm_info['guard_name'].'（'.$bm_info['code'].' - '.$bm_info['nickname'].'）';
-        $info['auth_token'] = $bm_info['auth_token'];
         if ($id){
             $info = (int)$id > 0 ? (new MerchantRepository())->row(['id' => (int)$id]) : [];
         }else{
@@ -98,6 +96,8 @@ class MerchantInterfaceService extends BaseService
             }
             $info['guard_name'] = $bm_info['guard_name'].' 的'.'（'.$count.'）';
         }
+        $info['bm_info'] = $bm_info['guard_name'].'（'.$bm_info['code'].' - '.$bm_info['nickname'].'）';
+        $info['auth_token'] = $bm_info['auth_token'];
         $render = FormBuilder::make()
             ->setSubmit(route('whatsapp.console.merchant.store', ['bm_id' => $bm_id,'id' => (int)$id]))
             ->setItems(function (FormItemBuilder $builder) use ($id) {
@@ -137,7 +137,7 @@ class MerchantInterfaceService extends BaseService
             return $this->fail(CodeLibrary::DATA_MISSING, '信息无更新');
         }
         //获取更改项
-        $info = Arr::only($data['__data__'], $data['__edited__']);
+        $info = $data['__data__'];
         //添加修改时间
         $info['updated_at'] = auto_datetime();
         //判断是否为新增
