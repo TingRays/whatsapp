@@ -74,7 +74,7 @@ class MassDispatchCommand extends Command
     private function massDispatch(): void
     {
         //地址：https://www.yuanchengzhushou.cn/article/7944.html
-        $process_ids = [];
+        //$process_ids = [];
         //查询有商户发送消息 的 任务
         $merchant_message_id = (new MerchantMessageRepository())->find(['status'=>MerchantMessages::STATUS_DISABLED],'id');
         if (!$merchant_message_id){
@@ -117,12 +117,12 @@ class MassDispatchCommand extends Command
             $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
             $accounts = array_column($accounts,null,'id');
             // 创建子进程
-            $process_ids[$i] = pcntl_fork();
-            switch ($process_ids[$i]) {
-                case -1 :
-                    echo "fork failed : {$i} \r\n";
-                    exit;
-                case 0 :
+            //$process_ids[$i] = pcntl_fork();
+            //switch ($process_ids[$i]) {
+            //    case -1 :
+            //        echo "fork failed : {$i} \r\n";
+            //        exit;
+            //    case 0 :
                     // 子进程处理消息发送
                     foreach ($message_logs as $k=>$message_log){
                         $accounts_info = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
@@ -155,20 +155,20 @@ class MassDispatchCommand extends Command
                         //恢复状态
                         (new MerchantMessageRepository())->update(['id'=>$merchant_message_id],['status'=>MerchantMessages::STATUS_DISABLED,'updated_at'=>auto_datetime()]);
                     }
-                    exit;
-                default :
-                    break;
-            }
+            //        exit;
+            //    default :
+            //        break;
+            //}
         }
         //子进程完成之后要退出
-        while (count($process_ids) > 0) {
-            $my_pid = pcntl_waitpid(-1, $status, WNOHANG);
-            foreach ($process_ids as $key => $pid) {
-                if ($my_pid == $pid || $my_pid == -1) {
-                    unset($process_ids[$key]);
-                }
-            }
-        }
+//        while (count($process_ids) > 0) {
+//            $my_pid = pcntl_waitpid(-1, $status, WNOHANG);
+//            foreach ($process_ids as $key => $pid) {
+//                if ($my_pid == $pid || $my_pid == -1) {
+//                    unset($process_ids[$key]);
+//                }
+//            }
+//        }
         //返回处理成功
     }
 }
