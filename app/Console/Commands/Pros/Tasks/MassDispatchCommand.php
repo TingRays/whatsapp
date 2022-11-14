@@ -93,7 +93,7 @@ class MassDispatchCommand extends Command
             if (empty($merchant)){
                 //没有商户可以用于发送消息
                 break;
-            }dd($merchant);
+            }
             //剩余发送量
             $remainder = $default_size = $merchant['remainder'];
             //等待发送中
