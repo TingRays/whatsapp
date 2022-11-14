@@ -77,7 +77,6 @@ class MassDispatchCommand extends Command
         $process_ids = [];
         //查询有商户发送消息 的 任务
         $merchant_message_id = (new MerchantMessageRepository())->find(['status'=>MerchantMessages::STATUS_DISABLED],'id');
-        dd($merchant_message_id);
         if (!$merchant_message_id){
             //没有发送任务
             return;
@@ -87,7 +86,7 @@ class MassDispatchCommand extends Command
         //最多10个子进程
         if ($workers > 10){
             $workers = 10;
-        }
+        }dd($merchant_message_id);
         for ($i = 1; $i <= $workers; $i++) {
             //查询可以用于发送消息的商户
             $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
