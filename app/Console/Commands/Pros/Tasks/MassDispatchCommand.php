@@ -59,13 +59,31 @@ class MassDispatchCommand extends Command
         //群发
         self::massDispatch();
 
-//        try {
-//            (new MerchantMessagesLogInterfaceService())->massDispatch();
-//        } catch (\Exception $e) {
-//            //记录日志
-//            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
-//            //返回失败
-//            return false;
+        //默认进程数
+//        $default_process = 10;
+//        for ($i = 1; $i <= $default_process; ++$i) {
+//            // 创建子进程
+//            $childPid = pcntl_fork();
+//            switch($childPid) {
+//                case -1:
+//                    print "创建子进程失败!".PHP_EOL;
+//                    exit;
+//                case 0:
+//                        try {
+//                            (new MerchantMessagesLogInterfaceService())->massDispatch();
+//                        } catch (\Exception $e) {
+//                            //记录日志
+//                            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
+//                            //返回失败
+//                            return false;
+//                        }
+//                    break;
+//                default:
+//                    $pid = pcntl_wait($status);
+//                    if (pcntl_wifexited($status)) {
+//                        print "\n\n* Sub process: {$pid} exited with {$status}";
+//                    }
+//            }
 //        }
         //返回处理成功
         return true;
