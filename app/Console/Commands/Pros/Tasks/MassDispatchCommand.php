@@ -102,8 +102,8 @@ class MassDispatchCommand extends Command
         //fork 子进程
         $workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED]);
         //最多10个子进程
-        if ($workers > 10){
-            $workers = 10;
+        if ($workers > 3){
+            $workers = 3;
         }
         for ($i = 1; $i <= $workers; $i++) {
             //查询可以用于发送消息的商户
@@ -135,8 +135,8 @@ class MassDispatchCommand extends Command
             $accounts = (new AccountRepository())->get(['id'=>['in',$account_ids]],['id','global_roaming','mobile']);
             $accounts = array_column($accounts,null,'id');
             // 创建子进程
-            $process_ids[$i] = pcntl_fork();
-            switch ($process_ids[$i]) {
+            $child_pid = pcntl_fork();
+            switch ($child_pid) {
                 case -1 :
                     echo "fork failed : {$i} \r\n";
                     exit;
@@ -146,7 +146,7 @@ class MassDispatchCommand extends Command
                         $accounts_info = $accounts[$message_log['account_id']]??['global_roaming'=>0,'mobile'=>0];
                         $to_mobile = $accounts_info['global_roaming'].$accounts_info['mobile'];
                         //模板发送成功
-                        //$result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
+                        $result = (new CloudApiImplementers($merchant['tel_code'],$merchant['auth_token']))->sendTextTemplate($templates[$message_log['template_id']]??[],$to_mobile);
                         (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                             ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
                                 'status'=>MerchantMessagesLogs::STATUS_ENABLED,'updated_at'=>auto_datetime()]);
