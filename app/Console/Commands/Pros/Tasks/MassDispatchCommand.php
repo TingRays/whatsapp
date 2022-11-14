@@ -93,14 +93,14 @@ class MassDispatchCommand extends Command
             if (empty($merchant)){
                 //没有商户可以用于发送消息
                 break;
-            }
+            }dd($merchant);
             //剩余发送量
             $remainder = $default_size = $merchant['remainder'];
             //等待发送中
             $message_logs = (new MerchantMessagesLogRepository())->limit(['merchant_messages_id'=>$merchant_message_id,'status'=>MerchantMessagesLogs::STATUS_DISABLED,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['id','account_id','merchant_messages_id','type','template_id'],[],['id'=>'desc'],[],1,$default_size);
             if (empty($message_logs)){
                 break;
-            }dd($message_logs);
+            }
             //更新商户状态
             (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
             //更新商户发送消息状态 - 发送中
