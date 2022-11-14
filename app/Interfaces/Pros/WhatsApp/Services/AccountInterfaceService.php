@@ -210,6 +210,10 @@ class AccountInterfaceService extends BaseService
             if ((int)$k > 0) {
                 $global_roaming = str_replace(['+',' '],'',trim($post[0]));
                 $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($post[1]));
+                if (strpos($mobile,$global_roaming) === 0){
+                    $global_roaming_len = strlen($global_roaming);
+                    $mobile = substr($mobile,$global_roaming_len);
+                }
                 if ((new AccountRepository())->exists(['global_roaming' => $global_roaming,'mobile' => $mobile])) {
                     //设置错误原因
                     $post[] = '该用户已存在';
@@ -221,10 +225,6 @@ class AccountInterfaceService extends BaseService
                 if (empty($tag_ids)){
                     ($service = new AccountTagInterfaceService())->insertTag($post[3]);
                     $tag_ids[] = $service->getResult()['tag_id'];
-                }
-                if (strpos($mobile,$global_roaming) === 0){
-                    $global_roaming_len = strlen($global_roaming);
-                    $mobile = substr($mobile,$global_roaming_len);
                 }
                 $params = [
                     'global_roaming' => $global_roaming,
