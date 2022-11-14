@@ -137,7 +137,7 @@ class MerchantInterfaceService extends BaseService
             return $this->fail(CodeLibrary::DATA_MISSING, '信息无更新');
         }
         //获取更改项
-        $info = $data['__data__'];
+        $info = Arr::only($data['__data__'], $data['__edited__']);
         //添加修改时间
         $info['updated_at'] = auto_datetime();
         //判断是否为新增
