@@ -77,6 +77,7 @@ class MassDispatchCommand extends Command
         $process_ids = [];
         //查询有商户发送消息 的 任务
         $merchant_message_id = (new MerchantMessageRepository())->find(['status'=>MerchantMessages::STATUS_DISABLED],'id');
+        dd($merchant_message_id);
         if (!$merchant_message_id){
             //没有发送任务
             return;
