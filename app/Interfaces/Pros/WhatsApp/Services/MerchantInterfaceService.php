@@ -141,7 +141,7 @@ class MerchantInterfaceService extends BaseService
         //添加修改时间
         $info['updated_at'] = auto_datetime();
         if (!isset($info['guard_name'])){
-            $info['guard_name'] = $data['__edited__']['guard_name'];
+            $info['guard_name'] = $data['__data__']['guard_name'];
         }
         //判断是否为新增
         if ((int)$id <= 0) {
