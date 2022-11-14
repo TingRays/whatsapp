@@ -57,16 +57,16 @@ class MassDispatchCommand extends Command
             die("This Programe can only be run in CLI mode");
         }
         //群发
-        self::massDispatch();
+        //self::massDispatch();
 
-//        try {
-//            (new MerchantMessagesLogInterfaceService())->massDispatch();
-//        } catch (\Exception $e) {
-//            //记录日志
-//            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
-//            //返回失败
-//            return false;
-//        }
+        try {
+            (new MerchantMessagesLogInterfaceService())->massDispatch();
+        } catch (\Exception $e) {
+            //记录日志
+            LoggerLibrary::logger('mass_dispatch_errors', $e->getMessage());
+            //返回失败
+            return false;
+        }
         //返回处理成功
         return true;
     }
