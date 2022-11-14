@@ -86,7 +86,7 @@ class MassDispatchCommand extends Command
         //最多10个子进程
         if ($workers > 10){
             $workers = 10;
-        }dd($merchant_message_id);
+        }
         for ($i = 1; $i <= $workers; $i++) {
             //查询可以用于发送消息的商户
             $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
@@ -100,7 +100,7 @@ class MassDispatchCommand extends Command
             $message_logs = (new MerchantMessagesLogRepository())->limit(['merchant_messages_id'=>$merchant_message_id,'status'=>MerchantMessagesLogs::STATUS_DISABLED,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['id','account_id','merchant_messages_id','type','template_id'],[],['id'=>'desc'],[],1,$default_size);
             if (empty($message_logs)){
                 break;
-            }
+            }dd($message_logs);
             //更新商户状态
             (new MerchantRepository())->update(['id'=>$merchant['id']],['status'=>Merchants::STATUS_VERIFYING,'updated_at'=>auto_datetime()]);
             //更新商户发送消息状态 - 发送中
