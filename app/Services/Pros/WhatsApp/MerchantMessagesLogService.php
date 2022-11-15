@@ -10,6 +10,7 @@
 namespace App\Services\Pros\WhatsApp;
 
 use Abnermouke\EasyBuilder\Module\BaseService;
+use App\Implementers\CloudAPI\CloudApiImplementers;
 
 /**
  * 商户发送消息记录逻辑服务容器
@@ -26,5 +27,13 @@ class MerchantMessagesLogService extends BaseService
     */
     public function __construct($pass = false) { parent::__construct($pass); }
 
-    //
+    public function sendMessageTemplates($tel_code,$auth_token,$templates,$to_mobile){
+        return (new CloudApiImplementers($tel_code,$auth_token))->sendTextTemplate($templates,$to_mobile);
+    }
+
+
+    public function sendMessage($tel_code,$auth_token,$text,$to_mobile){
+        $result = (new CloudApiImplementers($tel_code,$auth_token))->sendText($text,$to_mobile);
+        return $result;
+    }
 }
