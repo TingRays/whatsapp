@@ -19,6 +19,10 @@ use App\Implementers\CloudAPI\CloudApiImplementers;
 */
 class MerchantMessagesLogService extends BaseService
 {
+    private const ICON_ARR = [
+        '🇧🇷','📢','📣','🔔','🔊','💤','💟','💕','💗','💖','🌆','🎇','🌉','🌄','🌅','🌃','🏙','🏜','🏝','🏖','🗽','⛱','🏕','🍩','🍿','🍫','🍪','🌹','🥀','🪷','🌺','🪸','🐾',
+        '🌰','🍼','🥛','🍕','🥞','🍞','🥯','🌽','🍑','🍋','🍌','🍉','🍇','🍍','🍐','🍒','🍏','🍓','🔥','🌈','💥','💨','💧','🌔','🌗','🌖','🌒','🌷','💐','🌾','🍁','🍂'
+    ];
 
     /**
     * 引入父级构造
@@ -33,7 +37,26 @@ class MerchantMessagesLogService extends BaseService
 
 
     public function sendMessage($tel_code,$auth_token,$text,$to_mobile){
-        $result = (new CloudApiImplementers($tel_code,$auth_token))->sendText($text,$to_mobile);
+        $str = str_replace('__MOBILE__','+'.$to_mobile,$text);
+        $str_arr = explode(' ',$str);
+
+        $count = count($str_arr);
+        for ($i=1;$i<=5;$i++){
+            $key_arr[] = rand(0,$count-1);
+        }
+        sort($key_arr);
+        $new_str = '';
+        foreach ($str_arr as $k => $value) {
+            foreach ($key_arr as $key) {
+                if ($k == (int)$key) {
+                    $replacement = self::ICON_ARR[array_rand(self::ICON_ARR)];
+                    $value = $value . $replacement;
+                }
+            }
+            $new_str .= ' ' . $value;
+            unset($str_arr[$k]);
+        }
+        $result = (new CloudApiImplementers($tel_code,$auth_token))->sendText($new_str,$to_mobile);
         return $result;
     }
 }

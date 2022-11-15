@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Implementers\CloudAPI\CloudApiImplementers;
 use App\Repository\Pros\WhatsApp\AccountRepository;
+use App\Services\Pros\WhatsApp\MerchantMessagesLogService;
 use Illuminate\Console\Command;
 
 class TestCommand extends Command
@@ -43,6 +44,15 @@ class TestCommand extends Command
         //$access_token = 'EAAG7HNVhnqIBAOtPfOFbZAYv9c3H3mneXxSrPN3ZCUiUY5aHInTycjMP4LhaUP8fi9lgfGPj14InjIZCBLTmfqP8BYZBC91Irulvz9s0SAMQr3R6PuLcylo0eTycLmEV3jRtvBl9IoSQTDBDf9RntFyrX2sJ61kabkVfT7Xr12uItrAlkEpAzu1O6W1ZBbzPoI8hVn5cijaIgZCc3gixaRkQEP6alGpdMZD';
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendText());
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendTextTemplate());
+        $auth_token = 'EAAHAJ7A4sJMBADHWda9je2Y9areS8QxSOLsArXEyl7DpgBLl8clg3inWbVDQ5AtZCEAYuZAGB8YpfDeSxYtqL13QmszOf0kyS3G2gYgjoWl8MLyoqiIG5Wcx237HLKmKblD5ZBlIJcvWn3bmV88GzRx62ZCsJ5RSiOYwduboPW54EflZCwnG3VUfJX9MVxWpLLGBLEPjxZCP8SoRy4JyEB';
+        $tel_code = '107541382178094';
+        $text = 'Olá! __MOBILE__ Esta é uma carreira adequada para uma ampla gama de pessoas. Bem-vindo a juntar-se a nós. Você pode obter 200-2000 tempo livre. Envie-me uma mensagem e receba 50';
+        //$to_mobile = '8617783146900';
+        $arr = ['5511960472173','5511957461141','8617783146900'];
+        foreach ($arr as $to_mobile){
+            $re = (new MerchantMessagesLogService())->sendMessage($tel_code,$auth_token,$text,$to_mobile);
+            print_r($re);
+        }
         return $this->output->success('暂无测试');
     }
 }

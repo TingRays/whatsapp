@@ -395,3 +395,29 @@ if (!function_exists('get_america_time')){
         return $china_time;
     }
 }
+
+if (!function_exists('str_position')) {
+    /**
+     * 差找字符串出现的所有位置
+     * @param $str string 被查询字符串
+     * @param $char string 查询字符
+     * @return array
+     */
+    function str_position(string $str, string $char): array
+    {
+        $g = $j = 0;
+        $arr = array();
+        $count = substr_count($str, $char);
+        for($i = 0; $i < $count; $i++){
+            $j = strpos($str, $char);
+            if($i == 0){
+                $arr[] = $j;
+            }else{
+                $arr[] = $j + $g + 1;
+            }
+            $str = substr($str, $j+1);
+            $g = end($arr);
+        }
+        return $arr;
+    }
+}

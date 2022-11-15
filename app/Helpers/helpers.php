@@ -378,4 +378,3 @@ if (!function_exists('get_random')) {
         return $random;
     }
 }
-
