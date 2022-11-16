@@ -15,6 +15,7 @@ use Abnermouke\EasyBuilder\Module\BaseService;
 use Abnermouke\Pros\Builders\BuilderProvider;
 use Abnermouke\Pros\Builders\Table\TableBuilder;
 use App\Model\Pros\WhatsApp\Accounts;
+use App\Model\Pros\WhatsApp\AccountTags;
 use App\Model\Pros\WhatsApp\MerchantMessages;
 use App\Model\Pros\WhatsApp\MerchantMessagesLogs;
 use App\Model\Pros\WhatsApp\MerchantTemplates;
@@ -125,7 +126,7 @@ class MerchantMessageInterfaceService extends BaseService
             $accounts[$k] = '+('.$account['global_roaming'].')-'.$account['mobile'];
         }
         //查询全部用户标签
-        $account_tags = (new AccountTagRepository())->get([], ['id', 'guard_name', 'description']);
+        $account_tags = (new AccountTagRepository())->get(['status'=>AccountTags::STATUS_DISABLED], ['id', 'guard_name', 'description']);
         //初始化信息
         $account_tags = array_column($account_tags, null, 'id');
         //循环用户标签信息
