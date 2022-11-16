@@ -108,7 +108,7 @@ class CloudApiImplementers extends BaseService
             //记录日志
             LoggerLibrary::logger('cloud_api_errors', $exception->getMessage());
             //返回失败
-            return ['status'=>false,'data'=>[]];
+            return ['status'=>false,'data'=>$exception->getMessage()];
         }
         //判断是否请求失败
         if ((int)$response->getStatusCode() !== 200) {
