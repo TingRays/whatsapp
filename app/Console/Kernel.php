@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
         //每5秒执行 - 群发消息记录创建
         $schedule->command('messages:log')->cron('* * * * *');
         //每5秒执行 - 群发任务
-        //$schedule->command('mass:dispatch')->cron('* * * * *');
+        $schedule->command('mass:dispatch')->cron('* * * * *');
     }
 
     /**
