@@ -88,7 +88,7 @@ class CloudApiImplementers extends BaseService
             //返回失败
             return ['status'=>false,'data'=>[]];
         }
-        $params = $this->params;
+        $params = $this->params;//dd($params);
         //尝试查询
         try {
             //引入请求示例
@@ -131,22 +131,11 @@ class CloudApiImplementers extends BaseService
                         'type' => 'header',
                         'parameters' => [
                             [
-                                'type' => 'text',
-                                'text' => 'aaron',
+                                'type' => 'image',
+                                'image' => [
+                                    'link' => 'https://www.whatsqunfa.com/pros/static/medias/images/photo1.jpg'
+                                ],
                             ]
-                        ]
-                    ],
-                    [
-                        'type' => 'body',
-                        'parameters' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'ting',
-                            ],
-                            [
-                                'type' => 'text',
-                                'text' => 'ray',
-                            ],
                         ]
                     ],
                 ];
