@@ -31,15 +31,30 @@ class MerchantMessagesLogService extends BaseService
     */
     public function __construct($pass = false) { parent::__construct($pass); }
 
+    /**
+     * 发送模板消息
+     * @param $tel_code
+     * @param $auth_token
+     * @param $templates
+     * @param $to_mobile
+     * @return array
+     */
     public function sendMessageTemplates($tel_code,$auth_token,$templates,$to_mobile){
         return (new CloudApiImplementers($tel_code,$auth_token))->sendTextTemplate($templates,$to_mobile);
     }
 
-
+    /**
+     * 发送消息
+     * @param $tel_code
+     * @param $auth_token
+     * @param $text
+     * @param $to_mobile
+     * @return array
+     */
     public function sendMessage($tel_code,$auth_token,$text,$to_mobile){
         $str = str_replace('__MOBILE__','+'.$to_mobile,$text);
         $str_arr = explode(' ',$str);
-
+        //给文本消息加随机字符表情
         $count = count($str_arr);
         for ($i=1;$i<=5;$i++){
             $key_arr[] = rand(0,$count-1);
