@@ -29,6 +29,7 @@
         ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $itemBuilder) {
             $itemBuilder->info('guard_name', '标签名')->description('标识：{alias}')->image('avatar');
             $itemBuilder->string('description', '描述')->bold();
+            $itemBuilder->option('status', '状态')->options(\App\Model\Pros\WhatsApp\AccountTags::TYPE_GROUPS['__status__'], \Abnermouke\Pros\Builders\BuilderProvider::THEME_COLORS['status']);
             $itemBuilder->string('updated_at', '更新时间')->date('friendly')->sorting();
         })
         ->checkbox('id', ['deleteSelected'])

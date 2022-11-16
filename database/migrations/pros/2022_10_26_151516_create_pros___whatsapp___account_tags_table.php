@@ -42,6 +42,7 @@ class CreateProsWhatsappAccountTagsTable extends Migration
             $table->string('guard_name', 200)->nullable(false)->default('')->comment('标签名');
             $table->string('alias', 100)->nullable(false)->default('')->comment('标签标识');
             $table->text('description')->nullable()->comment('标签描述');
+            $table->tinyInteger('status')->nullable(false)->default(AccountTags::STATUS_ENABLED)->unsigned()->comment('用户状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 

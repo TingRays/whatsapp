@@ -15,6 +15,7 @@ use Abnermouke\EasyBuilder\Module\BaseService;
 use Abnermouke\Pros\Builders\Form\FormBuilder;
 use Abnermouke\Pros\Builders\Form\Tools\FormItemBuilder;
 use Abnermouke\Pros\Builders\Table\TableBuilder;
+use App\Model\Pros\WhatsApp\AccountTags;
 use App\Repository\Pros\WhatsApp\AccountTagRepository;
 use Illuminate\Support\Arr;
 
@@ -71,6 +72,8 @@ class AccountTagInterfaceService extends BaseService
                 $builder->input('alias', '标签标识')->required();
                 $builder->input('guard_name', '标签名称')->required();
                 $builder->textarea('description', '描述');
+                $builder->select('status', '状态')->options(AccountTags::TYPE_GROUPS['__status__'],AccountTags::STATUS_ENABLED)->required();
+
             })
             ->setData((int)$id > 0 ? (new AccountTagRepository())->row(['id' => (int)$id]) : [])
             ->render();
@@ -105,6 +108,7 @@ class AccountTagInterfaceService extends BaseService
                 return $this->fail(CodeLibrary::DATA_CREATE_FAIL, '标签名称已存在');
             }
             //添加信息
+            $info['status'] = AccountTags::STATUS_ENABLED;
             $info['created_at'] = auto_datetime();
             //添加信息
             if (!$id = (new AccountTagRepository())->insertGetId($info)) {
@@ -141,6 +145,7 @@ class AccountTagInterfaceService extends BaseService
             'guard_name'=>$guard_name,
             'alias'=>$alias,
             'description'=>$description,
+            'status' => AccountTags::STATUS_ENABLED,
             'created_at'=>auto_datetime(),
             'updated_at'=>auto_datetime(),
         ]);
