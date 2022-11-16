@@ -88,7 +88,7 @@ class CloudApiImplementers extends BaseService
             //返回失败
             return ['status'=>false,'data'=>[]];
         }
-        $params = $this->params;//dd($params);
+        $params = $this->params;
         //尝试查询
         try {
             //引入请求示例
@@ -125,7 +125,7 @@ class CloudApiImplementers extends BaseService
     private function components($name){
         switch ($name){
             case 'onemessage_en_US':
-            case 'onemessage_en_GB':
+            case 'event_notification_en_US':
                 $components = [
                     [
                         'type' => 'header',
