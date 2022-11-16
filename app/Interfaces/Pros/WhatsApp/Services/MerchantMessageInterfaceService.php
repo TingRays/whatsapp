@@ -189,6 +189,7 @@ class MerchantMessageInterfaceService extends BaseService
                 if ($tag_id = data_get($data, '__data__.account_tag_id', 0)) {
                     //查询所有当前标签用户
                     $account_ids = object_2_array((new AccountRepository())->pluck('id', ['status' => Accounts::STATUS_ENABLED, 'tag_ids' => ['json-contains', (int)$tag_id]]));
+                    (new AccountTagRepository())->update(['id'=>$tag_id],['status'=>AccountTags::STATUS_DISABLED]);
                 }
                 $type = MerchantMessages::TYPE_OF_TAGS;
                 break;
