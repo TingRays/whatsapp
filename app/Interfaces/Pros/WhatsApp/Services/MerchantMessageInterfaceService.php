@@ -126,7 +126,7 @@ class MerchantMessageInterfaceService extends BaseService
             $accounts[$k] = '+('.$account['global_roaming'].')-'.$account['mobile'];
         }
         //查询全部用户标签
-        $account_tags = (new AccountTagRepository())->get(['status'=>AccountTags::STATUS_DISABLED], ['id', 'guard_name', 'description']);
+        $account_tags = (new AccountTagRepository())->get(['status'=>AccountTags::STATUS_ENABLED], ['id', 'guard_name', 'description']);
         //初始化信息
         $account_tags = array_column($account_tags, null, 'id');
         //循环用户标签信息
