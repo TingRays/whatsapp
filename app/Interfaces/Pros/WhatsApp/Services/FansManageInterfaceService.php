@@ -223,6 +223,7 @@ class FansManageInterfaceService extends BaseService
             if (empty($mobile)){
                 continue;
             }
+            $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($mobile));
             //查询手机号
             if ((new FansManageRepository())->exists(['mobile' => $mobile,'admin_id'=>$admin_id])) {
                 //设置错误原因
