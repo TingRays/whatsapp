@@ -148,7 +148,7 @@ class CloudApiImplementers extends BaseService
                             [
                                 'type' => 'image',
                                 'image' => [
-                                    'link' => 'https://www.whatsqunfa.com/pros/static/medias/images/photo4.jpg'
+                                    'link' => 'https://www.whatsqunfa.com/pros/static/medias/images/photo4.png'
                                 ],
                             ]
                         ]
