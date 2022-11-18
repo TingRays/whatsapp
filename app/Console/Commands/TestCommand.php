@@ -53,10 +53,10 @@ class TestCommand extends Command
 //            $re = (new MerchantMessagesLogService())->sendMessage($tel_code,$auth_token,$text,$to_mobile);
 //            print_r($re);
 //        }
-        $auth_token = 'EAAqNKZCKTkzABADo6dD8SiOzrBZB4M3JNGSOplfgs2edKAcV4YukjJqiGUu7ZA72Qa5jmZC0u1DS8jL7ZAfvZAvszJApAZAWWYbOiHZChFgHnalkuvgLsvpRpZBjXwZBNlwuXHx50M2KralPr3bRb2PsRMkeZCLPHXF7DQZCrj1TSX3rQj4YwfPjCIZBYmrelEOlnuGaIqA6UAvQ3TajrV10TenUM';
-        $tel_code = '113870698204469';
+        $auth_token = 'EAAJRhOGjB0IBAAfAy4YAvvatSWMzAA11TAshjA0WRv4g2hHqMKE8R05syEMKo7zYcyog0Ac6DIl2PuX3lvWuTcpREEyMUZCIZAVzYeZBhtxFd2fk8eI2kO3m4JDWZCgZCZBiTSKQNQ2BiZCADw31DKZAX4XMWibeAZBvyviubeQQosR639nkEEPCWRsSHC8IcRkP44g9IkYBVMhwVmiZBEoPDx';
+        $tel_code = '102785319331876';
         $to_mobile = '8617783146900';
-        $templates = (new MerchantTemplateRepository())->row(['id'=>3],['id','title','language','header_type','header_content','body','button']);
+        $templates = (new MerchantTemplateRepository())->row(['id'=>4],['id','title','language','header_type','header_content','body','button']);
 
         $re = (new MerchantMessagesLogService())->sendMessageTemplates($tel_code,$auth_token,$templates,$to_mobile);
         print_r($re);
