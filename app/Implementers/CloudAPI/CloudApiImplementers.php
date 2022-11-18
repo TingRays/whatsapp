@@ -140,7 +140,7 @@ class CloudApiImplementers extends BaseService
                     ],
                 ];
                 break;
-            case 'notificao_pt_BR':
+            case 'moban1_pt_BR':
                 $components = [
                     [
                         'type' => 'header',
@@ -148,7 +148,7 @@ class CloudApiImplementers extends BaseService
                             [
                                 'type' => 'image',
                                 'image' => [
-                                    'link' => 'https://www.whatsqunfa.com/pros/static/medias/images/photo4.png'
+                                    'link' => 'https://www.whatsqunfa.com/pros/static/medias/images/photo4.jpg'
                                 ],
                             ]
                         ]
