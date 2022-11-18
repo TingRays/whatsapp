@@ -109,7 +109,7 @@ return [
             'guard_name' => 'WhatsApp',
             'handler' => '',
             'route' => ['name' => 'whatsapp.console.bm.index', 'params' => []],
-            'permission_nodes' => [],
+            'permission_nodes' => ['whatsapp.console.merchant.index','whatsapp.console.merchant.all.index'],
             'icon' => '',
             'group_menus' => [
                 [
@@ -117,14 +117,14 @@ return [
                         'guard_name' => 'BM账户管理',
                         'handler' => '',
                         'route' => ['name' => '', 'params' => []],
-                        'permission_nodes' => ['whatsapp.console.merchant.index'],
+                        'permission_nodes' => ['whatsapp.console.merchant.index','whatsapp.console.merchant.all.index'],
                         'icon' => 'fa fa-store',
                         'menus' => [
                             [
                                 'guard_name' => 'BM账户',
                                 'handler' => '',
                                 'route' => ['name' => 'whatsapp.console.bm.index', 'params' => []],
-                                'permission_nodes' => [],
+                                'permission_nodes' => ['whatsapp.console.merchant.index','whatsapp.console.merchant.all.index'],
                                 'icon' => 'fa fa-user',
                             ],
                             [

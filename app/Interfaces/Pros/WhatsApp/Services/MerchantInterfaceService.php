@@ -75,6 +75,46 @@ class MerchantInterfaceService extends BaseService
         return $this->success($render);
     }
 
+    public function allLists($request){
+        //获取加密信息
+        if (!$data = AesLibrary::decryptFormData($request->all())) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
+        }
+        //整理查询条件
+        $conditions = ['status' => ['!=', Merchants::STATUS_DELETED]];
+        //判断是否筛选状态
+        if ($request->exists('status')) {
+            //设置默认条件
+            $conditions['status'] = (int)$request->get('status', Merchants::STATUS_ENABLED);
+        }
+        //判断筛选条件
+        if ($filters = data_get($data, 'filters', [])) {
+            //循环筛选条件
+            foreach ($filters as $filter => $value) {
+                //根据筛选项设置条件
+                switch ($filter) {
+                    case 'keyword':
+                        $value && $conditions[implode('|', ['id', 'guard_name', 'tel', 'tel_code', 'business_code'])] = ['like', '%'.$value.'%'];
+                        break;
+                    case 'global_roaming':
+                        (int)$value > 0 && $conditions['global_roaming'] = (int)$value;
+                        break;
+                    case 'updated_at':
+                        $value && $conditions['updated_at'] = ['date', $value];
+                        break;
+                }
+            }
+        }
+        $conditions['remainder'] = ['>',0];
+        //查询列表
+        $lists = (new MerchantRepository())->lists($conditions, ['*'], [], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
+        //渲染表格内容
+        $render = TableBuilder::CONTENT()->signature($data['signature'])->setLists($lists)->render();
+        //返回成功
+        return $this->success($render);
+    }
+
     /**
      * 获取BM的商户详情
      * @param $id

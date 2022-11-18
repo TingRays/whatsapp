@@ -35,6 +35,10 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             Route::get('{bm_id}', 'MerchantController@index')->name('index');
             //商户列表
             Route::post('lists/{bm_id}', 'MerchantController@lists')->name('lists');
+            //商户
+            Route::get('all/index', 'MerchantController@allIndex')->name('all.index');
+            //商户列表
+            Route::post('all/lists', 'MerchantController@allLists')->name('all.lists');
             //商户详情
             Route::post('detail/{bm_id}/{id}', 'MerchantController@detail')->name('detail');
             //商户保存

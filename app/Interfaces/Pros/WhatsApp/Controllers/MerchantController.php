@@ -46,6 +46,30 @@ class MerchantController extends BaseController
     }
 
     /**
+     * 所有的BM的商户页面
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function allIndex()
+    {
+        //渲染页面
+        return view('pros.whatsapp.merchant.all_index');
+    }
+
+    /**
+     * BM的商户列表
+     * @param Request $request
+     * @param MerchantInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function allLists(Request $request, MerchantInterfaceService $service){
+        //获取（BM）账户列表
+        $service->allLists($request);
+        //响应接口
+        return responseService($service);
+    }
+
+    /**
      * 获取BM的商户详情
      * @param $id
      * @param Request $request

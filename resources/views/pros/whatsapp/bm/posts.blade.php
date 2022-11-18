@@ -27,6 +27,7 @@
                             </label>
                             <select class="form-select form-select-solid" data-control="select2"  data-allow-clear="true" autocomplete="off" id="remainder" name="group_id">
                                 <option value="" selected>请选择发送量</option>
+                                <option value="50">50</option>
                                 <option value="250">250</option>
                                 <option value="1000">1000</option>
                             </select>

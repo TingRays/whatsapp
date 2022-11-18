@@ -25,6 +25,7 @@
         })
         ->setButtons(function (\Abnermouke\Pros\Builders\Table\Tools\TableButtonBuilder $buttonBuilder) {
             $buttonBuilder->form(route('whatsapp.console.bm.detail', ['id' => 0]), '添加账户')->theme('info');
+            $buttonBuilder->redirect(route('whatsapp.console.merchant.all.index'), '所有商户管理')->icon('fa fa-list');
         })
         ->setActions(function (\Abnermouke\Pros\Builders\Table\Tools\TableActionBuilder $actionBuilder) {
             $actionBuilder->form(route('whatsapp.console.bm.detail', ['id' => '__ID__']), '编辑账户')->icon('fa fa-edit');
