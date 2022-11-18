@@ -312,7 +312,7 @@ class BusinessManagerInterfaceService extends BaseService
                         'tel' => $mobile,
                         'tel_code' => $tel_code,
                         'business_code' => $business_code,
-                        'remainder' => 250,
+                        'remainder' => $remainder,
                         'update_remainder_time' => 0,
                         'bm_status' => BusinessManager::STATUS_ENABLED,
                         'status' => Merchants::STATUS_ENABLED,
