@@ -81,10 +81,10 @@ class MerchantMessagesLogInterfaceService extends BaseService
     public function massDispatch(){
         //fork 进程
         $workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_VERIFYING]);
-        //最多10个 进程
-        if ($workers >= 10){
+        //最多1个 进程
+        if ($workers >= 1){
             //返回失败
-            return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '最多10个进程');
+            return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '最多1个进程');
         }
         //查询可以用于发送消息的商户
         $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
