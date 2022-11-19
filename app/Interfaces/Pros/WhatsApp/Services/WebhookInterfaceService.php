@@ -30,13 +30,13 @@ class WebhookInterfaceService extends BaseService
 
     public function webhook($request){
         $data = $request->all();
-        //if (isset($data['hub_verify_token']) && $data['hub_verify_token'] === 'XUkLMJJ|S$Aq5'){
+        if (isset($data['hub_verify_token']) && $data['hub_verify_token'] === 'XUkLMJJ|S$Aq5'){
             $id = (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
             return $this->success(compact('id'));
-        //}else{
-        //    (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
-        //    return $this->success();
-        //}
-        //return $this->fail(CodeLibrary::MISSING_PERMISSION, '修改失败');
+        }else{
+            (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
+            return $this->success();
+        }
+        return $this->fail(CodeLibrary::MISSING_PERMISSION, '修改失败');
     }
 }
