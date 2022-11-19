@@ -52,7 +52,7 @@ class CreateProsWhatsappAccountsTable extends Migration
 
             //索引配置
             $table->unique(['global_roaming', 'mobile'], 'GLOBAL_ROAMING_MOBILE');
-            $table->unique('mobile', 'MOBILE');
+            $table->index('mobile', 'MOBILE');
         });
         //添加表自增长值
         (new AccountRepository())->setIncrementId(1, Accounts::DB_CONNECTION);

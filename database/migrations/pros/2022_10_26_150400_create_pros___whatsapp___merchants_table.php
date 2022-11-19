@@ -55,8 +55,8 @@ class CreateProsWhatsappMerchantsTable extends Migration
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
 
             //索引配置
-            $table->unique(['global_roaming', 'tel'], 'GLOBAL_ROAMING_TEL');
-            $table->unique('tel_code', 'TEL_CODE');
+            $table->index(['global_roaming', 'tel'], 'GLOBAL_ROAMING_TEL');
+            $table->index('tel_code', 'TEL_CODE');
         });
         //添加表自增长值
         (new MerchantRepository())->setIncrementId(1, Merchants::DB_CONNECTION);
