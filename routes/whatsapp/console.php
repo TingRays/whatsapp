@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], function () {
     //获取BM列表
     Route::get('webhook', 'WebhookController@index')->name('index');
+    Route::post('webhook', 'WebhookController@index')->name('index');
     Route::get('terms/privacy', 'WebhookController@termsPrivacy')->name('terms.privacy');
     Route::get('terms/service', 'WebhookController@termsService')->name('terms.service');
     //设置需登录相关路由
