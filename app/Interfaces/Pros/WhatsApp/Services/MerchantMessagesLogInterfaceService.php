@@ -135,7 +135,7 @@ class MerchantMessagesLogInterfaceService extends BaseService
             $message_id = '';
             if($result['result']['status']){
                 $status = MerchantMessagesLogs::STATUS_ENABLED;
-                $message_id = $result['data']['messages'][0]['id']??'';
+                $message_id = $result['result']['data']['messages'][0]['id']??'';
             }
             (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                 ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
