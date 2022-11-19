@@ -132,12 +132,14 @@ class MerchantMessagesLogInterfaceService extends BaseService
             //$result = (new MerchantMessagesLogService())->sendMessage($merchant['tel_code'],$merchant['auth_token'],$templates[$message_log['template_id']]['body']??'',$to_mobile);
             $result = (new MerchantMessagesLogService())->sendMessageTemplates($merchant['tel_code'],$merchant['auth_token'],$templates[$message_log['template_id']]??[],$to_mobile);
             $status = MerchantMessagesLogs::STATUS_VERIFY_FAILED;
+            $message_id = '';
             if($result['result']['status']){
                 $status = MerchantMessagesLogs::STATUS_ENABLED;
+                $message_id = $result['data']['messages'][0]['id']??'';
             }
             (new MerchantMessagesLogRepository())->update(['id'=>$message_log['id']],
                 ['merchant_id'=>$merchant['id'],'content'=>$result['data']??[],'result'=>$result['result']??[],
-                    'status'=>$status,'updated_at'=>auto_datetime()]);
+                    'status'=>$status,'message_id'=>$message_id,'updated_at'=>auto_datetime()]);
             $remainder--;
             unset($message_logs[$k]);
             unset($message_log_ids[$message_log['id']]);

@@ -47,6 +47,10 @@ class CreateProsWhatsappMerchantMessagesLogsTable extends Migration
             $table->integer('template_id')->nullable(false)->default(0)->unsigned()->comment('模板ID');
             $table->longText('content')->comment('消息内容');
             $table->longText('result')->comment('结果');
+            $table->string('message_id', 250)->nullable(false)->default('')->comment('消息ID');
+            $table->tinyInteger('sent')->nullable(false)->default(MerchantMessagesLogs::SWITCH_OFF)->unsigned()->comment('发送');
+            $table->tinyInteger('delivered')->nullable(false)->default(MerchantMessagesLogs::SWITCH_OFF)->unsigned()->comment('送达');
+            $table->tinyInteger('read')->nullable(false)->default(MerchantMessagesLogs::SWITCH_OFF)->unsigned()->comment('阅读');
             $table->tinyInteger('status')->nullable(false)->default(MerchantMessagesLogs::STATUS_ENABLED)->unsigned()->comment('状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
