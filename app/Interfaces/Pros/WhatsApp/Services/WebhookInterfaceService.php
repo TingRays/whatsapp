@@ -33,6 +33,9 @@ class WebhookInterfaceService extends BaseService
         if ($data['hub_verify_token'] === 'XUkLMJJ|S$Aq5'){
             $id = (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
             return $this->success(compact('id'));
+        }else{
+            (new WebhookRepository())->insertGetId(['content'=>$data,'created_at' => auto_datetime(),'updated_at' => auto_datetime()]);
+            return $this->success();
         }
         return $this->fail(CodeLibrary::MISSING_PERMISSION, '修改失败');
     }
