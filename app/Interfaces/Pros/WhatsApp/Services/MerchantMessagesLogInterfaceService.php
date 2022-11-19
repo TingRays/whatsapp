@@ -82,7 +82,7 @@ class MerchantMessagesLogInterfaceService extends BaseService
         //fork 进程
         $workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_VERIFYING]);
         //最多3个 进程
-        if ($workers >= 3){
+        if ($workers >= 20){
             //返回失败
             return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '最多3个进程');
         }
