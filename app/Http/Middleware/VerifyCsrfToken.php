@@ -20,6 +20,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
-        'pros/console/uploader/*'
+        'pros/console/uploader/*',
+        'whatsapp/console/webhook',
     ];
 }
