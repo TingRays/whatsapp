@@ -191,6 +191,21 @@ class CloudApiImplementers extends BaseService
                     ],
                 ];
                 break;
+            case 'notificao_pt_BR':
+                $components = [
+                    [
+                        'type' => 'header',
+                        'parameters' => [
+                            [
+                                'type' => 'image',
+                                'image' => [
+                                    'link' => 'https://www.whatsqunfa.com/pros/static/medias/images/photo6.jpg'
+                                ],
+                            ]
+                        ]
+                    ],
+                ];
+                break;
             case 'hello_world_en_US':
                 $components = [];
                 break;

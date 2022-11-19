@@ -214,14 +214,14 @@ class AccountInterfaceService extends BaseService
                     $global_roaming_len = strlen($global_roaming);
                     $mobile = substr($mobile,$global_roaming_len);
                 }
-                if ((new AccountRepository())->exists(['global_roaming' => $global_roaming,'mobile' => $mobile])) {
-                    //设置错误原因
-                    $post[] = '该用户已存在';
-                    //设置失败
-                    $wrongs[] = $post;
-                    //跳出当前循环
-                    continue;
-                }
+//                if ((new AccountRepository())->exists(['global_roaming' => $global_roaming,'mobile' => $mobile])) {
+//                    //设置错误原因
+//                    $post[] = '该用户已存在';
+//                    //设置失败
+//                    $wrongs[] = $post;
+//                    //跳出当前循环
+//                    continue;
+//                }
                 if (empty($tag_ids)){
                     ($service = new AccountTagInterfaceService())->insertTag($post[3]);
                     $tag_ids[] = $service->getResult()['tag_id'];
