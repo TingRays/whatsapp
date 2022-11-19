@@ -26,15 +26,15 @@ class CloudApiImplementers extends BaseService
 
     /**
      * 构造函数
-     * @param $from_phone_number_id
+     * @param $from_id
      * @param $access_token
      */
-    public function __construct($from_phone_number_id = '', $access_token = '')
+    public function __construct($from_id = '', $access_token = '')
     {
         //引用父级构造
         parent::__construct(false);
         $this->access_token = $access_token;
-        $this->send_api_link = self::$api_link.'/'.$from_phone_number_id.'/messages';
+        $this->send_api_link = self::$api_link.'/'.$from_id;
         //设置默认请求参数
         //$this->setDefaultParams($params);
     }
@@ -62,6 +62,7 @@ class CloudApiImplementers extends BaseService
             'body' => $text
         ];
         $type = 'text';
+        $this->send_api_link = $this->send_api_link.'/messages';
         $this->setDefaultParams($data,$to_mobile,$type);
         $result = $this->query();
         return $result;
@@ -77,9 +78,16 @@ class CloudApiImplementers extends BaseService
             'components' => $components
         ];
         $type = 'template';
+        $this->send_api_link = $this->send_api_link.'/messages';
         $this->setDefaultParams($data,$to_mobile,$type);
         $result = $this->query();
         return compact('result','data');
+    }
+
+    public function retrieveTemplates($limit = 20){
+        $this->send_api_link = $this->send_api_link.'/message_templates?limit='.$limit.'0&access_token='.$this->access_token;
+        $result = $this->getQuery();
+        return compact('result');
     }
 
     private function query(){
@@ -104,6 +112,34 @@ class CloudApiImplementers extends BaseService
                 'verify' => false
             ]);
 
+        } catch (\Exception $exception) {
+            //记录日志
+            LoggerLibrary::logger('cloud_api_errors', $exception->getMessage());
+            //返回失败
+            return ['status'=>false,'data'=>$exception->getMessage()];
+        }
+        //判断是否请求失败
+        if ((int)$response->getStatusCode() !== 200) {
+            //返回失败
+            return ['status'=>false,'data'=>json_decode($response->getBody()->getContents(), true)];
+        }
+        //获取返回结果
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        //返回成功
+        return ['status'=>true,'data' => $result];
+    }
+
+    private function getQuery(){
+        //判断数据
+        if (!$this->send_api_link) {
+            //返回失败
+            return ['status'=>false,'data'=>[]];
+        }
+
+        try {
+            //发起请求
+            $response = (new Client())->get($this->send_api_link);
         } catch (\Exception $exception) {
             //记录日志
             LoggerLibrary::logger('cloud_api_errors', $exception->getMessage());

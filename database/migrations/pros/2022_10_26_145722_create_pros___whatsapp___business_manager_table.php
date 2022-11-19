@@ -56,7 +56,7 @@ class CreateProsWhatsappBusinessManagerTable extends Migration
             //索引配置
             $table->index('ac_email', 'AC_EMAIL');
             $table->unique('code', 'CODE');
-            $table->unique('ac_number', 'AC_NUMBER');
+            $table->index('ac_number', 'AC_NUMBER');
         });
         //添加表自增长值
         (new BusinessManagerRepository())->setIncrementId(1, BusinessManager::DB_CONNECTION);

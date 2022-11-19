@@ -74,4 +74,15 @@ class MerchantMessagesLogService extends BaseService
         $result = (new CloudApiImplementers($tel_code,$auth_token))->sendText($new_str,$to_mobile);
         return $result;
     }
+
+    /**
+     * 拉取模板
+     * @param $business_account_id
+     * @param $auth_token
+     * @param $limit
+     * @return array
+     */
+    public function retrieveTemplates($business_account_id,$auth_token,$limit = 20){
+        return (new CloudApiImplementers($business_account_id,$auth_token))->retrieveTemplates($limit);
+    }
 }

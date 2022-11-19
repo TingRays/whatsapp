@@ -87,7 +87,7 @@ class MerchantMessagesLogInterfaceService extends BaseService
             return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '最多3个进程');
         }
         //查询可以用于发送消息的商户
-        $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token']);
+        $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token'], ['id' => 'desc']);
         if (empty($merchant)){
             //没有商户可以用于发送消息
             //返回失败

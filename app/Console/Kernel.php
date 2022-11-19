@@ -37,9 +37,9 @@ class Kernel extends ConsoleKernel
         //$schedule->command('merchant:remainder')->daily();
         //每分钟执行任务队列
         $schedule->command('task:queues')->everyMinute();
-        //每5秒执行 - 群发消息记录创建
+        //每秒执行 - 群发消息记录创建
         $schedule->command('messages:log')->cron('* * * * *');
-        //每5秒执行 - 群发任务
+        //每秒执行 - 群发任务
         $schedule->command('mass:dispatch')->cron('* * * * *');
     }
 
