@@ -82,13 +82,13 @@ class MerchantMessagesLogInterfaceService extends BaseService
         //fork 进程
         $workers = (new MerchantRepository())->count(['remainder'=>['>',0],'status'=>Merchants::STATUS_VERIFYING]);
         //最多3个 进程
-        if ($workers >= 20){
+        if ($workers >= 20){dd(1);
             //返回失败
             return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '最多3个进程');
         }
         //查询可以用于发送消息的商户
         $merchant = (new MerchantRepository())->row(['remainder'=>['>',0],'status'=>Merchants::STATUS_ENABLED],['id','remainder','tel_code','auth_token'], ['id' => 'desc']);
-        if (empty($merchant)){
+        if (empty($merchant)){dd(2);
             //没有商户可以用于发送消息
             //返回失败
             return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '没有商户可以用于发送消息');
@@ -98,11 +98,11 @@ class MerchantMessagesLogInterfaceService extends BaseService
         $remainder = $default_size = $merchant['remainder'];
         //等待发送中
         $message_logs = (new MerchantMessagesLogRepository())->limit(['status'=>MerchantMessagesLogs::STATUS_DISABLED,'mode'=>MerchantMessagesLogs::MODE_OF_MERCHANT],['id','account_id','merchant_messages_id','type','template_id'],[],['id'=>'desc'],[],1,$default_size);
-        if (empty($message_logs)){
+        if (empty($message_logs)){dd(3);
             //返回失败
             return $this->fail(CodeLibrary::WITH_DO_NOT_ALLOW_STATE, '没有可发送的消息');
         }
-
+        dd(4);
         //获取商户发送任务
         $merchant_message_ids = array_column($message_logs,'merchant_messages_id');
         //更新商户发送消息状态 - 发送中
