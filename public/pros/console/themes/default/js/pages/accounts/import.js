@@ -2,10 +2,16 @@
 $(function () {
 
     //初始化信息
-    var body = $('body'), trigger = $("#import_trigger"), uploader = $("#import_file_input"), query_url = uploader.attr('data-query-url');
+    var body = $('body'), trigger = $("#import_trigger"), uploader = $("#import_file_input"), query_url = uploader.attr('data-query-url') ,group = $('#group');
 
     //设置触发监听
     trigger.on('click', function () {
+        var group_id = group.val();
+        if (group_id === ''){
+            //提示信息
+            alertToast('请先选择用户标签', 2000, 'error', '用户标签');
+            return true;
+        }
         //清空值
         uploader.val('');
         //设置触发上传
@@ -20,10 +26,12 @@ $(function () {
         if (typeof (upload_files) !== 'undefined' && !$.isEmptyObject(upload_files)) {
             //加载loading
             var loading = loadingStart(trigger, body[0], '正在上传文件...');
+            var group_id = group.val();
             //整理上传信息
             var uploadData = new FormData();
             //整理信息
             uploadData.append('file', upload_files[0]);
+            uploadData.append('group_id', group_id);
             uploadData.append('file_type', 'binary');
             uploadData.append('dictionary', 'accounts/posts/imports');
             uploadData.append('origin_name', file.target.files[0]['name']);

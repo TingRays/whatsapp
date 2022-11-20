@@ -20,6 +20,19 @@
                 </div>
                 <div class="col-xl-12">
                     <img src="{{ proxy_assets('static/medias/images/post_import_example.png', 'pros') }}" alt="Example" class="w-100 opacity-75" style="border-radius: 20px 20px 0 0">
+                    <div class="col-lg-10 col-xl-6 offset-xl-3 justify-content-center col-lg-12">
+                        <div class="d-flex flex-column col-lg-12">
+                            <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                <span>用户标签</span>
+                            </label>
+                            <select class="form-select form-select-solid" data-control="select2"  data-allow-clear="true" autocomplete="off" id="group" name="group_id">
+                                <option value="" selected>请选择用户标签</option>
+                                @foreach($groups as $group)
+                                    <option value="{{ $group['id'] }}">{{ $group['guard_name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-center py-10">
                         <button type="button" class="btn btn-light-primary font-weight-bolder px-10 py-3" id="import_trigger">
                             立即导入

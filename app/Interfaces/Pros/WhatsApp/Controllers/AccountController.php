@@ -10,6 +10,7 @@
 namespace App\Interfaces\Pros\WhatsApp\Controllers;
 
 use App\Interfaces\Pros\WhatsApp\Services\AccountInterfaceService;
+use App\Repository\Pros\WhatsApp\AccountTagRepository;
 use Illuminate\Http\Request;
 use Abnermouke\EasyBuilder\Module\BaseController;
 
@@ -95,8 +96,9 @@ class AccountController extends BaseController
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function posts(){
+        $groups = (new AccountTagRepository())->get([],['id','guard_name']);
         //快递单管理
-        return view('pros.whatsapp.account.posts');
+        return view('pros.whatsapp.account.posts',compact('groups'));
     }
 
     /**

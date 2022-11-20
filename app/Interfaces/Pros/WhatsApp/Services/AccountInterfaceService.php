@@ -196,6 +196,11 @@ class AccountInterfaceService extends BaseService
             //返回失败
             return $this->fail($service->getCode(), $service->getMessage());
         }
+        $group_id = $request->get('group_id');
+        if (!$group_id){
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '请先选择用户标签！');
+        }
         //获取文件结果
         $file = $service->getResult();
         //导入内容
@@ -204,6 +209,7 @@ class AccountInterfaceService extends BaseService
         $posts = Arr::first($sheets);
         //整理失败数据
         $wrongs = $success = $tag_ids = [];
+        $tag_ids[] = $group_id;
         //循环导入信息
         foreach ($posts as $k => $post) {
             //判断是否第一项
