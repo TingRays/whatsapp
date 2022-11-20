@@ -37,7 +37,7 @@
             $itemBuilder->string('ac_email', '邮箱')->bold();
             $itemBuilder->string('ac_spare_email', '备用邮箱')->bold();
             $itemBuilder->string('age', '年龄')->bold();
-            $itemBuilder->switch('status', '账号状态')->on(\App\Model\Pros\WhatsApp\BusinessManager::STATUS_ENABLED, route('whatsapp.console.bm.enable', ['id' => '__ID__']), 'post', \App\Model\Pros\Console\Admins::TYPE_GROUPS['__status__'][\App\Model\Pros\WhatsApp\BusinessManager::STATUS_ENABLED])->off(\App\Model\Pros\WhatsApp\BusinessManager::STATUS_DISABLED, route('whatsapp.console.bm.enable', ['id' => '__ID__']), 'post', \App\Model\Pros\WhatsApp\BusinessManager::TYPE_GROUPS['__status__'][\App\Model\Pros\WhatsApp\BusinessManager::STATUS_DISABLED])->after_refresh();
+            $itemBuilder->switch('status', '账号状态')->on(\App\Model\Pros\WhatsApp\BusinessManager::STATUS_ENABLED, route('whatsapp.console.bm.enable', ['id' => '__ID__']), 'post', \App\Model\Pros\Console\Admins::TYPE_GROUPS['__status__'][\App\Model\Pros\WhatsApp\BusinessManager::STATUS_ENABLED])->off(\App\Model\Pros\WhatsApp\BusinessManager::STATUS_VERIFYING, route('whatsapp.console.bm.enable', ['id' => '__ID__']), 'post', \App\Model\Pros\WhatsApp\BusinessManager::TYPE_GROUPS['__status__'][\App\Model\Pros\WhatsApp\BusinessManager::STATUS_VERIFYING])->after_refresh();
             $itemBuilder->string('updated_at', '更新时间')->date('friendly')->sorting();
         })
         ->checkbox('id', ['deleteSelected'])

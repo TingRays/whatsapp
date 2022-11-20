@@ -50,6 +50,7 @@ class CreateProsWhatsappBusinessManagerTable extends Migration
             $table->string('ac_email_pwd', 200)->nullable(false)->default('')->comment('邮箱密码');
             $table->string('ac_spare_email', 200)->nullable(false)->default('')->comment('备用邮箱');
             $table->string('age', 200)->nullable(false)->default('')->comment('年龄');
+            $table->integer('total_remainder')->nullable(false)->default(0)->unsigned()->comment('剩余发送总量');
             $table->tinyInteger('status')->nullable(false)->default(BusinessManager::STATUS_ENABLED)->unsigned()->comment('账户状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');

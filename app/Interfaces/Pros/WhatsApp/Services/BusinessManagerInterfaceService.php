@@ -215,6 +215,11 @@ class BusinessManagerInterfaceService extends BaseService
             //返回失败
             return $this->fail(CodeLibrary::DATA_UPDATE_FAIL, '更改失败');
         }
+        $status = Merchants::STATUS_DISABLED;
+        if((int)$data['value'] === BusinessManager::STATUS_ENABLED){
+            $status = Merchants::STATUS_ENABLED;
+        }
+        (new MerchantRepository())->update(['bm_id'=>$id],['status'=>$status, 'updated_at' => auto_datetime()]);
         //返回成功
         return $this->success(compact('id'));
     }
@@ -275,7 +280,7 @@ class BusinessManagerInterfaceService extends BaseService
                         'ac_email_pwd' => 'ioaFGjnI6ucVmmA#',
                         'ac_spare_email' => 'ayesha6f9dora@getnada.com',
                         'age' => '01/01/1976',
-                        'status' => BusinessManager::STATUS_ENABLED,
+                        'status' => BusinessManager::STATUS_VERIFYING,
                         'created_at' => auto_datetime(),
                         'updated_at' => auto_datetime(),
                     ];
@@ -293,8 +298,8 @@ class BusinessManagerInterfaceService extends BaseService
                         'tel_code' => $tel_code,
                         'business_code' => $business_code,
                         'remainder' => $remainder,
-                        'bm_status' => BusinessManager::STATUS_ENABLED,
-                        'status' => Merchants::STATUS_ENABLED,
+                        'bm_status' => BusinessManager::STATUS_VERIFYING,
+                        'status' => Merchants::STATUS_DISABLED,
                         'updated_at' => auto_datetime(),
                     ];
                     (new MerchantRepository())->update(['tel_code'=>$tel_code],$merchant_info);
@@ -314,8 +319,8 @@ class BusinessManagerInterfaceService extends BaseService
                         'business_code' => $business_code,
                         'remainder' => $remainder,
                         'update_remainder_time' => 0,
-                        'bm_status' => BusinessManager::STATUS_ENABLED,
-                        'status' => Merchants::STATUS_ENABLED,
+                        'bm_status' => BusinessManager::STATUS_VERIFYING,
+                        'status' => Merchants::STATUS_DISABLED,
                         'created_at' => auto_datetime(),
                         'updated_at' => auto_datetime(),
                     ];
