@@ -38,9 +38,9 @@ class Kernel extends ConsoleKernel
         //每分钟执行任务队列
         $schedule->command('task:queues')->everyMinute();
         //每秒执行 - 群发消息记录创建
-        //$schedule->command('messages:log')->cron('* * * * *');
+        $schedule->command('messages:log')->cron('* * * * *');
         //每秒执行 - 群发任务
-        //$schedule->command('mass:dispatch')->cron('* * * * *');
+        $schedule->command('mass:dispatch')->cron('* * * * *');
     }
 
     /**
