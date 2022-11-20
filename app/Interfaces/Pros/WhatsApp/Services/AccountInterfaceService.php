@@ -209,7 +209,7 @@ class AccountInterfaceService extends BaseService
         $posts = Arr::first($sheets);
         //整理失败数据
         $wrongs = $success = $tag_ids = [];
-        $tag_ids[] = $group_id;
+        $tag_ids[] = (int)$group_id;
         //循环导入信息
         foreach ($posts as $k => $post) {
             //判断是否第一项
@@ -230,7 +230,7 @@ class AccountInterfaceService extends BaseService
                 }
                 if (empty($tag_ids)){
                     ($service = new AccountTagInterfaceService())->insertTag($post[3]);
-                    $tag_ids[] = $service->getResult()['tag_id'];
+                    $tag_ids[] = (int)$service->getResult()['tag_id'];
                 }
                 $params = [
                     'global_roaming' => $global_roaming,
