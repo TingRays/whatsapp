@@ -68,8 +68,12 @@ class CloudApiImplementers extends BaseService
         return $result;
     }
 
-    public function sendTextTemplate($template,$to_mobile){
-        $components = self::components($template['title'].'_'.$template['language']);
+    public function sendTextTemplate($template,$to_mobile,$components=[]){
+        if (empty($components)){
+            $components = self::components($template['title'].'_'.$template['language']);
+        }else{
+            $components = $template['components'];
+        }
         $data = [
             'name' => $template['title'],
             'language' => [

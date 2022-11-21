@@ -39,15 +39,18 @@ class CreateProsWhatsappMerchantTemplatesTable extends Migration
             $table->increments('id')->comment('表ID');
 
             //其他字段配置
-            //$table->tinyInteger('object')->nullable(false)->default(MerchantTemplates::OBJECT_OF_TEXT)->unsigned()->comment('模板对象');
+            $table->string('template_id',50)->nullable(false)->default('')->comment('拉取的模板ID');
+            $table->integer('admin_id')->nullable(false)->default(0)->unsigned()->comment('管理员ID');
+            $table->string('object_id',50)->nullable(false)->default('')->comment('模板对象ID：业务帐户编号等');
             $table->tinyInteger('type')->nullable(false)->default(MerchantTemplates::TYPE_OF_MARKETING)->unsigned()->comment('消息模板类型');
             $table->string('title', 255)->nullable(false)->default('')->comment('模板名称');
             $table->string('language', 20)->nullable(false)->default('')->comment('模板消息语言');
             $table->tinyInteger('header_type')->nullable(false)->default(MerchantTemplates::HEADER_OF_NULL)->unsigned()->comment('模板页眉类型');
-            $table->string('header_content', 20)->nullable(false)->default(MerchantTemplates::HEADER_OF_NULL)->comment('模板页眉内容');
+            $table->string('header_content', 500)->nullable(false)->default(MerchantTemplates::HEADER_OF_NULL)->comment('模板页眉内容');
             $table->longText('body')->comment('身体正文内容');
             $table->longText('footer')->comment('页脚正文内容');
             $table->longText('button')->comment('按钮内容');
+            $table->tinyInteger('status_type')->nullable(false)->default(MerchantTemplates::STATUS_TYPE_LOCAL)->unsigned()->comment('模板状态');
             $table->tinyInteger('status')->nullable(false)->default(MerchantTemplates::STATUS_ENABLED)->unsigned()->comment('状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');

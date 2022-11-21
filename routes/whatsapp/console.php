@@ -140,6 +140,34 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             Route::post('store', 'MerchantTemplateController@store')->name('store');
             //更改BM状态
             Route::post('{id}/enable', 'MerchantTemplateController@enable')->name('enable');
+            //虚拟手机列表
+            Route::get('retrieve/index/{mdm_id}', 'MerchantTemplateController@retrieveIndex')->name('retrieve_index');
+            //获取虚拟手机列表
+            Route::post('retrieve/lists/{mdm_id}', 'MerchantTemplateController@retrieveLists')->name('retrieve_lists');
+            //设置文件页面
+            Route::post('set_file/{id}', 'MerchantTemplateController@setFile')->name('set_file');
+            //设置文件保存
+            Route::post('store_file/{id}', 'MerchantTemplateController@storeFile')->name('store_file');
+        });
+        //生成页面群发路由
+        Route::group(['as' => 'mass_dispatch.', 'prefix' => 'mass_dispatch'], function () {
+            //页面群发列表
+            Route::get('', 'MassDispatchController@index')->name('index');
+            //页面群发手机列表
+            Route::post('lists', 'MassDispatchController@lists')->name('lists');
+            //页面群发详情
+            Route::post('detail/{id}', 'MassDispatchController@detail')->name('detail');
+            //页面群发用戶导入页面
+            Route::get('posts', 'MassDispatchController@posts')->name('posts');
+            //页面群发用戶导入
+            Route::post('import', 'MassDispatchController@import')->name('import');
+        });
+        //生成页面群发路由
+        Route::group(['as' => 'mass_dispatch_merchant.', 'prefix' => 'mass_dispatch_merchant'], function () {
+            //页面群发详情
+            Route::post('detail/{id}', 'MassDispatchMerchantController@detail')->name('detail');
+            //页面群发用戶导入页面
+            Route::post('store/{id}', 'MassDispatchMerchantController@store')->name('store');
         });
     });
 });

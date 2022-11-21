@@ -36,13 +36,20 @@ class MerchantTemplates extends BaseModel
         '__switch__' => [self::SWITCH_ON => '是', self::SWITCH_OFF => '不是'],
         //默认状态
         '__status__' => [self::STATUS_ENABLED => '正常启用', self::STATUS_DISABLED => '禁用中', self::STATUS_VERIFYING => '审核中', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
+        '__status_type__' => [self::STATUS_ENABLED => '通过', self::STATUS_DISABLED => '拒绝', self::STATUS_VERIFYING => '暂停', self::STATUS_VERIFY_FAILED => '审核失败', self::STATUS_DELETED => '已删除'],
 
         'languages' => self::LANGUAGES,
 
+        '__status_type_str__' => [
+            'APPROVED' => self::STATUS_ENABLED,
+            'REJECTED' => self::STATUS_DISABLED,
+            'PAUSED' => self::STATUS_VERIFYING,
+        ],
+
     ];
 
-    public const OBJECT_OF_TEXT = 1;//文本对象
-    public const OBJECT_OF_TEMPLATE = 2;//模板对象
+    public const STATUS_TYPE_LOCAL = 1;//本地模板
+    public const STATUS_TYPE_ONLINE = 2;//线上模板
 
     public const TYPE_OF_TRANSCATION = 1;//交易事务
     public const TYPE_OF_MARKETING = 2;//市场营销

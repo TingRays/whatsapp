@@ -226,6 +226,24 @@ return [
                 ]
             ],
         ],
+        [
+            'guard_name' => '页面群发',
+            'handler' => '',
+            'route' => ['name' => 'whatsapp.console.mass_dispatch.index', 'params' => []],
+            'permission_nodes' => [],
+            'icon' => '',
+            'group_menus' => [
+                [
+                    [
+                        'guard_name' => '群发列表',
+                        'handler' => '',
+                        'route' => ['name' => 'whatsapp.console.mass_dispatch.index', 'params' => []],
+                        'permission_nodes' => [],
+                        'icon' => 'fa fa-asterisk',
+                    ],
+                ]
+            ],
+        ],
     ],
 
 ];
