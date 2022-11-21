@@ -1754,6 +1754,12 @@ $.form_builder = {
                             if (typeof modal_id !== 'undefined' && modal_id.length > 0 && typeof modal_object !== 'undefined') {
                                 //关闭弹窗
                                 modal_object.find('#'+modal_id+'_close_icon').trigger('click');
+                                setTimeout(function (){
+                                    if (res['data']['after']){
+                                        window.location.href = res['data']['after'];
+                                    }
+                                }, 500);
+
                             } else {
                                 //根据配置处理
                                 switch (params['after']) {

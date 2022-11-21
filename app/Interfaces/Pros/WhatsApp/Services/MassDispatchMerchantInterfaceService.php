@@ -41,7 +41,7 @@ class MassDispatchMerchantInterfaceService extends BaseService
                 $builder->input('auth_token', '访问令牌')->description('绑定手机的国际区号（+86）')->readonly((int)$id <= 0 ? false : true)->required();
                 $builder->input('tel_code', '电话号码ID')->description('用戶的手机号')->required();
                 $builder->input('business_code', '商业账户ID')->description('用戶的手机号')->required();
-                $builder->input('remainder', '发送条数')->description('用戶的手机号')->required();
+                $builder->select('remainder', '发送条数')->options([0=>0,50=>50,250=>250,1000=>1000])->default_value(0)->required();
             })
             ->setData((int)$id > 0 ? (new MassDispatchMerchantRepository())->row(['id' => (int)$id]) : [])
             ->render();
@@ -59,6 +59,10 @@ class MassDispatchMerchantInterfaceService extends BaseService
         if (!($edited = $data['__edited__'])) {
             //返回失败
             return $this->fail(CodeLibrary::DATA_MISSING, '信息无更新');
+        }
+        if ($data['__data__']['remainder'] <= 0){
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '请选择发送条数');
         }
         //获取更改项
         $info = Arr::only($data['__data__'], $data['__edited__']);
@@ -83,7 +87,8 @@ class MassDispatchMerchantInterfaceService extends BaseService
             }
         }
         //返回成功
-        return $this->success(compact('id'));
+        $after = route('whatsapp.console.template.retrieve_index',['mdm_id'=>$id]);
+        return $this->success(compact('after'));
     }
 
 }

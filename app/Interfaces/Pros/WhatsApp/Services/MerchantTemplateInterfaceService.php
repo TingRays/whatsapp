@@ -171,65 +171,68 @@ class MerchantTemplateInterfaceService extends BaseService
         }
         if ($mdm_id){
             $mdm_info = (new MassDispatchMerchantRepository())->row(['id'=>$mdm_id],['admin_id','auth_token','business_code']);
-            if ((new MerchantTemplateRepository())->count(['admin_id'=>$mdm_info['admin_id']]) <= 0){
-                $business_account_id = $mdm_info['business_code'];
-                $auth_token = $mdm_info['auth_token'];
-                $templates = (new MerchantMessagesLogService())->retrieveTemplates($business_account_id,$auth_token,3);
-                $templates = $templates['result']['data']['data']??[];
-                foreach ($templates as $template){
-                    $header_content = $body = $footer = '';
-                    $button = [];
-                    $header_type = MerchantTemplates::HEADER_OF_NULL;
-                    foreach ($template['components'] as $component){
-                        if ($component['type'] === 'HEADER'){
-                            if ($component['format'] === 'TEXT'){
-                                $header_type = MerchantTemplates::HEADER_OF_TEXT;
-                                $header_content = $component['text'];
-                            }elseif ($component['format'] === 'IMAGE'){
-                                $header_type = MerchantTemplates::HEADER_OF_MEDIA_IMAGE;
-                            }elseif ($component['format'] === 'DOCUMENT'){
-                                $header_type = MerchantTemplates::HEADER_OF_MEDIA_DOCUMENT;
-                            }elseif ($component['format'] === 'VIDEO'){
-                                $header_type = MerchantTemplates::HEADER_OF_MEDIA_VIDEO;
+            if ($mdm_info){
+                if ((new MerchantTemplateRepository())->count(['admin_id'=>$mdm_info['admin_id']]) <= 0){
+                    $business_account_id = $mdm_info['business_code'];
+                    $auth_token = $mdm_info['auth_token'];
+                    $templates = (new MerchantMessagesLogService())->retrieveTemplates($business_account_id,$auth_token,3);
+                    $templates = $templates['result']['data']['data']??[];
+                    foreach ($templates as $template){
+                        $header_content = $body = $footer = '';
+                        $button = [];
+                        $header_type = MerchantTemplates::HEADER_OF_NULL;
+                        foreach ($template['components'] as $component){
+                            if ($component['type'] === 'HEADER'){
+                                if ($component['format'] === 'TEXT'){
+                                    $header_type = MerchantTemplates::HEADER_OF_TEXT;
+                                    $header_content = $component['text'];
+                                }elseif ($component['format'] === 'IMAGE'){
+                                    $header_type = MerchantTemplates::HEADER_OF_MEDIA_IMAGE;
+                                }elseif ($component['format'] === 'DOCUMENT'){
+                                    $header_type = MerchantTemplates::HEADER_OF_MEDIA_DOCUMENT;
+                                }elseif ($component['format'] === 'VIDEO'){
+                                    $header_type = MerchantTemplates::HEADER_OF_MEDIA_VIDEO;
+                                }
+                            }
+                            if ($component['type'] === 'BODY'){
+                                $body = $component['text'];
+                            }
+                            if ($component['type'] === 'FOOTER'){
+                                $footer = $component['text'];
+                            }
+                            if ($component['type'] === 'BUTTONS'){
+                                $button = $component;
                             }
                         }
-                        if ($component['type'] === 'BODY'){
-                            $body = $component['text'];
+                        $params = [
+                            'template_id' => $template['id'],
+                            'admin_id' => $mdm_info['admin_id'],
+                            'object_id' => $business_account_id,
+                            'type' => MerchantTemplates::TYPE_OF_MARKETING,
+                            'title' => $template['name'],
+                            'language' => $template['language'],
+                            'header_type' => $header_type,
+                            'header_content' => $header_content,
+                            'body' => $body,
+                            'footer' => $footer,
+                            'button' => $button,
+                            'status_type' => MerchantTemplates::TYPE_GROUPS['__status_type_str__'][$template['status']],
+                            'status' => MerchantTemplates::TYPE_GROUPS['__status_type_str__'][$template['status']],
+                            'updated_at' => auto_datetime(),
+                        ];
+                        if ((new MerchantTemplateRepository())->exists(['admin_id'=>$mdm_info['admin_id'],'template_id'=>$template['id']])){
+                            (new MerchantTemplateRepository())->update(['admin_id'=>$mdm_info['admin_id'],'template_id'=>$template['id']],$params);
+                        }else{
+                            $params['created_at'] = auto_datetime();
+                            (new MerchantTemplateRepository())->insertGetId($params);
                         }
-                        if ($component['type'] === 'FOOTER'){
-                            $footer = $component['text'];
-                        }
-                        if ($component['type'] === 'BUTTONS'){
-                            $button = $component;
-                        }
-                    }
-                    $params = [
-                        'template_id' => $template['id'],
-                        'admin_id' => $mdm_info['admin_id'],
-                        'object_id' => $business_account_id,
-                        'type' => MerchantTemplates::TYPE_OF_MARKETING,
-                        'title' => $template['name'],
-                        'language' => $template['language'],
-                        'header_type' => $header_type,
-                        'header_content' => $header_content,
-                        'body' => $body,
-                        'footer' => $footer,
-                        'button' => $button,
-                        'status_type' => MerchantTemplates::TYPE_GROUPS['__status_type_str__'][$template['status']],
-                        'status' => MerchantTemplates::TYPE_GROUPS['__status_type_str__'][$template['status']],
-                        'updated_at' => auto_datetime(),
-                    ];
-                    if ((new MerchantTemplateRepository())->exists(['admin_id'=>$mdm_info['admin_id'],'template_id'=>$template['id']])){
-                        (new MerchantTemplateRepository())->update(['admin_id'=>$mdm_info['admin_id'],'template_id'=>$template['id']],$params);
-                    }else{
-                        $params['created_at'] = auto_datetime();
-                        (new MerchantTemplateRepository())->insertGetId($params);
                     }
                 }
+                $conditions = ['admin_id' => ['=', $mdm_info['admin_id']]];
+            }else{
+                $conditions = ['admin_id' => ['=', 0]];
             }
-            $conditions = ['admin_id' => ['=', $mdm_info['admin_id']]];
         }
-
         //查询列表
         $lists = (new MerchantTemplateRepository())->lists($conditions, ['*'], [], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
         //渲染表格内容
