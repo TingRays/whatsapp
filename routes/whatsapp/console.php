@@ -152,11 +152,13 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
         //生成页面群发路由
         Route::group(['as' => 'mass_dispatch.', 'prefix' => 'mass_dispatch'], function () {
             //页面群发列表
-            Route::get('', 'MassDispatchController@index')->name('index');
+            Route::get('index/{tel_code?}/{business_code?}', 'MassDispatchController@index')->name('index');
             //页面群发手机列表
-            Route::post('lists', 'MassDispatchController@lists')->name('lists');
+            Route::post('lists/{tel_code?}/{business_code?}', 'MassDispatchController@lists')->name('lists');
             //页面群发详情
             Route::post('detail/{id}', 'MassDispatchController@detail')->name('detail');
+            //页面群发信息保存
+            Route::post('store/{id}', 'MassDispatchController@store')->name('store');
             //页面群发用戶导入页面
             Route::get('posts', 'MassDispatchController@posts')->name('posts');
             //页面群发用戶导入

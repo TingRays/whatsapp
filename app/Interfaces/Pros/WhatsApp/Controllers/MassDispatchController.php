@@ -31,15 +31,29 @@ class MassDispatchController extends BaseController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
     */
-    public function index(Request $request, MassDispatchInterfaceService $service)
+    public function index($tel_code='',$business_code='',Request $request, MassDispatchInterfaceService $service)
     {
         //渲染页面
-        return view('pros.whatsapp.mass_dispatch.index');
+        return view('pros.whatsapp.mass_dispatch.index',compact('tel_code','business_code'));
     }
 
-    public function lists(Request $request, MassDispatchInterfaceService $service){
+    public function lists($tel_code='',$business_code='',Request $request, MassDispatchInterfaceService $service){
         //群发信息列表
-        $service->lists($request);
+        $service->lists($tel_code,$business_code,$request);
+        //响应接口
+        return responseService($service);
+    }
+
+    public function detail($id, Request $request, MassDispatchInterfaceService $service){
+        //
+        $service->detail($id, $request);
+        //响应接口
+        return responseService($service);
+    }
+
+    public function store($id, Request $request, MassDispatchInterfaceService $service){
+        //
+        $service->store($id, $request);
         //响应接口
         return responseService($service);
     }
@@ -67,6 +81,15 @@ class MassDispatchController extends BaseController
         return responseService($service);
     }
 
+    /**
+     * 发送模板信息
+     * @param $id
+     * @param $mdm_id
+     * @param Request $request
+     * @param MassDispatchInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function sendTemplateMassage($id, $mdm_id, Request $request, MassDispatchInterfaceService $service){
         //手机号导入
         $service->sendTemplateMassage($id, $mdm_id, $request);

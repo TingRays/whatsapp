@@ -17,17 +17,17 @@
             $filterBuilder->input('keyword', '关键词搜索')->placeholder('请输入ID/手机号码等关键词检索');
             $filterBuilder->date('updated_at', '更新时间')->col(5);
         })
-        ->setTabs(function (\Abnermouke\Pros\Builders\Table\Tools\TableTabBuilder $tabBuilder) {
-            $tabBuilder->create('all', '全部', route('whatsapp.console.mass_dispatch.lists'));
-            $tabBuilder->create('enabled', '发送成功', route('whatsapp.console.mass_dispatch.lists', ['status' => \App\Model\Pros\WhatsApp\MassDispatch::STATUS_ENABLED]));
-            $tabBuilder->create('disabled', '发送失败', route('whatsapp.console.mass_dispatch.lists', ['status' => \App\Model\Pros\WhatsApp\MassDispatch::STATUS_VERIFY_FAILED]));
+        ->setTabs(function (\Abnermouke\Pros\Builders\Table\Tools\TableTabBuilder $tabBuilder) use ($tel_code,$business_code) {
+            $tabBuilder->create('all', '全部', route('whatsapp.console.mass_dispatch.lists',['tel_code'=>$tel_code,'business_code'=>$business_code]));
+            $tabBuilder->create('enabled', '发送成功', route('whatsapp.console.mass_dispatch.lists', ['tel_code'=>$tel_code,'business_code'=>$business_code,'status' => \App\Model\Pros\WhatsApp\MassDispatch::STATUS_ENABLED]));
+            $tabBuilder->create('disabled', '发送失败', route('whatsapp.console.mass_dispatch.lists', ['tel_code'=>$tel_code,'business_code'=>$business_code,'status' => \App\Model\Pros\WhatsApp\MassDispatch::STATUS_VERIFY_FAILED]));
         })
         ->setButtons(function (\Abnermouke\Pros\Builders\Table\Tools\TableButtonBuilder $buttonBuilder) {
             $buttonBuilder->redirect(route('whatsapp.console.mass_dispatch.posts'), '导入手机号')->icon('fa fa-car');
             $buttonBuilder->form(route('whatsapp.console.mass_dispatch_merchant.detail', ['id' => 0]), '发送模板获取')->icon('fa fa-hands-helping')->theme('info');
         })
         ->setActions(function (\Abnermouke\Pros\Builders\Table\Tools\TableActionBuilder $actionBuilder) {
-            $actionBuilder->form(route('whatsapp.console.account.detail', ['id' => '__ID__']), '编辑用户')->icon('fa fa-edit');
+            $actionBuilder->form(route('whatsapp.console.mass_dispatch.detail', ['id' => '__ID__']), '编辑用户')->icon('fa fa-edit');
         })
         ->setItems(function (\Abnermouke\Pros\Builders\Table\Tools\TableItemBuilder $itemBuilder) {
             $itemBuilder->info('mobile', '手机号码')->description('id：{id}')->image('avatar');

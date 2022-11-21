@@ -45,7 +45,7 @@ class MassDispatchInterfaceService extends BaseService
     */
     public function __construct($pass = false) { parent::__construct($pass); }
 
-    public function lists($request){
+    public function lists($tel_code='',$business_code='',$request){
         //获取加密信息
         if (!$data = AesLibrary::decryptFormData($request->all())) {
             //返回失败
@@ -73,12 +73,56 @@ class MassDispatchInterfaceService extends BaseService
                 }
             }
         }
+        if ($tel_code){
+            $conditions = ['tel_code' => ['=', $tel_code]];
+        }
+        if ($business_code){
+            $conditions = ['business_code' => ['=', $business_code]];
+        }
         //查询列表
         $lists = (new MassDispatchRepository())->lists($conditions, ['*'], [], data_get($data, 'sorts', ['id' => 'desc']), '', (int)data_get($data, 'page', config('pros.table.default_page')), (int)data_get($data, 'page_size', config('pros.table.default_page_size')));
         //渲染表格内容
         $render = TableBuilder::CONTENT()->signature($data['signature'])->setLists($lists)->render();
         //返回成功
         return $this->success($render);
+    }
+
+    public function detail($id, $request){
+        $info = (int)$id > 0 ? (new MassDispatchRepository())->row(['id' => (int)$id]) : [];
+        //渲染表单内容
+        $render = FormBuilder::make()
+            ->setSubmit(route('whatsapp.console.mass_dispatch.store', ['id' => (int)$id]))
+            ->setItems(function (FormItemBuilder $builder) use ($id) {
+                $builder->input('mobile', '手机号码')->description('要发送手机的号码');
+            })
+            ->setData($info)
+            ->render();
+        //返回成功
+        return $this->success(['html' => $render]);
+    }
+
+    public function store($id, $request){
+        //获取加密信息
+        if (!$data = AesLibrary::decryptFormData($request->all())) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '非法参数');
+        }
+        //判断更改项
+        if (!($edited = $data['__edited__'])) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '信息无更新');
+        }
+        //获取更改项
+        $info = Arr::only($data['__data__'], $data['__edited__']);
+        //添加修改时间
+        $info['updated_at'] = auto_datetime();
+        //修改信息
+        if (!(new MassDispatchRepository())->update(['id' => (int)$id], $info)) {
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_UPDATE_FAIL, '修改失败');
+        }
+        //返回成功
+        return $this->success(compact('id'));
     }
 
     public function import(Request $request)
@@ -192,7 +236,9 @@ class MassDispatchInterfaceService extends BaseService
             ];
             (new MassDispatchRepository())->update(['id'=>$mobile['id']],$params);
         }
+
         //返回成功
-        return $this->success();
+        $after = route('whatsapp.console.mass_dispatch.lists',['tel_code'=>$merchant['tel_code'],'business_code'=>$merchant['business_code']]);
+        return $this->success(compact('after'));
     }
 }

@@ -87,22 +87,46 @@ class MerchantTemplateController extends BaseController
         return view('pros.whatsapp.templates.retrieve_index',compact('mdm_id'));
     }
 
+    /**
+     * 拉取模板
+     * @param $mdm_id
+     * @param Request $request
+     * @param MerchantTemplateInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function retrieveLists($mdm_id, Request $request, MerchantTemplateInterfaceService $service){
-        //商户模板列表
+        //拉取模板
         $service->retrieveLists($mdm_id, $request);
         //响应接口
         return responseService($service);
     }
 
+    /**
+     * 设置模板文件页面
+     * @param $id
+     * @param Request $request
+     * @param MerchantTemplateInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function setFile($id, Request $request, MerchantTemplateInterfaceService $service){
-        //商户模板详情
+        //设置模板文件页面
         $service->setFile($id, $request);
         //响应接口
         return responseService($service);
     }
 
+    /**
+     * 保存模板文件
+     * @param $id
+     * @param Request $request
+     * @param MerchantTemplateInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function storeFile($id, Request $request, MerchantTemplateInterfaceService $service){
-        //商户模板信息
+        //保存模板文件
         $service->storeFile($id, $request);
         //响应接口
         return responseService($service);
