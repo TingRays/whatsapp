@@ -6,9 +6,10 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
 /**
- * 老外群发系统数据导出
+ * https://haimachuhai.com
+ * 海马群发系统数据导出
  */
-class PhoneGroupExport implements FromArray, WithColumnWidths
+class HaiMaExport implements FromArray, WithColumnWidths
 {
     //用户数据
     private $accounts;
@@ -36,7 +37,7 @@ class PhoneGroupExport implements FromArray, WithColumnWidths
     {
         //整理数据
         $data = [
-            ['First name', 'Last name', 'Email', 'Country code', 'Phone', 'Labels', 'Notes', 'Custom Field 1', 'Campo Personalizado 2'],
+            ['name', 'phone', 'whatsapp_account', 'email', 'labels', 'remark'],
         ];
         //循环订单集合
         foreach ($this->accounts as $k => $account) {
@@ -59,14 +60,11 @@ class PhoneGroupExport implements FromArray, WithColumnWidths
         //返回各宽度
         return [
             'A' => 20,
-            'B' => 15,
+            'B' => 20,
             'C' => 20,
-            'D' => 15,
+            'D' => 20,
             'E' => 20,
             'F' => 20,
-            'G' => 20,
-            'H' => 20,
-            'I' => 20,
         ];
     }
 }

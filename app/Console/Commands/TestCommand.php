@@ -2,11 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Exports\Accounts\HaiMaExport;
 use App\Exports\Accounts\PhoneGroupExport;
 use App\Exports\Accounts\WrongAccountsExport;
 use App\Implementers\CloudAPI\CloudApiImplementers;
+use App\Model\Pros\WhatsApp\MassDispatch;
 use App\Model\Pros\WhatsApp\MerchantMessagesLogs;
 use App\Repository\Pros\WhatsApp\AccountRepository;
+use App\Repository\Pros\WhatsApp\FansManageRepository;
+use App\Repository\Pros\WhatsApp\MassDispatchRepository;
 use App\Repository\Pros\WhatsApp\MerchantMessagesLogRepository;
 use App\Repository\Pros\WhatsApp\MerchantTemplateRepository;
 use App\Services\Pros\System\TemporaryFileService;
@@ -22,7 +26,7 @@ class TestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'test:test';
+    protected $signature = 'test:test {i}';
 
     /**
      * The console command description.
@@ -69,29 +73,58 @@ class TestCommand extends Command
 //        $auth_token = 'EAAW06207p1QBAHFsZBwl7R4uDMQ1tjTix45w9M8h2k419KUnbbTWCiBZC9bJ9Vbskvb5NUMF7mVYO5fXdB3UsSD2MiAff5ZBPOZCC3VbsniKpXsanrpmWEG0GYofwCMypJqBAKxwAJS3uy0Y2e5HNquMvgiZBZCfnWRZCuT9tzZAAtxjxqVuMWwNPZCJtbZBZACi35FjfKCStV6ZBXSIqjnQXhcnQj4I9HOzIB0ZD';
 //        $business_account_id = '101728846106642';
 //        $re = (new MerchantMessagesLogService())->retrieveTemplates($business_account_id,$auth_token,3);
-
         //print_r($re);
+//        for ($i=1;$i<=139635;$i++){
+//            //$account = (new AccountRepository())->row(['status'=>1],['id','global_roaming','mobile']);
+//            //(new AccountRepository())->update(['id'=>$account['id']],['status'=>2,'updated_at'=>auto_datetime()]);
+//            //$mobile = $account['global_roaming'].$account['mobile'];
+//            $fans = (new FansManageRepository())->row(['status'=>1],['id','mobile']);
+//            (new FansManageRepository())->update(['id'=>$fans['id']],['status'=>2,'updated_at'=>auto_datetime()]);
+//            $mobile = $fans['mobile'];
+//            if ((new MassDispatchRepository())->exists(['mobile' => $mobile])) {
+//                //跳出当前循环
+//                continue;
+//            }
+//            $params = [
+//                'admin_id' => 0,
+//                'mobile' => $mobile,
+//                'status' => MassDispatch::STATUS_VERIFYING,
+//                'created_at' => auto_datetime(),
+//                'updated_at' => auto_datetime(),
+//            ];
+//            (new MassDispatchRepository)->insertGetId($params);
+//        }dd(1);
+        $i = '-E'.$this->argument('i');
+        $limit = 5000;
         $wrongs = [];
-        $datas = [5511950726686,5511971342736,5511942166157,5511966318519,5511956367546,5511933947471,5511951300363,5511947766749,5511957563582,5511972073607,5511997472181,5511989656075,5511970548781,5511970259521,5511986588630,5511977864289,5511977386446,5511993943996,5511981573886,5511996217990,5511978472547,5511965773749,5511973678835,5511931064693,5511952111349,5511940116784,5511969039910,5511944022495,5511999853652,5511989586035,5511933736324,5511952234065,5511959667818,5511988865568,5511990201628,5511994391827,5511947415903,5511953399045,5511980373052,5511992641795,5511980534522,5511949967482,5511992554825,5511960334729,5511966151626,5511941581196,5511947838662,5511962465488,5511965232314,5511988323352,5511962355154,5511975148188,5511953963899,5511932395241,5511953538466,5511983985323,5511973210808,5511961836772,5511966344895,5511959650978,5511988314623,5511976045023,5511934088897,5511984254024,5511958361078,5511965944339,5511937663652,5511962666464,5511999959964,5511993918701,5511973111957,5511972276960,5511999012111,5511951213715,5511979862345,5511965820237,5511991913274,5511981982704,5511987088115,5511930499983,5511983889218,5511989521856,5511972823858,5511948618269,5511963221792,5511943981272,5511963065652,5511939484221,5511978474508,5511930884977,5511985806597,5511989930977,5511947928552,5511954757554,5511946451107,5511946097291,5511995472585,5511969783054,5511985727898,5511963834889,5511963763688,5511950509498,5511993886081,5511996864207,5511953001581,5511949510216,5511987625004,5511972896851,5511982448418,5511966140395,5511971424621,5511966029160,5511965808643,5511990190434,5511982951236,5511991765638,5511991976677,5511968334755,5511985683696,5511963886556,5511993232102,5511965239668,5511971145582,5511973488572,5511954472582,5511965359948,5511947195815,5511996597347,5511970353017,5511978397103,5511952244167,5511965795745,5511985565264,5511968396934,5511981835598,5511971773696,5511992486618,5511940592962,5511981001624,5511963918383,5511986820516,5511965726060,5511959701802,5511955517042,5511984659684,5511986105697,5511981777987,5511967526896,5511996342884,5511958928175,5511977089751,5511968086671,5511931047434,5511968469805,5511954335079,5511992741209,5511989385627,5511985152192,5511939451902,5511998745840,5511983690365,5511958503442,5511989596273,5511977024802,5511999135797,5511973399540,5511940175793,5511993741624,5511949103655,5511947105078,5511937371185,5511967682915,5511994508121,5511983075712,5511976547574,5511940369289,5511989296352,5511967822037,5511970289297,5511951728518,5511937291723,5511934007910,5511959816970,5511953490484,5511949566782,5511999307998,5511974020885,5511953908446,5511987143318,5511973474480,5511973722621,5511959808001,5511953767490,5511996465977,5511947927323,5511986253559,5511964399484,5511977198845,5511984893324,5511958259180,5511999728559,5511969307001,5511981042630,5511995662809,5511978349056,5511944559993,5511944718753,5511996661966,5511944947446,5511987873219,5511964616762,5511948421087,5511944603356,5511985105969,5511994508706,5511975997912,5511981946446,5511969660962,5511985049083,5511946891649,5511963796607,5511969215185,5511970580199,5511987678102,5511958493440,5511969294282,5511941701444,5511961108539,5511997350560,5511959166441,5511952506099,5511955702634,5511993747498,5511974169790,5511951442480,5511974690630,5511970490761,5511989921138,5511966031849,5511990013354,5511944750464,5511958958661,5511941954535,5511987323895,5511969463114,5511972349606,5511994074019,5511983406702,5511974402630,5511964664129];
-        $i = 19;
+        $datas = (new MassDispatchRepository())->limit(['status'=>MassDispatch::STATUS_VERIFYING],['id','mobile'],[],[],'',1,$limit);
+        $ids = array_column($datas,'id');
+        (new MassDispatchRepository())->update(['id'=>['in',$ids]],['status'=>MassDispatch::STATUS_ENABLED,'created_at'=>auto_datetime()]);
         foreach ($datas as $k=>$data){
+//            $wrongs[] = [
+//                'John',
+//                'Doe',
+//                'pedroperez@gmail.com',
+//                'US',
+//                $data['mobile'],
+//                'ddd'.$limit.$i,
+//                'Mis notas',
+//                'Optional',
+//                'Opcional'
+//            ];
             $wrongs[] = [
                 'John',
-                'Doe',
+                $data['mobile'],
+                '',
                 'pedroperez@gmail.com',
-                'US',
-                $data,
-                'ddd'.$i,
-                'Mis notas',
-                'Optional',
-                'Opcional'
+                '',
+                ''
             ];
-            if ($k == 249){
+            if ($k == ($limit - 1)){
                 //生成临时文件
-                $temp_file = (new TemporaryFileService(true))->temporary('accounts/exports/wrongs/' . $i.'.xlsx');
+                $temp_file = (new TemporaryFileService(true))->temporary('accounts/exports/wrongs/' . $limit.$i.'.xlsx');
                 //保存文件
-                Excel::store(new PhoneGroupExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
-                $i++;
+                Excel::store(new HaiMaExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
                 $wrongs = [];
             }
             unset($datas[$k]);
