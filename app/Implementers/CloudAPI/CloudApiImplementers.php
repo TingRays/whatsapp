@@ -89,7 +89,7 @@ class CloudApiImplementers extends BaseService
     }
 
     public function retrieveTemplates($limit = 20){
-        $this->send_api_link = $this->send_api_link.'/message_templates?limit='.$limit.'0&access_token='.$this->access_token;
+        $this->send_api_link = $this->send_api_link.'/message_templates?limit='.$limit.'&access_token='.$this->access_token;
         $result = $this->getQuery();
         return compact('result');
     }
@@ -110,6 +110,11 @@ class CloudApiImplementers extends BaseService
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer '.$this->access_token,
+                ],
+                'proxy' => [
+                    'http'  => 'http://localhost:10808', // Use this proxy with "http"
+                    'https' => 'http://localhost:10808', // Use this proxy with "https",
+                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
                 ],
                 'json' => $params,
                 //取消https验证

@@ -6,6 +6,7 @@ use App\Exports\Accounts\HaiMaExport;
 use App\Exports\Accounts\PhoneGroupExport;
 use App\Exports\Accounts\WrongAccountsExport;
 use App\Implementers\CloudAPI\CloudApiImplementers;
+use App\Implementers\Meta\BusinessManagement\BMAPIsImplementers;
 use App\Model\Pros\WhatsApp\MassDispatch;
 use App\Model\Pros\WhatsApp\MerchantMessagesLogs;
 use App\Repository\Pros\WhatsApp\AccountRepository;
@@ -53,6 +54,11 @@ class TestCommand extends Command
     public function handle()
     {
         // TODO：测试内容
+        $access_token = 'EAAqNKZCKTkzABAI5oxnVUeOQbGyxZB9ZCGsUPoCMf6skZC1zMHnVc9pK9ZBM8yCsjp3uZCV2uWzBH8tKkjVwbYoxUZA5LXIgsTHy4HyPErKeuW4ZBcGvsSbtdQdSFaQt79MSMtL1JCuOo7D6rgTGE9r2d6TLDeBlYpKtShFiW3ZBbM41WvRf3ACM1KZCUPpjsIficz9KYvqu1D9gZDZD';
+        $business_id = '772680547311648';
+        //dd((new BMAPIsImplementers($access_token))->viewPropertiesBusiness($business_id));
+        dd((new BMAPIsImplementers($access_token))->ownsApplications($business_id));
+
         //$access_token = 'EAAG7HNVhnqIBAOtPfOFbZAYv9c3H3mneXxSrPN3ZCUiUY5aHInTycjMP4LhaUP8fi9lgfGPj14InjIZCBLTmfqP8BYZBC91Irulvz9s0SAMQr3R6PuLcylo0eTycLmEV3jRtvBl9IoSQTDBDf9RntFyrX2sJ61kabkVfT7Xr12uItrAlkEpAzu1O6W1ZBbzPoI8hVn5cijaIgZCc3gixaRkQEP6alGpdMZD';
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendText());
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendTextTemplate());
