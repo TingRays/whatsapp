@@ -7,6 +7,8 @@ use App\Exports\Accounts\PhoneGroupExport;
 use App\Exports\Accounts\WrongAccountsExport;
 use App\Implementers\CloudAPI\CloudApiImplementers;
 use App\Implementers\Meta\BusinessManagement\BMAPIsImplementers;
+use App\Implementers\Meta\Facebook\LoginImplementers;
+use App\Model\Pros\WhatsApp\Accounts;
 use App\Model\Pros\WhatsApp\MassDispatch;
 use App\Model\Pros\WhatsApp\MerchantMessagesLogs;
 use App\Repository\Pros\WhatsApp\AccountRepository;
@@ -57,11 +59,14 @@ class TestCommand extends Command
         $access_token = 'EAAqNKZCKTkzABAI5oxnVUeOQbGyxZB9ZCGsUPoCMf6skZC1zMHnVc9pK9ZBM8yCsjp3uZCV2uWzBH8tKkjVwbYoxUZA5LXIgsTHy4HyPErKeuW4ZBcGvsSbtdQdSFaQt79MSMtL1JCuOo7D6rgTGE9r2d6TLDeBlYpKtShFiW3ZBbM41WvRf3ACM1KZCUPpjsIficz9KYvqu1D9gZDZD';
         $business_id = '772680547311648';
         //dd((new BMAPIsImplementers($access_token))->viewPropertiesBusiness($business_id));
-        dd((new BMAPIsImplementers($access_token))->ownsApplications($business_id));
+        //dd((new BMAPIsImplementers($access_token))->ownsApplications($business_id));
 
-        //$access_token = 'EAAG7HNVhnqIBAOtPfOFbZAYv9c3H3mneXxSrPN3ZCUiUY5aHInTycjMP4LhaUP8fi9lgfGPj14InjIZCBLTmfqP8BYZBC91Irulvz9s0SAMQr3R6PuLcylo0eTycLmEV3jRtvBl9IoSQTDBDf9RntFyrX2sJ61kabkVfT7Xr12uItrAlkEpAzu1O6W1ZBbzPoI8hVn5cijaIgZCc3gixaRkQEP6alGpdMZD';
+        $access_token = 'EAAQsGMwuauUBACkGM2XkZBCl0Uj0M84aNgHsqaIzZAjud4YUtVGqicAYOaDO4Hb1N7XwaOtiFvXwQrZAQ3NPIeqK2SZAeZACxUlbCQIML7aPZBcOIKDH27mLkLHsjb5GSDcYjnIiykbRMcywjeOtSLv8wLtwxU4p8V9t0hR3xy1Bc0OzBU3xThapljCw2iZA2IzTtksxF9GMy9f6mclBzYg';
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendText());
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendTextTemplate());
+        //dd((new CloudApiImplementers('102429646106439',$access_token))->businessAccountNumberStatus());
+
+        //dd((new LoginImplementers('oauth/access_token'))->appAccessTokens('666608335150800','280dd5f3f0e4252338eed6191c3f4d0f'));
 //        $auth_token = 'EAAHAJ7A4sJMBADHWda9je2Y9areS8QxSOLsArXEyl7DpgBLl8clg3inWbVDQ5AtZCEAYuZAGB8YpfDeSxYtqL13QmszOf0kyS3G2gYgjoWl8MLyoqiIG5Wcx237HLKmKblD5ZBlIJcvWn3bmV88GzRx62ZCsJ5RSiOYwduboPW54EflZCwnG3VUfJX9MVxWpLLGBLEPjxZCP8SoRy4JyEB';
 //        $tel_code = '107541382178094';
 //        $text = 'Olá! __MOBILE__ Esta é uma carreira adequada para uma ampla gama de pessoas. Bem-vindo a juntar-se a nós. Você pode obter 200-2000 tempo livre. Envie-me uma mensagem e receba 50';
@@ -100,37 +105,40 @@ class TestCommand extends Command
 //            ];
 //            (new MassDispatchRepository)->insertGetId($params);
 //        }dd(1);
-        $i = '-E'.$this->argument('i');
-        $limit = 5000;
+        $i = '-K'.$this->argument('i');
+        $limit = 250;
         $wrongs = [];
-        $datas = (new MassDispatchRepository())->limit(['status'=>MassDispatch::STATUS_VERIFYING],['id','mobile'],[],[],'',1,$limit);
+        //$datas = (new MassDispatchRepository())->limit(['status'=>MassDispatch::STATUS_VERIFYING],['id','mobile'],[],[],'',1,$limit);
+        $datas = (new AccountRepository())->limit(['status'=>Accounts::STATUS_ENABLED],['id','global_roaming','mobile'],[],[],'',1,$limit);
         $ids = array_column($datas,'id');
-        (new MassDispatchRepository())->update(['id'=>['in',$ids]],['status'=>MassDispatch::STATUS_ENABLED,'created_at'=>auto_datetime()]);
+        //(new MassDispatchRepository())->update(['id'=>['in',$ids]],['status'=>MassDispatch::STATUS_ENABLED,'created_at'=>auto_datetime()]);
+        (new AccountRepository())->update(['id'=>['in',$ids]],['status'=>MassDispatch::STATUS_DISABLED,'created_at'=>auto_datetime()]);
         foreach ($datas as $k=>$data){
-//            $wrongs[] = [
-//                'John',
-//                'Doe',
-//                'pedroperez@gmail.com',
-//                'US',
-//                $data['mobile'],
-//                'ddd'.$limit.$i,
-//                'Mis notas',
-//                'Optional',
-//                'Opcional'
-//            ];
             $wrongs[] = [
                 'John',
-                $data['mobile'],
-                '',
+                'Doe',
                 'pedroperez@gmail.com',
-                '',
-                ''
+                'US',
+                $data['global_roaming'].$data['mobile'],
+                'aaa'.$limit.$i,
+                'Mis notas',
+                'Optional',
+                'Opcional'
             ];
+//            $wrongs[] = [
+//                'John',
+//                $data['global_roaming'].$data['mobile'],
+//                '',
+//                'pedroperez@gmail.com',
+//                '',
+//                ''
+//            ];
             if ($k == ($limit - 1)){
                 //生成临时文件
                 $temp_file = (new TemporaryFileService(true))->temporary('accounts/exports/wrongs/' . $limit.$i.'.xlsx');
                 //保存文件
-                Excel::store(new HaiMaExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
+                //Excel::store(new HaiMaExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
+                Excel::store(new PhoneGroupExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
                 $wrongs = [];
             }
             unset($datas[$k]);

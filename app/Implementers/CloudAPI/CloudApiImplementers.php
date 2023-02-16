@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 class CloudApiImplementers extends BaseService
 {
     //请求api链接
-    private static $api_link = 'https://graph.facebook.com/v15.0';
+    private static $api_link = 'https://graph.facebook.com/v16.0';
 
     /**
      * 发送完整api连接
@@ -94,6 +94,17 @@ class CloudApiImplementers extends BaseService
         return compact('result');
     }
 
+    /**
+     * 企业帐户号码当前状态
+     * https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/
+     * @return array
+     */
+    public function businessAccountNumberStatus(){
+        $this->send_api_link = $this->send_api_link.'?fields=id,is_official_business_account,display_phone_number,verified_name,messaging_limit_tier&access_token='.$this->access_token;
+        $result = $this->getQuery();
+        return compact('result');
+    }
+
     private function query(){
         //判断数据
         if (!$this->send_api_link || !$this->access_token || !$this->params) {
@@ -112,8 +123,8 @@ class CloudApiImplementers extends BaseService
                     'Authorization' => 'Bearer '.$this->access_token,
                 ],
                 'proxy' => [
-                    'http'  => 'http://localhost:10808', // Use this proxy with "http"
-                    'https' => 'http://localhost:10808', // Use this proxy with "https",
+                    'http'  => 'http://localhost:10809', // Use this proxy with "http"
+                    'https' => 'http://localhost:10809', // Use this proxy with "https",
                     'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
                 ],
                 'json' => $params,
@@ -148,7 +159,15 @@ class CloudApiImplementers extends BaseService
 
         try {
             //发起请求
-            $response = (new Client())->get($this->send_api_link);
+            $response = (new Client())->get($this->send_api_link,[
+                'proxy' => [
+                    'http'  => 'http://localhost:10809', // Use this proxy with "http"
+                    'https' => 'http://localhost:10809', // Use this proxy with "https",
+                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
+                ],
+                //取消https验证
+                'verify' => false
+            ]);
         } catch (\Exception $exception) {
             //记录日志
             LoggerLibrary::logger('cloud_api_errors', $exception->getMessage());
