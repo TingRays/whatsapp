@@ -61,10 +61,11 @@ class TestCommand extends Command
         //dd((new BMAPIsImplementers($access_token))->viewPropertiesBusiness($business_id));
         //dd((new BMAPIsImplementers($access_token))->ownsApplications($business_id));
 
-        $access_token = 'EAAQsGMwuauUBACkGM2XkZBCl0Uj0M84aNgHsqaIzZAjud4YUtVGqicAYOaDO4Hb1N7XwaOtiFvXwQrZAQ3NPIeqK2SZAeZACxUlbCQIML7aPZBcOIKDH27mLkLHsjb5GSDcYjnIiykbRMcywjeOtSLv8wLtwxU4p8V9t0hR3xy1Bc0OzBU3xThapljCw2iZA2IzTtksxF9GMy9f6mclBzYg';
+        $access_token = 'EAAJeRtkFXtABAHYPguiSFEACmtSo7ZCCaeyZCYTrqpkx99M6daZBIsYPInMX0w6MJZBVvZABEJoZB8sbQER6yDJIApjwACjZAfVilLBPFZBS1GM37JZBdF8KQMq1ZCgWHz7y3TxayF6GlvgVEISJskarrGZAUzD8eCM47VcHKZC9spWErkiV3kaEJzZB7HEIM2Nh7TcfOqZCBSNKao9xpXarTzOZC3v';
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendText());
         //dd((new CloudApiImplementers('100785316177486',$access_token))->sendTextTemplate());
-        //dd((new CloudApiImplementers('102429646106439',$access_token))->businessAccountNumberStatus());
+        //dd((new CloudApiImplementers('107080918968321',$access_token))->getAllPhoneNumbers());
+        //dd((new CloudApiImplementers('111952255142881',$access_token))->getASinglePhoneNumber());
 
         //dd((new LoginImplementers('oauth/access_token'))->appAccessTokens('666608335150800','280dd5f3f0e4252338eed6191c3f4d0f'));
 //        $auth_token = 'EAAHAJ7A4sJMBADHWda9je2Y9areS8QxSOLsArXEyl7DpgBLl8clg3inWbVDQ5AtZCEAYuZAGB8YpfDeSxYtqL13QmszOf0kyS3G2gYgjoWl8MLyoqiIG5Wcx237HLKmKblD5ZBlIJcvWn3bmV88GzRx62ZCsJ5RSiOYwduboPW54EflZCwnG3VUfJX9MVxWpLLGBLEPjxZCP8SoRy4JyEB';
@@ -105,7 +106,7 @@ class TestCommand extends Command
 //            ];
 //            (new MassDispatchRepository)->insertGetId($params);
 //        }dd(1);
-        $i = '-K'.$this->argument('i');
+        $i = '-N'.$this->argument('i');
         $limit = 250;
         $wrongs = [];
         //$datas = (new MassDispatchRepository())->limit(['status'=>MassDispatch::STATUS_VERIFYING],['id','mobile'],[],[],'',1,$limit);
@@ -120,7 +121,7 @@ class TestCommand extends Command
                 'pedroperez@gmail.com',
                 'US',
                 $data['global_roaming'].$data['mobile'],
-                'aaa'.$limit.$i,
+                'nnn'.$limit.$i,
                 'Mis notas',
                 'Optional',
                 'Opcional'

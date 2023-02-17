@@ -105,6 +105,28 @@ class CloudApiImplementers extends BaseService
         return compact('result');
     }
 
+    /**
+     * 获取所有手机号
+     * 参数：whatsapp-business-account-id 和 system-user-access-token
+     * @return array
+     */
+    public function getAllPhoneNumbers(){
+        $this->send_api_link = $this->send_api_link.'/phone_numbers?access_token='.$this->access_token;
+        $result = $this->getQuery();
+        return compact('result');
+    }
+
+    /**
+     * 获取一个手机号
+     * 参数：phone_number_id 和 system-user-access-token
+     * @return array
+     */
+    public function getASinglePhoneNumber(){
+        $this->send_api_link = $this->send_api_link.'?access_token='.$this->access_token;
+        $result = $this->getQuery();
+        return compact('result');
+    }
+
     private function query(){
         //判断数据
         if (!$this->send_api_link || !$this->access_token || !$this->params) {
