@@ -172,6 +172,13 @@ return [
                                 'icon' => 'fa fa-car',
                             ],
                             [
+                                'guard_name' => 'TXT文本导入用户',
+                                'handler' => '',
+                                'route' => ['name' => 'whatsapp.console.account.posts.txt', 'params' => []],
+                                'permission_nodes' => [],
+                                'icon' => 'fa fa-car',
+                            ],
+                            [
                                 'guard_name' => '用户标签',
                                 'handler' => '',
                                 'route' => ['name' => 'whatsapp.console.account.tag.index', 'params' => []],

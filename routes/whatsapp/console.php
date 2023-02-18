@@ -86,6 +86,10 @@ Route::group(['as' => 'whatsapp.console.', 'prefix' => 'whatsapp/console'], func
             Route::get('posts', 'AccountController@posts')->name('posts');
             //用戶导入
             Route::post('import', 'AccountController@import')->name('import');
+            //txt文本 - 用戶导入页面
+            Route::get('posts/txt', 'AccountController@postTxt')->name('posts.txt');
+            //txt文本 - 用戶导入
+            Route::post('import/txt', 'AccountController@importTxt')->name('import.txt');
         });
         //生成虚拟手机路由
         Route::group(['as' => 'fictitious.', 'prefix' => 'fictitious'], function () {

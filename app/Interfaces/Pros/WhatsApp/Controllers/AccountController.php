@@ -114,4 +114,29 @@ class AccountController extends BaseController
         //导入快递单
         return responseService($service);
     }
+
+    /**
+     * txt文本 - 用户导入管理
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
+     */
+    public function postTxt(){
+        $groups = (new AccountTagRepository())->get([],['id','guard_name']);
+        //快递单管理
+        return view('pros.whatsapp.account.posts_txt',compact('groups'));
+    }
+
+    /**
+     * txt文本 - 用户导入方法
+     * @param Request $request
+     * @param AccountInterfaceService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function importTxt(Request $request, AccountInterfaceService $service){
+        //导入发货单
+        $service->importTxt($request);
+        //导入快递单
+        return responseService($service);
+    }
 }

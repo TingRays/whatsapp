@@ -217,7 +217,7 @@ class FansManageInterfaceService extends BaseService
 
         $admin_id = current_auth('id', config('pros.session_prefix', 'abnermouke:pros:console:auth'));
         //整理失败数据
-        $wrongs = $success = [];
+        $wrongs = $success = $post = [];
         //循环导入信息
         foreach ($posts as $mobile) {
             if (empty($mobile)){

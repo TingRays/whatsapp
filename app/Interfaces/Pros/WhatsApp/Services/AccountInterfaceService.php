@@ -24,6 +24,7 @@ use App\Services\Pros\Console\UploadService;
 use App\Services\Pros\System\TemporaryFileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
@@ -264,6 +265,86 @@ class AccountInterfaceService extends BaseService
             //设置提示
             $result['msg'] .= '<br /><br />错误文档已自动导出，请留意最后一栏失败原因并及时处理！';
         }
+        //返回成功
+        return $this->success($result);
+    }
+
+    /**
+     * 批量导入粉号
+     * @param Request $request
+     * @return array|bool
+     * @throws \Exception
+     */
+    public function importTxt(Request $request)
+    {
+        //上传文件
+        if (!($service = new UploadService())->upload($request)) {
+            //返回失败
+            return $this->fail($service->getCode(), $service->getMessage());
+        }
+        $group_id = $request->get('group_id');
+        if (!$group_id){
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '请先选择用户标签！');
+        }
+        $global_roaming = $request->get('global_roaming');
+        if (!$global_roaming){
+            //返回失败
+            return $this->fail(CodeLibrary::DATA_MISSING, '请先选择电话区号！');
+        }
+        //获取文件结果
+        $file = $service->getResult();
+        $file_path = Storage::disk($file['storage_disk'])->path($file['storage_name']);
+        if (!file_exists($file_path)) {
+            //返回失败
+            return $this->fail($service->getCode(), '文件丢失请重试！');
+        }
+        $fp = fopen($file_path, "r");
+        $str = fread($fp, filesize($file_path));//指定读取大小，这里把整个文件内容读取出来
+        $str = str_replace("\r\n", ",", $str);
+        $posts = explode(',',$str);
+
+        //整理失败数据
+        $success = $tag_ids = [];
+        $tag_ids[] = (int)$group_id;
+        $repeat_num = 0;
+        //循环导入信息
+        foreach ($posts as $k => $mobile) {
+            if (empty($mobile)){
+                continue;
+            }
+            $global_roaming = str_replace(['+',' '],'',trim($global_roaming));
+            $mobile = str_replace(['+',' ','(',')','-','（','）'],'',trim($mobile));
+            if (strpos($mobile,$global_roaming) === 0){
+                $global_roaming_len = strlen($global_roaming);
+                $mobile = substr($mobile,$global_roaming_len);
+            }
+            if ((new AccountRepository())->exists(['global_roaming' => $global_roaming,'mobile' => $mobile])) {
+                //设置失败
+                $repeat_num++;
+                //跳出当前循环
+                continue;
+            }
+            $params = [
+                'global_roaming' => $global_roaming,
+                'mobile' => $mobile,
+                'gender' => Accounts::GENDER_OF_UNKNOWN,
+                'tag_ids' => $tag_ids,
+                'remarks' => '',
+                'source' => Accounts::SOURCE_OF_IMPORT,
+                //'status' => Accounts::STATUS_DISABLED,
+                'created_at' => auto_datetime(),
+                'updated_at' => auto_datetime(),
+            ];
+            //if (trim($post[2]) == '是'){
+            $params['status'] = Accounts::STATUS_ENABLED;
+            //}
+            (new AccountRepository())->insertGetId($params);
+            //添加成功
+            $success[] = $mobile;
+        }
+        //整理返回结果
+        $result = ['link'=>route('whatsapp.console.fans_manage.index'), 'msg' => ('本次导入共' . (count($posts)) . '条<br />成功：' . count($success) . ' 条，已存在重复：' . count($repeat_num) . ' 条')];
         //返回成功
         return $this->success($result);
     }
