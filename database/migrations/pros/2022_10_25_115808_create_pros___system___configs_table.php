@@ -87,6 +87,7 @@ class CreateProsSystemConfigsTable extends Migration
             ['alias' => 'AMAP_WEB_SERVER_API_KEY', 'description' => '高德地图WEB服务API KEY', 'content' => '', 'created_at' => auto_datetime(), 'updated_at' => auto_datetime()],
             ['alias' => 'QINIU_SYNC_AUTO', 'description' => '自动化同步资源至七牛云', 'content' => 2, 'created_at' => auto_datetime(), 'updated_at' => auto_datetime()],
             ['alias' => 'QINIU_PARAMS', 'description' => '七牛云储存配置参数', 'content' => ['domain' => '', 'access_key' => '', 'access_secret' => '', 'bucket' => '', 'visibility' => 'public'], 'created_at' => auto_datetime(), 'updated_at' => auto_datetime()],
+            ['alias' => 'ASSIGNMENT_NUMBER', 'description' => '分配数据当前编号', 'content' => 1, 'created_at' => auto_datetime(), 'updated_at' => auto_datetime()],
         ]);
         //返回数据
         return true;

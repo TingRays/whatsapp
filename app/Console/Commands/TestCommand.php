@@ -11,6 +11,7 @@ use App\Implementers\Meta\Facebook\LoginImplementers;
 use App\Model\Pros\WhatsApp\Accounts;
 use App\Model\Pros\WhatsApp\MassDispatch;
 use App\Model\Pros\WhatsApp\MerchantMessagesLogs;
+use App\Repository\Pros\System\ConfigRepository;
 use App\Repository\Pros\WhatsApp\AccountRepository;
 use App\Repository\Pros\WhatsApp\FansManageRepository;
 use App\Repository\Pros\WhatsApp\MassDispatchRepository;
@@ -29,7 +30,7 @@ class TestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'test:test {i}';
+    protected $signature = 'test:test {alias} {new=no}';
 
     /**
      * The console command description.
@@ -106,44 +107,82 @@ class TestCommand extends Command
 //            ];
 //            (new MassDispatchRepository)->insertGetId($params);
 //        }dd(1);
-        $i = '-N'.$this->argument('i');
-        $limit = 250;
+        $alias = strtoupper($this->argument('alias'));
+        if ($this->argument('new') === 'no'){
+            $i = (int)(new ConfigRepository())->find(['alias'=>'ASSIGNMENT_NUMBER'],'content');
+        }else{
+            $i = 1;
+        }
+        $limit = 5000;
         $wrongs = [];
         //$datas = (new MassDispatchRepository())->limit(['status'=>MassDispatch::STATUS_VERIFYING],['id','mobile'],[],[],'',1,$limit);
+        if ((new AccountRepository())->count(['status'=>Accounts::STATUS_ENABLED]) < $limit){
+            return $this->output->error('数据不足了');
+        }
         $datas = (new AccountRepository())->limit(['status'=>Accounts::STATUS_ENABLED],['id','global_roaming','mobile'],[],[],'',1,$limit);
         $ids = array_column($datas,'id');
         //(new MassDispatchRepository())->update(['id'=>['in',$ids]],['status'=>MassDispatch::STATUS_ENABLED,'created_at'=>auto_datetime()]);
         (new AccountRepository())->update(['id'=>['in',$ids]],['status'=>MassDispatch::STATUS_DISABLED,'created_at'=>auto_datetime()]);
+        $arr = [
+            '1-250' => '+16098301475',
+            '251-500' => '+16204695464',
+            '501-750' => '+14197998380',
+            '751-1000' => '+17168894606',
+            '1001-1250' => '+18388993853',
+            '1251-1500' => '+18388993936',
+            '1501-1750' => '+16104877029',
+            '1751-2000' => '+18127583653',
+            '2001-2250' => '+12693603365',
+            '2251-2500' => '+16673396238',
+            '2501-2750' => '+17249136940',
+            '2751-3000' => '+18389443527',
+            '3001-3250' => '+16409628146',
+            '3251-3500' => '+17792207550',
+            '3501-3750' => '+18382134237',
+            '3751-4000' => '+16402339545',
+            '4001-4250' => '+15077412068',
+            '4251-4500' => '+14848139153',
+            '4501-4750' => '+17405188843',
+            '4751-5000' => '+18483066051',
+        ];
         foreach ($datas as $k=>$data){
-            $wrongs[] = [
-                'John',
-                'Doe',
-                'pedroperez@gmail.com',
-                'US',
-                $data['global_roaming'].$data['mobile'],
-                'nnn'.$limit.$i,
-                'Mis notas',
-                'Optional',
-                'Opcional'
-            ];
 //            $wrongs[] = [
 //                'John',
-//                $data['global_roaming'].$data['mobile'],
-//                '',
+//                'Doe',
 //                'pedroperez@gmail.com',
-//                '',
-//                ''
+//                'US',
+//                $data['global_roaming'].$data['mobile'],
+//                strtolower($alias.$alias.$alias).$limit.'-'.$alias.$i,
+//                'Mis notas',
+//                'Optional',
+//                'Opcional'
 //            ];
+            $phone = '';
+            foreach ($arr as $range_str=>$value_phone){
+                $range = explode('-',$range_str);
+                if ($range[0] <= $k+1 && $k+1<=$range[1]){
+                    $phone = $value_phone;
+                }
+            }
+            $wrongs[] = [
+                'John',
+                $data['global_roaming'].$data['mobile'],
+                $phone,
+                'pedroperez@gmail.com',
+                '',
+                ''
+            ];
+            (new ConfigRepository())->update(['alias'=>'ASSIGNMENT_NUMBER'],['content'=>$i+1]);
             if ($k == ($limit - 1)){
                 //生成临时文件
-                $temp_file = (new TemporaryFileService(true))->temporary('accounts/exports/wrongs/' . $limit.$i.'.xlsx');
+                $temp_file = (new TemporaryFileService(true))->temporary('accounts/exports/wrongs/' . $limit.'-'.$alias.$i.'.xlsx');
                 //保存文件
-                //Excel::store(new HaiMaExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
-                Excel::store(new PhoneGroupExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
+                Excel::store(new HaiMaExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
+                //Excel::store(new PhoneGroupExport($wrongs), $temp_file['file']['storage_name'], $temp_file['file']['storage_disk'], \Maatwebsite\Excel\Excel::XLSX);
                 $wrongs = [];
             }
             unset($datas[$k]);
         }
-        return $this->output->success('暂无测试');
+        return $this->output->success('暂无测试-'.$i);
     }
 }

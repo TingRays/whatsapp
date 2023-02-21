@@ -322,6 +322,7 @@ class AccountInterfaceService extends BaseService
             if ((new AccountRepository())->exists(['global_roaming' => $global_roaming,'mobile' => $mobile])) {
                 //设置失败
                 $repeat_num++;
+                (new AccountRepository())->update(['global_roaming' => $global_roaming,'mobile' => $mobile],['status' => Accounts::STATUS_ENABLED]);
                 //跳出当前循环
                 continue;
             }
@@ -344,7 +345,7 @@ class AccountInterfaceService extends BaseService
             $success[] = $mobile;
         }
         //整理返回结果
-        $result = ['link'=>route('whatsapp.console.fans_manage.index'), 'msg' => ('本次导入共' . (count($posts)) . '条<br />成功：' . count($success) . ' 条，已存在重复：' . count($repeat_num) . ' 条')];
+        $result = ['link'=>route('whatsapp.console.fans_manage.index'), 'msg' => ('本次导入共' . (count($posts)) . '条<br />成功：' . count($success) . ' 条，已存在重复：' . $repeat_num . ' 条')];
         //返回成功
         return $this->success($result);
     }

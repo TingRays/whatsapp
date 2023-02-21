@@ -3,13 +3,15 @@
 namespace App\Exports\Accounts;
 
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 /**
  * https://haimachuhai.com
  * 海马群发系统数据导出
  */
-class HaiMaExport implements FromArray, WithColumnWidths
+class HaiMaExport implements FromArray, WithColumnWidths, WithColumnFormatting
 {
     //用户数据
     private $accounts;
@@ -65,6 +67,17 @@ class HaiMaExport implements FromArray, WithColumnWidths
             'D' => 20,
             'E' => 20,
             'F' => 20,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function columnFormats(): array
+    {
+        return [
+            'B' => NumberFormat::FORMAT_NUMBER, //设置为文本
+            'C' => NumberFormat::FORMAT_NUMBER, //设置为文本
         ];
     }
 }
