@@ -88,6 +88,11 @@ class CloudApiImplementers extends BaseService
         return compact('result','data');
     }
 
+    /**
+     * 拉取模板
+     * @param $limit
+     * @return array
+     */
     public function retrieveTemplates($limit = 20){
         $this->send_api_link = $this->send_api_link.'/message_templates?limit='.$limit.'&access_token='.$this->access_token;
         $result = $this->getQuery();

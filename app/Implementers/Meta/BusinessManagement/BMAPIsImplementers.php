@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 class BMAPIsImplementers extends BaseService
 {
     //请求api链接
-    private static $api_link = 'https://graph.facebook.com/v15.0';
+    private static $api_link = 'https://graph.facebook.com/v16.0';
 
     /**
      * 发送完整api连接
@@ -75,6 +75,15 @@ class BMAPIsImplementers extends BaseService
         $this->send_api_link = $this->send_api_link.'/'.$business_id.'/system_users?access_token='.$this->access_token;
         $result = $this->getQuery();
         return compact('result');
+        /*
+         * "data" => array:1 [
+         *   0 => array:3 [
+         *     "id" => "106951612320519"
+         *     "name" => "comp1"
+         *     "role" => "EMPLOYEE"
+         *   ]
+         * ]
+         */
     }
 
     /**
@@ -88,6 +97,16 @@ class BMAPIsImplementers extends BaseService
         $this->send_api_link = $this->send_api_link.'/'.$business_id.'/owned_apps?access_token='.$this->access_token;
         $result = $this->getQuery();
         return compact('result');
+        /*
+         * "data" => array:1 [
+         *    0 => array:3 [
+         *      "link" => "https://www.facebook.com/games/?app_id=1174384923273957"
+         *      "name" => "企业1"
+         *      "id" => "1174384923273957"
+         *    ]
+         * ]
+
+         */
     }
     //查看企业有权访问的所有应用程序
     public function accessApplications($business_id): array
@@ -115,6 +134,19 @@ class BMAPIsImplementers extends BaseService
         $this->send_api_link = $this->send_api_link.'/'.$business_id.'/business_users?access_token='.$this->access_token;
         $result = $this->getQuery();
         return compact('result');
+        /*
+         * "data" => array:1 [
+         *   0 => array:4 [
+         *     "id" => "126826273655843"
+         *     "name" => "ads w"
+         *     "business" => array:2 [
+         *        "id" => "104252772584905"
+         *        "name" => "Gilbert Bros Built To Last Inc"
+         *     ]
+         *     "role" => "ADMIN"
+         *   ]
+         * ]
+         */
     }
 
     private function query(){
